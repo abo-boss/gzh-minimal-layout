@@ -1,6 +1,6 @@
 # gzh-minimal-layout
 
-一个面向微信公众号文章的智能排版 Codex Skill。它把文章理解、阅读节奏、主题选择和 HTML 渲染拆成可追踪的中间合同，让 Agent 负责“怎么排”，让 Renderer 负责“稳定地排出来”。
+一个面向微信公众号文章的智能排版 agent Skill。它把文章理解、阅读节奏、主题选择和 HTML 渲染拆成可追踪的中间合同，让 Agent 负责“怎么排”，让 Renderer 负责“稳定地排出来”。
 
 项目适合需要将 Markdown 或纯文本文章转换为微信公众号 HTML 的开发者，也适合作为 Agent 驱动内容工具的排版基础设施。
 

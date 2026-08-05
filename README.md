@@ -4,6 +4,8 @@
 
 项目适合需要将 Markdown 或纯文本文章转换为微信公众号 HTML 的开发者，也适合作为 Agent 驱动内容工具的排版基础设施。
 
+![gzh-minimal-layout editorial layout system](assets/promo/gzh-minimal-layout-hero.png)
+
 ## 项目特点
 
 - **结构化文章理解**：将原始文章拆解为文章画像、语义 Block 和阅读计划，保留来源可追溯关系。
@@ -26,6 +28,8 @@ Raw Article → SourceManifest → Agent ArticleProfile + BlockDocument
 - Agent 决定文章画像、语义结构、阅读节奏、主题和候选取舍。
 - Theme 决定组件能力、Token、间距档位和强调预算。
 - Renderer 不重新解释语义，只绑定安全插槽、生成内联样式并验证内容完整性。
+
+![从原文到结构化排版的编辑工作台](assets/promo/gzh-minimal-layout-editorial.png)
 
 ## 使用
 

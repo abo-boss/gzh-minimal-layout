@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gzh-minimal-layout:schema:component-definition:1.0",
+  "title": "ComponentDefinition v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "id", "kind", "accepts", "slots", "fallbackVariant", "template", "baseStyles", "variants"],
+  "properties": {
+    "specVersion": { "const": "1.0" },
+    "id": { "$ref": "#/$defs/id" },
+    "kind": { "enum": ["masthead", "heading", "prose", "ending", "list", "quote", "table", "cta", "image"] },
+    "accepts": { "$ref": "#/$defs/requiredCandidateRule" },
+    "slots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "source", "required"],
+        "properties": {
+          "name": { "enum": ["content", "initial", "remainder", "marker", "items", "attribution", "src", "alt", "caption", "headers", "rows", "eyebrow", "prompt", "highlight"] },
+          "source": { "enum": ["content", "content-initial", "content-remainder", "heading-title", "heading-marker", "list-items", "quote-content", "quote-attribution", "image-src", "image-alt", "image-caption", "table-headers", "table-rows", "cta-eyebrow", "cta-prompt", "cta-highlight"] },
+          "required": { "type": "boolean" },
+          "format": { "enum": ["source", "arabic", "two-digit-arabic", "chinese"] }
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "name": { "const": "content" },
+              "source": { "const": "content" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "content" },
+              "source": { "const": "heading-title" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "initial" },
+              "source": { "const": "content-initial" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "remainder" },
+              "source": { "const": "content-remainder" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "marker" },
+              "source": { "const": "heading-marker" },
+              "required": { "const": false }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "items" },
+              "source": { "const": "list-items" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "content" },
+              "source": { "const": "quote-content" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "attribution" },
+              "source": { "const": "quote-attribution" },
+              "required": { "const": false }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "src" },
+              "source": { "const": "image-src" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "alt" },
+              "source": { "const": "image-alt" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "caption" },
+              "source": { "const": "image-caption" },
+              "required": { "const": false }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "headers" },
+              "source": { "const": "table-headers" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "rows" },
+              "source": { "const": "table-rows" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "eyebrow" },
+              "source": { "const": "cta-eyebrow" },
+              "required": { "const": false }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "prompt" },
+              "source": { "const": "cta-prompt" },
+              "required": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "name": { "const": "highlight" },
+              "source": { "const": "cta-highlight" },
+              "required": { "const": false }
+            }
+          }
+        ]
+      }
+    },
+    "fallbackVariant": { "$ref": "#/$defs/id" },
+    "template": { "type": "string", "pattern": "^[A-Za-z0-9._/-]+\\.html$" },
+    "baseStyles": { "$ref": "#/$defs/styleMap" },
+    "variants": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/variant" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+    "blockType": {
+      "enum": ["article-title", "article-subtitle", "metadata", "lead", "heading", "paragraph", "quote", "list", "image", "divider", "callout", "step", "table", "code", "ending", "cta"]
+    },
+    "candidateRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "blockTypes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/blockType" } },
+        "roles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" } },
+        "gestures": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["flow", "pause", "pivot", "anchor", "release"] } },
+        "levels": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "integer", "minimum": 1, "maximum": 6 } }
+      }
+    },
+    "requiredCandidateRule": {
+      "allOf": [
+        { "$ref": "#/$defs/candidateRule" },
+        { "type": "object", "required": ["blockTypes"] }
+      ]
+    },
+    "styleMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": { "type": "string", "minLength": 1 }
+      }
+    },
+    "variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "priority", "visualWeight", "surface", "emphasisCost", "styles"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "label": { "type": "string", "minLength": 1 },
+        "priority": { "type": "integer", "minimum": 0 },
+        "visualWeight": { "enum": ["quiet", "medium", "strong"] },
+        "surface": { "enum": ["open", "panel"] },
+        "emphasisCost": { "type": "integer", "minimum": 0 },
+        "accepts": { "$ref": "#/$defs/candidateRule" },
+        "styles": { "$ref": "#/$defs/styleMap" }
+      }
+    }
+  }
+}

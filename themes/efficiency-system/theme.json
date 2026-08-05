@@ -1,0 +1,110 @@
+{
+  "specVersion": "1.0",
+  "id": "efficiency-system",
+  "version": "1.0.0",
+  "name": "效率系统",
+  "description": "现代效率主题，提取 430px 卡片画布、24px 内容轨、14px 正文和圆角模块结构。",
+  "defaultDensity": "balanced",
+  "tokens": {
+    "color": {
+      "paper": "#F9F8F4",
+      "ink": "#333333",
+      "body": "#787D85",
+      "muted": "#787D85",
+      "accent": "#36506B",
+      "accentLight": "#EEF2F5",
+      "line": "#EBE8DF"
+    },
+    "type": {
+      "body": "-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif",
+      "editorial": "\"Songti SC\",STSong,SimSun,serif"
+    },
+    "size": {
+      "title": "26px",
+      "heading": "15px",
+      "subheading": "22px",
+      "body": "14px",
+      "meta": "14px",
+      "focus": "18px"
+    },
+    "lineHeight": {
+      "title": "1.4",
+      "heading": "1.4",
+      "body": "1.85",
+      "compact": "1.75",
+      "focus": "1.9"
+    },
+    "alignment": {
+      "flowMargin": "0",
+      "insetMargin": "0 0 0 24px",
+      "insetWidth": "calc(100% - 24px)",
+      "focusMargin": "0 auto",
+      "focusWidth": "84%",
+      "ornamentLeft": "-10px",
+      "left": "left",
+      "center": "center",
+      "right": "right",
+      "justify": "justify"
+    },
+    "canvas": {
+      "background": "#F9F8F4",
+      "padding": "0 24px 80px"
+    }
+  },
+  "rhythm": {
+    "modes": {
+      "dense": {
+        "close": 6,
+        "flow": 14,
+        "break": 24,
+        "turn": 36,
+        "section": 48,
+        "release": 60
+      },
+      "balanced": {
+        "close": 10,
+        "flow": 20,
+        "break": 32,
+        "turn": 48,
+        "section": 64,
+        "release": 80
+      },
+      "airy": {
+        "close": 14,
+        "flow": 26,
+        "break": 40,
+        "turn": 60,
+        "section": 80,
+        "release": 100
+      }
+    },
+    "relationMap": {
+      "default": "flow",
+      "same-group": "close",
+      "continuation": "flow",
+      "new-argument": "break",
+      "turning-point": "turn",
+      "before-strong-block": "turn",
+      "after-strong-block": "break",
+      "new-section": "section",
+      "before-ending": "release"
+    }
+  },
+  "budgets": {
+    "maxStrongPerSection": 1,
+    "maxSurfaceRatio": 0.16,
+    "noAdjacentStrong": true
+  },
+  "componentPaths": [
+    "components/masthead/component.json",
+    "components/lead-image/component.json",
+    "components/lead/component.json",
+    "components/heading/component.json",
+    "components/subheading/component.json",
+    "components/prose/component.json",
+    "components/list/component.json",
+    "components/quote/component.json",
+    "components/ending/component.json",
+    "components/cta/component.json"
+  ]
+}

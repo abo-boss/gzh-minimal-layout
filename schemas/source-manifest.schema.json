@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gzh-minimal-layout:schema:source-manifest:1.0",
+  "title": "SourceManifest v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "sourceId", "format", "contentHash", "segments"],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri-reference" },
+    "specVersion": { "const": "1.0" },
+    "sourceId": { "$ref": "#/$defs/id" },
+    "format": { "enum": ["markdown", "plain-text"] },
+    "contentHash": { "$ref": "#/$defs/hash" },
+    "segmentation": { "$ref": "#/$defs/segmentation" },
+    "segments": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/segment" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "segmentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requested", "resolved"],
+      "properties": {
+        "requested": { "enum": ["auto", "blank-lines", "lines"] },
+        "resolved": { "enum": ["blank-lines", "lines"] },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sourceOrder",
+        "kindHint",
+        "content",
+        "startOffset",
+        "endOffset",
+        "contentHash"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "sourceOrder": { "type": "integer", "minimum": 0 },
+        "kindHint": {
+          "enum": ["heading", "paragraph", "list", "quote", "code", "divider"]
+        },
+        "content": { "type": "string", "minLength": 1 },
+        "startOffset": { "type": "integer", "minimum": 0 },
+        "endOffset": { "type": "integer", "minimum": 1 },
+        "contentHash": { "$ref": "#/$defs/hash" }
+      }
+    }
+  }
+}

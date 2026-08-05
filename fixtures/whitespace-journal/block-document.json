@@ -1,0 +1,167 @@
+{
+  "specVersion": "1.0",
+  "id": "whitespace-journal-reference",
+  "articleType": "knowledge-editorial",
+  "moods": ["quiet", "reflective"],
+  "blocks": [
+    {
+      "id": "title",
+      "type": "article-title",
+      "role": "title",
+      "content": "如何用留白，\n让一篇文章更耐读",
+      "importance": 1,
+      "sourceOrder": 0,
+      "sectionId": "entry"
+    },
+    {
+      "id": "lead-image",
+      "type": "image",
+      "role": "lead-image",
+      "content": "LIGHT & SHADOW",
+      "importance": 0.8,
+      "sourceOrder": 1,
+      "sectionId": "entry",
+      "relationToPrevious": "new-argument",
+      "structure": {
+        "src": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop",
+        "alt": "光影留白",
+        "hasCaption": true,
+        "caption": "LIGHT & SHADOW"
+      },
+      "metadata": {
+        "src": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "lead",
+      "type": "lead",
+      "role": "lead",
+      "content": "留白不是空出来的地方，而是内容之间用来呼吸、停顿和建立关系的空间。很多人第一次做文章排版时，都会下意识地把页面填满。",
+      "importance": 0.78,
+      "sourceOrder": 2,
+      "sectionId": "entry",
+      "relationToPrevious": "new-argument"
+    },
+    {
+      "id": "heading-1",
+      "type": "heading",
+      "role": "section-heading",
+      "content": "01 先判断内容之间是什么关系",
+      "importance": 0.85,
+      "sourceOrder": 3,
+      "sectionId": "section-1",
+      "relationToPrevious": "new-section",
+      "level": 2,
+      "structure": {
+        "hasMarker": true,
+        "marker": "01",
+        "ordinal": 1,
+        "title": "先判断内容之间是什么关系"
+      }
+    },
+    {
+      "id": "body-1",
+      "type": "paragraph",
+      "role": "body",
+      "content": "调整间距之前，不要急着修改具体数值。你需要先判断，相邻的两个内容究竟是什么关系。",
+      "importance": 0.55,
+      "sourceOrder": 4,
+      "sectionId": "section-1",
+      "relationToPrevious": "same-group"
+    },
+    {
+      "id": "callout",
+      "type": "callout",
+      "role": "explanation",
+      "content": "关系越紧密，距离越小；关系越疏远，距离越大。",
+      "importance": 0.72,
+      "sourceOrder": 5,
+      "sectionId": "section-1",
+      "relationToPrevious": "turning-point"
+    },
+    {
+      "id": "insight",
+      "type": "paragraph",
+      "role": "key-insight",
+      "content": "排版的稳定感，来自规则的重复，而不是元素的相似。",
+      "importance": 0.82,
+      "sourceOrder": 6,
+      "sectionId": "section-1",
+      "relationToPrevious": "before-strong-block"
+    },
+    {
+      "id": "heading-2",
+      "type": "heading",
+      "role": "section-heading",
+      "content": "02 建立三档基础间距",
+      "importance": 0.85,
+      "sourceOrder": 7,
+      "sectionId": "section-2",
+      "relationToPrevious": "new-section",
+      "level": 2,
+      "structure": {
+        "hasMarker": true,
+        "marker": "02",
+        "ordinal": 2,
+        "title": "建立三档基础间距"
+      }
+    },
+    {
+      "id": "list",
+      "type": "list",
+      "role": "steps",
+      "content": "1. 小间距，用于标题与副标题等紧密关系\n2. 中间距，用于普通段落和连续内容\n3. 大间距，用于章节切换和结尾收束",
+      "importance": 0.7,
+      "sourceOrder": 8,
+      "sectionId": "section-2",
+      "relationToPrevious": "same-group",
+      "structure": {
+        "ordered": true,
+        "items": [
+          { "ordinal": 1, "content": "小间距，用于标题与副标题等紧密关系" },
+          { "ordinal": 2, "content": "中间距，用于普通段落和连续内容" },
+          { "ordinal": 3, "content": "大间距，用于章节切换和结尾收束" }
+        ]
+      }
+    },
+    {
+      "id": "quote",
+      "type": "quote",
+      "role": "pull-quote",
+      "content": "真正高级的留白，不是让页面显得空，而是让读者知道在哪里停下来。",
+      "importance": 0.82,
+      "sourceOrder": 9,
+      "sectionId": "section-2",
+      "relationToPrevious": "before-strong-block",
+      "structure": {
+        "content": "真正高级的留白，不是让页面显得空，而是让读者知道在哪里停下来。",
+        "hasAttribution": false
+      }
+    },
+    {
+      "id": "ending",
+      "type": "ending",
+      "role": "conclusion",
+      "content": "留白看起来是视觉问题，实际上考验的是对内容结构的理解。",
+      "importance": 0.8,
+      "sourceOrder": 10,
+      "sectionId": "exit",
+      "relationToPrevious": "before-ending"
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "role": "action",
+      "content": "ACTION\n选择一篇已经排版的文章，只重新调整组件之间的距离。\n观察哪些地方开始顺畅。",
+      "importance": 0.6,
+      "sourceOrder": 11,
+      "sectionId": "exit",
+      "relationToPrevious": "before-ending",
+      "structure": {
+        "eyebrow": "ACTION",
+        "prompt": "选择一篇已经排版的文章，只重新调整组件之间的距离。",
+        "highlight": "观察哪些地方开始顺畅。"
+      }
+    }
+  ]
+}

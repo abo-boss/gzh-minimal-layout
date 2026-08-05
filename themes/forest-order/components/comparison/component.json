@@ -1,0 +1,28 @@
+{
+  "specVersion": "1.0",
+  "id": "comparison",
+  "kind": "table",
+  "accepts": { "blockTypes": ["table"] },
+  "slots": [
+    { "name": "headers", "source": "table-headers", "required": true },
+    { "name": "rows", "source": "table-rows", "required": true }
+  ],
+  "fallbackVariant": "balanced",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "width": "100%", "margin": "0", "border-collapse": "separate", "border-spacing": "0 6px", "table-layout": "fixed", "font-family": "{type.body}", "font-size": "14px" },
+    "head": { "display": "table-header-group" },
+    "body": { "display": "table-row-group" },
+    "row": { "vertical-align": "middle" },
+    "headerCell": { "padding": "20px 14px 17px", "color": "{color.muted}", "font-size": "14px", "font-weight": "600", "letter-spacing": "0.04em", "line-height": "1.6", "text-align": "center" },
+    "headerCellFirst": { "width": "50%", "padding": "20px 14px 17px", "background-color": "#F0F0F0", "border-right": "2px solid {color.white}", "border-radius": "5px 0 0 5px", "color": "{color.quiet}", "font-size": "14px", "font-weight": "600", "letter-spacing": "0.04em", "line-height": "1.6", "text-align": "center" },
+    "headerCellLast": { "width": "50%", "padding": "20px 14px 17px", "background-color": "{color.paperWarm}", "border-radius": "0 5px 5px 0", "color": "{color.forest}", "font-size": "14px", "font-weight": "600", "letter-spacing": "0.04em", "line-height": "1.6", "text-align": "center" },
+    "cell": { "padding": "17px 14px", "color": "{color.muted}", "font-weight": "400", "line-height": "1.85", "vertical-align": "middle" },
+    "cellFirst": { "width": "50%", "padding": "17px 14px", "background-color": "#F0F0F0", "border-right": "2px solid {color.white}", "border-radius": "5px 0 0 5px", "color": "{color.muted}", "font-weight": "400", "line-height": "1.85", "vertical-align": "middle" },
+    "cellLast": { "width": "50%", "padding": "17px 14px", "background-color": "{color.paperWarm}", "border-radius": "0 5px 5px 0", "color": "{color.muted}", "font-weight": "400", "line-height": "1.85", "vertical-align": "middle" }
+  },
+  "variants": [
+    { "id": "contrast", "label": "双栏秩序对比", "priority": 60, "visualWeight": "medium", "surface": "open", "emphasisCost": 1, "styles": {} },
+    { "id": "balanced", "label": "中性双栏", "priority": 20, "visualWeight": "quiet", "surface": "open", "emphasisCost": 0, "styles": { "headerCellLast": { "font-weight": "700" }, "cellLast": { "background-color": "{color.paper}" } } }
+  ]
+}

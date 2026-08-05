@@ -1,0 +1,20 @@
+{
+  "specVersion": "1.0",
+  "id": "list",
+  "kind": "list",
+  "accepts": { "blockTypes": ["list"] },
+  "slots": [{ "name": "items", "source": "list-items", "required": true, "format": "two-digit-arabic" }],
+  "fallbackVariant": "compact",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "margin": "0", "padding": "0" },
+    "list": { "margin": "0", "padding": "0", "color": "{color.muted}", "font-family": "{type.body}", "font-size": "{size.body}", "letter-spacing": "0.06em", "line-height": "{lineHeight.body}", "list-style": "none" },
+    "item": { "display": "block", "margin-bottom": "18px", "padding": "0" },
+    "itemMarker": { "display": "inline-block", "width": "2.2em", "color": "{color.champagne}", "font-family": "{type.editorial}", "font-size": "14px", "font-style": "italic", "font-weight": "700", "letter-spacing": "0", "vertical-align": "top" },
+    "itemContent": { "display": "inline-block", "width": "calc(100% - 2.2em)", "color": "{color.muted}", "vertical-align": "top" }
+  },
+  "variants": [
+    { "id": "editorial", "label": "秩序列表", "priority": 50, "visualWeight": "medium", "surface": "open", "emphasisCost": 1, "styles": {} },
+    { "id": "compact", "label": "紧凑列表", "priority": 20, "visualWeight": "quiet", "surface": "open", "emphasisCost": 0, "styles": { "item": { "margin-bottom": "6px" } } }
+  ]
+}

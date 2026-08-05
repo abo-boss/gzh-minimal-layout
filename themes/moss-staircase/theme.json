@@ -1,0 +1,110 @@
+{
+  "specVersion": "1.0",
+  "id": "moss-staircase",
+  "version": "1.0.0",
+  "name": "苔绿阶梯",
+  "description": "苔绿宣纸与非对称阶梯轨道，提取 600px 宽度、32px 主轨、24/48/80/120/160px 间距序列。",
+  "defaultDensity": "balanced",
+  "tokens": {
+    "color": {
+      "paper": "#F6F5F1",
+      "ink": "#2C332E",
+      "body": "#545B56",
+      "muted": "#545B56",
+      "accent": "#4A5D4E",
+      "accentLight": "#E8ECE7",
+      "line": "#C8CEC8"
+    },
+    "type": {
+      "body": "-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif",
+      "editorial": "\"Songti SC\",STSong,SimSun,serif"
+    },
+    "size": {
+      "title": "32px",
+      "heading": "16px",
+      "subheading": "24px",
+      "body": "15px",
+      "meta": "14px",
+      "focus": "19px"
+    },
+    "lineHeight": {
+      "title": "1.4",
+      "heading": "1.4",
+      "body": "2.4",
+      "compact": "1.75",
+      "focus": "2.2"
+    },
+    "alignment": {
+      "flowMargin": "0",
+      "insetMargin": "0 0 0 24px",
+      "insetWidth": "calc(100% - 24px)",
+      "focusMargin": "0 auto",
+      "focusWidth": "76%",
+      "ornamentLeft": "-20px",
+      "left": "left",
+      "center": "center",
+      "right": "right",
+      "justify": "justify"
+    },
+    "canvas": {
+      "background": "#F6F5F1",
+      "padding": "0 32px 120px"
+    }
+  },
+  "rhythm": {
+    "modes": {
+      "dense": {
+        "close": 8,
+        "flow": 18,
+        "break": 40,
+        "turn": 68,
+        "section": 104,
+        "release": 140
+      },
+      "balanced": {
+        "close": 12,
+        "flow": 24,
+        "break": 48,
+        "turn": 80,
+        "section": 120,
+        "release": 160
+      },
+      "airy": {
+        "close": 16,
+        "flow": 30,
+        "break": 56,
+        "turn": 92,
+        "section": 136,
+        "release": 180
+      }
+    },
+    "relationMap": {
+      "default": "flow",
+      "same-group": "close",
+      "continuation": "flow",
+      "new-argument": "break",
+      "turning-point": "turn",
+      "before-strong-block": "turn",
+      "after-strong-block": "break",
+      "new-section": "section",
+      "before-ending": "release"
+    }
+  },
+  "budgets": {
+    "maxStrongPerSection": 1,
+    "maxSurfaceRatio": 0.16,
+    "noAdjacentStrong": true
+  },
+  "componentPaths": [
+    "components/masthead/component.json",
+    "components/lead-image/component.json",
+    "components/lead/component.json",
+    "components/heading/component.json",
+    "components/subheading/component.json",
+    "components/prose/component.json",
+    "components/list/component.json",
+    "components/quote/component.json",
+    "components/ending/component.json",
+    "components/cta/component.json"
+  ]
+}

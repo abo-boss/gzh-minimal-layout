@@ -1,0 +1,16 @@
+{
+  "specVersion": "1.0",
+  "id": "subheading",
+  "kind": "heading",
+  "accepts": { "blockTypes": ["heading"], "levels": [3, 4] },
+  "slots": [{ "name": "content", "source": "heading-title", "required": true }],
+  "fallbackVariant": "inset",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "margin": "{alignment.insetMargin}", "width": "{alignment.insetWidth}", "padding": "0 0 0 14px", "border-left": "1px solid {color.accent}", "box-sizing": "border-box" },
+    "content": { "margin": "0", "color": "{color.ink}", "font-family": "{type.body}", "font-size": "{size.subheading}", "font-weight": "600", "letter-spacing": "0.05em", "line-height": "{lineHeight.compact}", "text-align": "{alignment.left}" }
+  },
+  "variants": [
+    { "id": "inset", "label": "缩进侧线小标题", "priority": 65, "visualWeight": "medium", "surface": "open", "emphasisCost": 1, "styles": {} }
+  ]
+}

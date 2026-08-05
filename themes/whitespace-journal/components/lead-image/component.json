@@ -1,0 +1,24 @@
+{
+  "specVersion": "1.0",
+  "id": "lead-image",
+  "kind": "image",
+  "accepts": { "blockTypes": ["image"], "roles": ["lead-image"] },
+  "slots": [
+    { "name": "src", "source": "image-src", "required": true },
+    { "name": "alt", "source": "image-alt", "required": true },
+    { "name": "caption", "source": "image-caption", "required": false }
+  ],
+  "fallbackVariant": "gallery",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "width": "100%", "margin": "{alignment.flowMargin}", "padding": "0", "overflow": "hidden" },
+    "frame": { "width": "100%", "aspect-ratio": "16 / 10", "margin": "0", "background-color": "{color.accentLight}", "overflow": "hidden" },
+    "image": { "display": "block", "width": "100%", "height": "100%", "object-fit": "cover" },
+    "caption": { "display": "flex", "align-items": "center", "justify-content": "space-between", "gap": "16px", "margin": "14px 0 0", "color": "{color.muted}", "font-family": "{type.body}", "font-size": "10px", "letter-spacing": "0.16em", "line-height": "{lineHeight.compact}" },
+    "figure": { "color": "{color.muted}", "font-weight": "400", "text-align": "{alignment.left}" },
+    "label": { "color": "{color.muted}", "font-weight": "300", "text-align": "{alignment.right}" }
+  },
+  "variants": [
+    { "id": "gallery", "label": "固定画廊头图", "priority": 90, "visualWeight": "medium", "surface": "open", "emphasisCost": 1, "styles": {} }
+  ]
+}

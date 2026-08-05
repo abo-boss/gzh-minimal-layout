@@ -1,0 +1,16 @@
+{
+  "specVersion": "1.0",
+  "id": "opinion-knowledge-workflow",
+  "articleType": "opinion-knowledge",
+  "moods": ["clear", "measured"],
+  "blocks": [
+    { "id": "block-001", "type": "article-title", "role": "title", "content": "# 清晰的边界让协作更快", "importance": 1, "sectionId": "section-opening", "groupId": "group-opening", "relationToPrevious": "default", "sourceOrder": 0, "sourceRefs": ["source-001"], "marks": [] },
+    { "id": "block-002", "type": "paragraph", "role": "argument", "content": "很多团队把响应速度当成协作效率，却忽略了决策边界。", "importance": 0.75, "sectionId": "section-01", "groupId": "group-01", "relationToPrevious": "new-section", "sourceOrder": 1, "sourceRefs": ["source-002"], "marks": [] },
+    { "id": "block-003", "type": "heading", "role": "other", "content": "## 边界减少重复确认", "importance": 0.72, "level": 2, "sectionId": "section-02", "groupId": "group-02", "relationToPrevious": "new-argument", "sourceOrder": 2, "sourceRefs": ["source-003"], "marks": [] },
+    { "id": "block-004", "type": "paragraph", "role": "evidence", "content": "当负责人、输入和完成标准都明确时，成员可以独立推进。", "importance": 0.7, "sectionId": "section-02", "groupId": "group-02", "relationToPrevious": "continuation", "sourceOrder": 3, "sourceRefs": ["source-004"], "marks": [] },
+    { "id": "block-005", "type": "quote", "role": "evidence", "content": "> 好的边界不是限制行动，而是减少无效等待。", "importance": 0.78, "sectionId": "section-02", "groupId": "group-02", "relationToPrevious": "same-group", "sourceOrder": 4, "sourceRefs": ["source-005"], "marks": [], "structure": { "content": "好的边界不是限制行动，而是减少无效等待。", "hasAttribution": false } },
+    { "id": "block-006", "type": "paragraph", "role": "example", "content": "例如，评审前先约定由谁拍板，讨论就不会反复回到起点。", "importance": 0.64, "sectionId": "section-02", "groupId": "group-02", "relationToPrevious": "continuation", "sourceOrder": 5, "sourceRefs": ["source-006"], "marks": [] },
+    { "id": "block-007", "type": "heading", "role": "other", "content": "## 速度来自更少的往返", "importance": 0.72, "level": 2, "sectionId": "section-03", "groupId": "group-03", "relationToPrevious": "new-argument", "sourceOrder": 6, "sourceRefs": ["source-007"], "marks": [] },
+    { "id": "block-008", "type": "paragraph", "role": "conclusion", "content": "因此，提升协作效率的第一步不是增加会议，而是写清责任和出口。", "importance": 0.82, "sectionId": "section-03", "groupId": "group-03", "relationToPrevious": "before-ending", "sourceOrder": 7, "sourceRefs": ["source-008"], "marks": [] }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "specVersion": "1.0",
+  "id": "quiet-editorial",
+  "version": "1.0.0",
+  "name": "静读编辑部",
+  "description": "面向公众号长文阅读的开放式排版：用层级、细线和主题节奏区分块，不把正文装进卡片。",
+  "defaultDensity": "balanced",
+  "tokens": {
+    "color": {
+      "paper": "#fffefb",
+      "ink": "#26231f",
+      "muted": "#756f67",
+      "accent": "#9a6742",
+      "line": "#d9d0c5",
+      "wash": "#f5f1ea"
+    },
+    "type": {
+      "body": "-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif",
+      "editorial": "Georgia,\"Songti SC\",\"STSong\",serif"
+    },
+    "size": {
+      "title": "28px",
+      "heading": "20px",
+      "body": "16px",
+      "meta": "14px"
+    },
+    "lineHeight": {
+      "title": "1.35",
+      "heading": "1.5",
+      "body": "1.9",
+      "compact": "1.75"
+    }
+  },
+  "rhythm": {
+    "modes": {
+      "dense": { "close": 8, "flow": 14, "break": 24, "turn": 32, "section": 42, "release": 52 },
+      "balanced": { "close": 10, "flow": 18, "break": 28, "turn": 38, "section": 52, "release": 64 },
+      "airy": { "close": 12, "flow": 22, "break": 34, "turn": 46, "section": 64, "release": 76 }
+    },
+    "relationMap": {
+      "default": "flow",
+      "same-group": "close",
+      "continuation": "flow",
+      "new-argument": "break",
+      "turning-point": "turn",
+      "before-strong-block": "turn",
+      "after-strong-block": "break",
+      "new-section": "section",
+      "before-ending": "release"
+    }
+  },
+  "budgets": {
+    "maxStrongPerSection": 1,
+    "maxSurfaceRatio": 0.2,
+    "noAdjacentStrong": true
+  },
+  "componentPaths": [
+    "components/masthead/component.json",
+    "components/heading/component.json",
+    "components/prose/component.json",
+    "components/list/component.json",
+    "components/quote/component.json",
+    "components/ending/component.json"
+  ]
+}

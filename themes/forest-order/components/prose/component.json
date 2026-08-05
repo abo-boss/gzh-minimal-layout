@@ -1,0 +1,24 @@
+{
+  "specVersion": "1.0",
+  "id": "prose",
+  "kind": "prose",
+  "accepts": { "blockTypes": ["article-subtitle", "metadata", "lead", "paragraph", "quote", "list", "image", "divider", "callout", "step", "table", "code"] },
+  "slots": [{ "name": "content", "source": "content", "required": true }],
+  "fallbackVariant": "body",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "margin": "{alignment.flowMargin}", "padding": "0" },
+    "content": { "margin": "0", "color": "{color.muted}", "font-family": "{type.body}", "font-size": "{size.body}", "font-weight": "400", "letter-spacing": "0.045em", "line-height": "{lineHeight.body}", "text-align": "{alignment.justify}", "text-align-last": "{alignment.left}" },
+    "markStrong": { "color": "{color.forest}", "font-weight": "600", "background-image": "linear-gradient(transparent 72%, {color.champagneWash} 72%)" },
+    "markKeyword": { "color": "{color.forest}", "font-weight": "600", "background-color": "{color.paperWarm}" },
+    "markEmphasis": { "color": "{color.forestSoft}", "font-style": "normal", "font-weight": "600" },
+    "markQuote": { "color": "{color.forestSoft}", "font-family": "{type.editorial}", "font-style": "italic" }
+  },
+  "variants": [
+    { "id": "golden", "label": "留白金句", "priority": 50, "visualWeight": "medium", "surface": "open", "emphasisCost": 1, "accepts": { "roles": ["key-insight"] }, "styles": { "root": { "margin": "{alignment.focusMargin}", "max-width": "80%", "padding": "42px 0" }, "content": { "color": "{color.forest}", "font-family": "{type.editorial}", "font-size": "20px", "font-weight": "600", "letter-spacing": "0.1em", "line-height": "2", "text-align": "{alignment.center}", "text-align-last": "{alignment.center}" } } },
+    { "id": "lead", "label": "卷首语", "priority": 40, "visualWeight": "medium", "surface": "open", "emphasisCost": 1, "accepts": { "blockTypes": ["lead"] }, "styles": { "content": { "color": "{color.forestSoft}", "font-family": "{type.editorial}", "font-size": "18px", "line-height": "2" } } },
+    { "id": "muted", "label": "辅助信息", "priority": 40, "visualWeight": "quiet", "surface": "open", "emphasisCost": 0, "accepts": { "blockTypes": ["article-subtitle", "metadata", "divider"] }, "styles": { "content": { "color": "{color.quiet}", "font-size": "{size.meta}", "letter-spacing": "0.08em", "line-height": "{lineHeight.compact}" } } },
+    { "id": "inset", "label": "细节强调", "priority": 35, "visualWeight": "medium", "surface": "open", "emphasisCost": 1, "accepts": { "blockTypes": ["callout"] }, "styles": { "root": { "border-left": "3px solid {color.champagne}", "padding-left": "{alignment.insetPadding}" }, "content": { "color": "{color.forestSoft}", "font-family": "{type.editorial}", "text-align": "{alignment.left}", "text-align-last": "{alignment.left}" } } },
+    { "id": "body", "label": "安静正文", "priority": 10, "visualWeight": "quiet", "surface": "open", "emphasisCost": 0, "styles": {} }
+  ]
+}

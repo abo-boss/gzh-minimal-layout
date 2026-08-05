@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gzh-minimal-layout:schema:image-plan:1.0",
+  "title": "ImagePlan v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "id", "documentId", "items"],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri-reference" },
+    "specVersion": { "const": "1.0" },
+    "id": { "$ref": "#/$defs/id" },
+    "documentId": { "$ref": "#/$defs/id" },
+    "sourceHash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/item" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "anchorBlockId",
+        "placement",
+        "purpose",
+        "prompt",
+        "alt",
+        "aspectRatio",
+        "assetId",
+        "reason"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "anchorBlockId": { "$ref": "#/$defs/id" },
+        "placement": { "enum": ["before", "after"] },
+        "purpose": { "enum": ["lead", "inline", "infographic"] },
+        "prompt": { "type": "string", "minLength": 1 },
+        "alt": { "type": "string", "minLength": 1 },
+        "aspectRatio": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*:[1-9][0-9]*$"
+        },
+        "assetId": { "$ref": "#/$defs/id" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

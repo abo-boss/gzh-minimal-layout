@@ -1,0 +1,110 @@
+{
+  "specVersion": "1.0",
+  "id": "brick-literary",
+  "version": "1.0.0",
+  "name": "砖红纸页",
+  "description": "砖红纸张与章节仪式，提取 375px 画布、28px 内轨、16/9 头图和大段落留白。",
+  "defaultDensity": "balanced",
+  "tokens": {
+    "color": {
+      "paper": "#FBF9F4",
+      "ink": "#222222",
+      "body": "#6F706C",
+      "muted": "#6F706C",
+      "accent": "#9A3B26",
+      "accentLight": "#F1E8DF",
+      "line": "#D8D0C5"
+    },
+    "type": {
+      "body": "-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif",
+      "editorial": "\"Songti SC\",STSong,SimSun,serif"
+    },
+    "size": {
+      "title": "26px",
+      "heading": "15px",
+      "subheading": "20px",
+      "body": "14px",
+      "meta": "14px",
+      "focus": "18px"
+    },
+    "lineHeight": {
+      "title": "1.35",
+      "heading": "1.35",
+      "body": "2.05",
+      "compact": "1.75",
+      "focus": "2"
+    },
+    "alignment": {
+      "flowMargin": "0",
+      "insetMargin": "0 0 0 24px",
+      "insetWidth": "calc(100% - 24px)",
+      "focusMargin": "0 auto",
+      "focusWidth": "80%",
+      "ornamentLeft": "-12px",
+      "left": "left",
+      "center": "center",
+      "right": "right",
+      "justify": "justify"
+    },
+    "canvas": {
+      "background": "#FBF9F4",
+      "padding": "0 28px 96px"
+    }
+  },
+  "rhythm": {
+    "modes": {
+      "dense": {
+        "close": 8,
+        "flow": 18,
+        "break": 32,
+        "turn": 44,
+        "section": 60,
+        "release": 76
+      },
+      "balanced": {
+        "close": 12,
+        "flow": 24,
+        "break": 40,
+        "turn": 56,
+        "section": 76,
+        "release": 96
+      },
+      "airy": {
+        "close": 16,
+        "flow": 30,
+        "break": 48,
+        "turn": 68,
+        "section": 92,
+        "release": 116
+      }
+    },
+    "relationMap": {
+      "default": "flow",
+      "same-group": "close",
+      "continuation": "flow",
+      "new-argument": "break",
+      "turning-point": "turn",
+      "before-strong-block": "turn",
+      "after-strong-block": "break",
+      "new-section": "section",
+      "before-ending": "release"
+    }
+  },
+  "budgets": {
+    "maxStrongPerSection": 1,
+    "maxSurfaceRatio": 0.16,
+    "noAdjacentStrong": true
+  },
+  "componentPaths": [
+    "components/masthead/component.json",
+    "components/lead-image/component.json",
+    "components/lead/component.json",
+    "components/heading/component.json",
+    "components/subheading/component.json",
+    "components/prose/component.json",
+    "components/list/component.json",
+    "components/quote/component.json",
+    "components/ending/component.json",
+    "components/cta/component.json"
+  ]
+}

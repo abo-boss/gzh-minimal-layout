@@ -1,0 +1,113 @@
+{
+  "specVersion": "1.0",
+  "id": "personal-essay-workflow",
+  "articleType": "personal-essay",
+  "moods": ["introspective", "restrained", "calm"],
+  "blocks": [
+    {
+      "id": "block-001",
+      "type": "article-title",
+      "role": "title",
+      "content": "# 我终于学会把脚步放慢",
+      "importance": 1,
+      "sectionId": "section-opening",
+      "groupId": "group-opening",
+      "relationToPrevious": "default",
+      "sourceOrder": 0,
+      "sourceRefs": ["source-001"],
+      "marks": []
+    },
+    {
+      "id": "block-002",
+      "type": "paragraph",
+      "role": "context",
+      "content": "起初，我把每一个空白都塞进日程，以为忙碌就是可靠。",
+      "importance": 0.55,
+      "sectionId": "section-01",
+      "groupId": "group-01",
+      "relationToPrevious": "new-section",
+      "sourceOrder": 1,
+      "sourceRefs": ["source-002"],
+      "marks": []
+    },
+    {
+      "id": "block-003",
+      "type": "heading",
+      "role": "other",
+      "content": "## 改变发生在一个普通清晨",
+      "importance": 0.72,
+      "level": 2,
+      "sectionId": "section-02",
+      "groupId": "group-02",
+      "relationToPrevious": "new-section",
+      "sourceOrder": 2,
+      "sourceRefs": ["source-003"],
+      "marks": []
+    },
+    {
+      "id": "block-004",
+      "type": "paragraph",
+      "role": "narrative",
+      "content": "那天没有新的消息，我第一次听见窗外连续的鸟鸣。",
+      "importance": 0.58,
+      "sectionId": "section-02",
+      "groupId": "group-02",
+      "relationToPrevious": "continuation",
+      "sourceOrder": 3,
+      "sourceRefs": ["source-004"],
+      "marks": []
+    },
+    {
+      "id": "block-005",
+      "type": "paragraph",
+      "role": "narrative",
+      "content": "我仍然担心停下来会落后，但身体先替我做出了选择。",
+      "importance": 0.68,
+      "sectionId": "section-02",
+      "groupId": "group-02",
+      "relationToPrevious": "same-group",
+      "sourceOrder": 4,
+      "sourceRefs": ["source-005"],
+      "marks": []
+    },
+    {
+      "id": "block-006",
+      "type": "paragraph",
+      "role": "key-insight",
+      "content": "后来我才明白，真正的问题不是做得不够多，而是从未问过自己为什么出发。",
+      "importance": 0.9,
+      "sectionId": "section-03",
+      "groupId": "group-03",
+      "relationToPrevious": "turning-point",
+      "sourceOrder": 5,
+      "sourceRefs": ["source-006"],
+      "marks": []
+    },
+    {
+      "id": "block-007",
+      "type": "paragraph",
+      "role": "reflection",
+      "content": "慢下来以后，事情没有消失，我却重新看见了它们的轻重。",
+      "importance": 0.76,
+      "sectionId": "section-03",
+      "groupId": "group-03",
+      "relationToPrevious": "after-strong-block",
+      "sourceOrder": 6,
+      "sourceRefs": ["source-007"],
+      "marks": []
+    },
+    {
+      "id": "block-008",
+      "type": "ending",
+      "role": "ending",
+      "content": "现在，我会给一天留下一小段没有任务的时间。",
+      "importance": 0.7,
+      "sectionId": "section-ending",
+      "groupId": "group-ending",
+      "relationToPrevious": "before-ending",
+      "sourceOrder": 7,
+      "sourceRefs": ["source-008"],
+      "marks": []
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "specVersion": "1.0",
+  "id": "masthead",
+  "kind": "masthead",
+  "accepts": { "blockTypes": ["article-title"] },
+  "slots": [{ "name": "content", "source": "content", "required": true }],
+  "fallbackVariant": "minimal",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "margin": "0", "padding": "0" },
+    "content": {
+      "margin": "0",
+      "color": "{color.ink}",
+      "font-family": "{type.editorial}",
+      "font-size": "{size.title}",
+      "font-weight": "700",
+      "letter-spacing": "0.04em",
+      "line-height": "{lineHeight.title}"
+    },
+    "accent": { "display": "block", "margin-top": "18px", "height": "2px", "background-color": "{color.accent}" }
+  },
+  "variants": [
+    {
+      "id": "editorial",
+      "label": "编辑部题签",
+      "priority": 30,
+      "visualWeight": "strong",
+      "surface": "open",
+      "emphasisCost": 2,
+      "styles": { "accent": { "width": "36px" } }
+    },
+    {
+      "id": "minimal",
+      "label": "极简标题",
+      "priority": 10,
+      "visualWeight": "strong",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": { "accent": { "width": "20px", "background-color": "{color.line}" } }
+    }
+  ]
+}

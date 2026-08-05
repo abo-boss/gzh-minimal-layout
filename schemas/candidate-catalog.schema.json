@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gzh-minimal-layout:schema:candidate-catalog:1.0",
+  "title": "CandidateCatalog v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "documentId", "themeId", "blocks"],
+  "properties": {
+    "specVersion": { "const": "1.0" },
+    "documentId": { "$ref": "#/$defs/id" },
+    "themeId": { "$ref": "#/$defs/id" },
+    "blocks": { "type": "array", "items": { "$ref": "#/$defs/block" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+    "blockType": {
+      "enum": ["article-title", "article-subtitle", "metadata", "lead", "heading", "paragraph", "quote", "list", "image", "divider", "callout", "step", "table", "code", "ending", "cta"]
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "componentId", "variantId", "priority", "visualWeight", "surface", "emphasisCost"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+:[A-Za-z0-9._-]+$" },
+        "componentId": { "$ref": "#/$defs/id" },
+        "variantId": { "$ref": "#/$defs/id" },
+        "priority": { "type": "integer", "minimum": 0 },
+        "visualWeight": { "enum": ["quiet", "medium", "strong"] },
+        "surface": { "enum": ["open", "panel"] },
+        "emphasisCost": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blockId", "type", "role", "gesture", "candidates"],
+      "properties": {
+        "blockId": { "$ref": "#/$defs/id" },
+        "type": { "$ref": "#/$defs/blockType" },
+        "role": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "gesture": { "enum": ["flow", "pause", "pivot", "anchor", "release"] },
+        "candidates": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/candidate" } }
+      }
+    }
+  }
+}

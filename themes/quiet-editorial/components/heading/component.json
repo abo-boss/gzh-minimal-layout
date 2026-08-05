@@ -1,0 +1,42 @@
+{
+  "specVersion": "1.0",
+  "id": "heading",
+  "kind": "heading",
+  "accepts": { "blockTypes": ["heading"] },
+  "slots": [{ "name": "content", "source": "content", "required": true }],
+  "fallbackVariant": "plain",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "margin": "0", "padding": "0" },
+    "marker": { "display": "block", "width": "24px", "height": "2px", "margin-bottom": "10px", "background-color": "{color.accent}" },
+    "content": {
+      "margin": "0",
+      "color": "{color.ink}",
+      "font-family": "{type.editorial}",
+      "font-size": "{size.heading}",
+      "font-weight": "700",
+      "letter-spacing": "0.03em",
+      "line-height": "{lineHeight.heading}"
+    }
+  },
+  "variants": [
+    {
+      "id": "marker",
+      "label": "短线章节",
+      "priority": 30,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    },
+    {
+      "id": "plain",
+      "label": "纯文字章节",
+      "priority": 10,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": { "marker": { "background-color": "{color.line}", "width": "16px" } }
+    }
+  ]
+}

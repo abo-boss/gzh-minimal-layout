@@ -1,0 +1,8 @@
+node_modules/
+dist/
+outputs/
+previews/
+*-artifacts/
+fixtures/**/artifacts/
+.DS_Store
+*.swp

@@ -1,0 +1,15 @@
+{
+  "specVersion": "1.0",
+  "id": "literary-prose-workflow",
+  "articleType": "literary-prose",
+  "moods": ["quiet", "restrained", "observant"],
+  "blocks": [
+    { "id": "block-001", "type": "article-title", "role": "title", "content": "# 风从窗边经过", "importance": 1, "sectionId": "section-opening", "groupId": "group-opening", "relationToPrevious": "default", "sourceOrder": 0, "sourceRefs": ["source-001"], "marks": [] },
+    { "id": "block-002", "type": "paragraph", "role": "narrative", "content": "午后的光落在旧木桌上，像一封没有署名的信。", "importance": 0.52, "sectionId": "section-01", "groupId": "group-01", "relationToPrevious": "new-section", "sourceOrder": 1, "sourceRefs": ["source-002"], "marks": [] },
+    { "id": "block-003", "type": "paragraph", "role": "narrative", "content": "窗帘轻轻动了一下，房间仍旧安静。", "importance": 0.45, "sectionId": "section-01", "groupId": "group-01", "relationToPrevious": "continuation", "sourceOrder": 2, "sourceRefs": ["source-003"], "marks": [] },
+    { "id": "block-004", "type": "paragraph", "role": "reflection", "content": "我没有追问风从哪里来，只把杯子往光里挪了挪。", "importance": 0.58, "sectionId": "section-01", "groupId": "group-01", "relationToPrevious": "same-group", "sourceOrder": 3, "sourceRefs": ["source-004"], "marks": [] },
+    { "id": "block-005", "type": "paragraph", "role": "narrative", "content": "远处有人关上一扇门，声音很轻，很快就散了。", "importance": 0.48, "sectionId": "section-01", "groupId": "group-01", "relationToPrevious": "continuation", "sourceOrder": 4, "sourceRefs": ["source-005"], "marks": [] },
+    { "id": "block-006", "type": "paragraph", "role": "reflection", "content": "黄昏抵达时，桌上的水已经有了微凉的影子。", "importance": 0.6, "sectionId": "section-01", "groupId": "group-01", "relationToPrevious": "same-group", "sourceOrder": 5, "sourceRefs": ["source-006"], "marks": [] },
+    { "id": "block-007", "type": "ending", "role": "ending", "content": "我坐了一会儿，然后关灯离开。", "importance": 0.55, "sectionId": "section-ending", "groupId": "group-ending", "relationToPrevious": "before-ending", "sourceOrder": 6, "sourceRefs": ["source-007"], "marks": [] }
+  ]
+}

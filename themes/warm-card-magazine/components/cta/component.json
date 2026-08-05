@@ -1,0 +1,23 @@
+{
+  "specVersion": "1.0",
+  "id": "cta",
+  "kind": "cta",
+  "accepts": { "blockTypes": ["cta"] },
+  "slots": [
+    { "name": "eyebrow", "source": "cta-eyebrow", "required": false },
+    { "name": "prompt", "source": "cta-prompt", "required": true },
+    { "name": "highlight", "source": "cta-highlight", "required": false }
+  ],
+  "fallbackVariant": "action",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "margin": "{alignment.focusMargin}", "max-width": "78%", "padding": "8px 0 0", "text-align": "{alignment.center}" },
+    "eyebrow": { "margin": "0 0 20px", "color": "{color.ink}", "font-family": "{type.body}", "font-size": "10px", "font-weight": "400", "letter-spacing": "0.28em", "line-height": "{lineHeight.compact}", "text-align": "{alignment.center}" },
+    "prompt": { "margin": "0", "color": "{color.muted}", "font-family": "{type.body}", "font-size": "13px", "font-weight": "300", "letter-spacing": "0.045em", "line-height": "2", "text-align": "{alignment.center}" },
+    "highlight": { "display": "block", "margin-top": "14px", "color": "{color.accent}", "font-family": "{type.editorial}", "font-size": "16px", "font-style": "italic", "font-weight": "300", "letter-spacing": "0.06em", "line-height": "{lineHeight.focus}", "text-align": "{alignment.center}" }
+  },
+  "variants": [
+    { "id": "action", "label": "中轴行动提示", "priority": 55, "visualWeight": "medium", "surface": "open", "emphasisCost": 1, "styles": {} },
+    { "id": "quiet", "label": "轻行动提示", "priority": 20, "visualWeight": "quiet", "surface": "open", "emphasisCost": 0, "styles": { "highlight": { "font-size": "14px" } } }
+  ]
+}

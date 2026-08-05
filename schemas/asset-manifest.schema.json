@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gzh-minimal-layout:schema:asset-manifest:1.0",
+  "title": "AssetManifest v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "id", "documentId", "assets"],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri-reference" },
+    "specVersion": { "const": "1.0" },
+    "id": { "$ref": "#/$defs/id" },
+    "documentId": { "$ref": "#/$defs/id" },
+    "assets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/asset" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "status", "url"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["generated", "local", "remote"] },
+        "status": { "const": "ready" },
+        "url": { "type": "string", "format": "uri-reference", "minLength": 1 },
+        "localPath": { "type": "string", "minLength": 1 },
+        "mimeType": { "type": "string", "pattern": "^image/[A-Za-z0-9.+-]+$" },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

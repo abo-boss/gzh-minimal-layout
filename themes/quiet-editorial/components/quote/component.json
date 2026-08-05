@@ -1,0 +1,37 @@
+{
+  "specVersion": "1.0",
+  "id": "quote",
+  "kind": "quote",
+  "accepts": { "blockTypes": ["quote"] },
+  "slots": [
+    { "name": "content", "source": "quote-content", "required": true },
+    { "name": "attribution", "source": "quote-attribution", "required": false }
+  ],
+  "fallbackVariant": "quiet",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "margin": "0", "padding-left": "16px", "border-left": "2px solid {color.accent}" },
+    "content": { "margin": "0", "color": "{color.muted}", "font-family": "{type.editorial}", "font-size": "{size.body}", "font-style": "italic", "font-weight": "400", "letter-spacing": "0.02em", "line-height": "{lineHeight.body}" },
+    "attribution": { "margin": "10px 0 0", "color": "{color.muted}", "font-family": "{type.body}", "font-size": "{size.meta}", "font-style": "normal", "line-height": "{lineHeight.compact}", "text-align": "right" }
+  },
+  "variants": [
+    {
+      "id": "inset",
+      "label": "侧线引用",
+      "priority": 50,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    },
+    {
+      "id": "quiet",
+      "label": "轻引用",
+      "priority": 20,
+      "visualWeight": "quiet",
+      "surface": "open",
+      "emphasisCost": 0,
+      "styles": { "root": { "border-left": "2px solid {color.line}", "padding-left": "14px" } }
+    }
+  ]
+}

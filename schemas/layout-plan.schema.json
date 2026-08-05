@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gzh-minimal-layout:schema:layout-plan:1.0",
+  "title": "LayoutPlan v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "id", "documentId", "themeId", "density", "items"],
+  "properties": {
+    "specVersion": { "const": "1.0" },
+    "id": { "$ref": "#/$defs/id" },
+    "documentId": { "$ref": "#/$defs/id" },
+    "themeId": { "$ref": "#/$defs/id" },
+    "density": { "enum": ["dense", "balanced", "airy"] },
+    "items": { "type": "array", "items": { "$ref": "#/$defs/item" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sourceBlockIds", "componentId", "variantId", "readingGesture", "rhythmToken", "gapBefore", "reason"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "sourceBlockIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "componentId": { "$ref": "#/$defs/id" },
+        "variantId": { "$ref": "#/$defs/id" },
+        "readingGesture": { "enum": ["flow", "pause", "pivot", "anchor", "release"] },
+        "rhythmToken": { "enum": ["close", "flow", "break", "turn", "section", "release"] },
+        "gapBefore": { "type": "number", "minimum": 0 },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

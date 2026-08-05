@@ -1,0 +1,18 @@
+{
+  "specVersion": "1.0",
+  "id": "ending",
+  "kind": "ending",
+  "accepts": { "blockTypes": ["ending", "cta"] },
+  "slots": [{ "name": "content", "source": "content", "required": true }],
+  "fallbackVariant": "ritual",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "margin": "{alignment.focusMargin}", "max-width": "80%", "padding": "10px 0 0", "text-align": "{alignment.center}" },
+    "accent": { "display": "block", "width": "28px", "height": "1px", "margin": "0 auto 22px", "background-color": "{color.champagne}", "opacity": "0.75" },
+    "content": { "margin": "0", "color": "{color.champagne}", "font-family": "{type.editorial}", "font-size": "17px", "font-weight": "400", "letter-spacing": "0.1em", "line-height": "{lineHeight.body}" }
+  },
+  "variants": [
+    { "id": "ritual", "label": "仪式收束", "priority": 30, "visualWeight": "medium", "surface": "open", "emphasisCost": 1, "styles": {} },
+    { "id": "quiet", "label": "轻收尾", "priority": 10, "visualWeight": "quiet", "surface": "open", "emphasisCost": 0, "styles": { "accent": { "width": "20px", "margin": "0 auto 14px" }, "content": { "color": "{color.muted}", "letter-spacing": "0.06em" } } }
+  ]
+}

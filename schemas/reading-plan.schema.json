@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gzh-minimal-layout:schema:reading-plan:1.0",
+  "title": "ReadingPlan v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "id", "documentId", "items"],
+  "properties": {
+    "specVersion": { "const": "1.0" },
+    "id": { "$ref": "#/$defs/id" },
+    "documentId": { "$ref": "#/$defs/id" },
+    "items": { "type": "array", "items": { "$ref": "#/$defs/item" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blockId", "compositionGroupId", "phase", "gesture", "emphasisFunction", "strength", "reason"],
+      "properties": {
+        "blockId": { "$ref": "#/$defs/id" },
+        "compositionGroupId": { "$ref": "#/$defs/id" },
+        "phase": { "enum": ["entry", "body", "exit"] },
+        "gesture": { "enum": ["flow", "pause", "pivot", "anchor", "release"] },
+        "emphasisFunction": { "enum": ["none", "structural", "cognitive", "affective", "utility"] },
+        "strength": { "enum": ["quiet", "medium", "strong"] },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

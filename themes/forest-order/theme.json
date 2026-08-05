@@ -1,0 +1,88 @@
+{
+  "specVersion": "1.0",
+  "id": "forest-order",
+  "version": "1.0.0",
+  "name": "森序",
+  "description": "以深森林绿、香槟金与杂志式留白组织长文。强调判断、删减和章节仪式感，正文保持安静开放。",
+  "defaultDensity": "balanced",
+  "tokens": {
+    "color": {
+      "forest": "#1A3224",
+      "forestSoft": "#3B4A42",
+      "champagne": "#C0AC92",
+      "champagneWash": "#E3D9C6",
+      "paper": "#FAFAF7",
+      "paperWarm": "#FAF6EE",
+      "line": "#EAE5DE",
+      "ink": "#333333",
+      "muted": "#555555",
+      "quiet": "#7A7A7A",
+      "white": "#FFFFFF"
+    },
+    "type": {
+      "body": "-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif",
+      "editorial": "\"Songti SC\",STSong,SimSun,serif"
+    },
+    "size": {
+      "title": "25px",
+      "heading": "22px",
+      "body": "14px",
+      "meta": "13px",
+      "golden": "20px"
+    },
+    "lineHeight": {
+      "title": "1.5",
+      "heading": "1.45",
+      "body": "2.15",
+      "compact": "1.75"
+    },
+    "alignment": {
+      "flowMargin": "0",
+      "insetPadding": "16px",
+      "focusMargin": "0 auto",
+      "focusMaxWidth": "86%",
+      "left": "left",
+      "center": "center",
+      "right": "right",
+      "justify": "justify"
+    },
+    "canvas": {
+      "background": "#FAFAF7",
+      "padding": "0 20px 72px"
+    }
+  },
+  "rhythm": {
+    "modes": {
+      "dense": { "close": 8, "flow": 16, "break": 28, "turn": 40, "section": 56, "release": 70 },
+      "balanced": { "close": 12, "flow": 22, "break": 36, "turn": 52, "section": 72, "release": 88 },
+      "airy": { "close": 16, "flow": 28, "break": 44, "turn": 64, "section": 88, "release": 108 }
+    },
+    "relationMap": {
+      "default": "flow",
+      "same-group": "close",
+      "continuation": "flow",
+      "new-argument": "break",
+      "turning-point": "turn",
+      "before-strong-block": "turn",
+      "after-strong-block": "break",
+      "new-section": "section",
+      "before-ending": "release"
+    }
+  },
+  "budgets": {
+    "maxStrongPerSection": 1,
+    "maxSurfaceRatio": 0.25,
+    "noAdjacentStrong": true
+  },
+  "componentPaths": [
+    "components/masthead/component.json",
+    "components/heading/component.json",
+    "components/subheading/component.json",
+    "components/prose/component.json",
+    "components/list/component.json",
+    "components/quote/component.json",
+    "components/comparison/component.json",
+    "components/ending/component.json",
+    "components/cta/component.json"
+  ]
+}

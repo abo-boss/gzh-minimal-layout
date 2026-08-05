@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gzh-minimal-layout:schema:article-profile:1.0",
+  "title": "ArticleProfile v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "articleType",
+    "tone",
+    "contentDensity",
+    "structurePattern",
+    "sectionComplexity"
+  ],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri-reference" },
+    "articleType": {
+      "enum": ["personal-essay", "opinion-knowledge", "literary-prose", "other"]
+    },
+    "tone": {
+      "type": "array",
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]*$"
+      }
+    },
+    "contentDensity": { "enum": ["low", "medium", "high"] },
+    "structurePattern": {
+      "enum": [
+        "experience-reflection-conclusion",
+        "argument-evidence-conclusion",
+        "narrative-reflection",
+        "fragmented-prose",
+        "list-driven",
+        "other"
+      ]
+    },
+    "sectionComplexity": { "enum": ["low", "medium", "high"] }
+  }
+}

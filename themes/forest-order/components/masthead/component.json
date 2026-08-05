@@ -1,0 +1,21 @@
+{
+  "specVersion": "1.0",
+  "id": "masthead",
+  "kind": "masthead",
+  "accepts": { "blockTypes": ["article-title"] },
+  "slots": [{ "name": "content", "source": "content", "required": true }],
+  "fallbackVariant": "quiet",
+  "template": "template.html",
+  "baseStyles": {
+    "root": { "position": "relative", "margin": "{alignment.flowMargin}", "padding": "76px 24px 60px", "background-color": "{color.forest}", "overflow": "hidden", "text-align": "{alignment.center}" },
+    "ringTop": { "position": "absolute", "top": "-54px", "right": "-50px", "display": "block", "width": "164px", "height": "164px", "border": "1px solid {color.champagne}", "border-radius": "50%", "box-sizing": "border-box", "opacity": "0.13" },
+    "ringBottom": { "position": "absolute", "bottom": "-98px", "left": "-58px", "display": "block", "width": "224px", "height": "224px", "border": "1px solid {color.champagne}", "border-radius": "50%", "box-sizing": "border-box", "opacity": "0.09" },
+    "content": { "position": "relative", "z-index": "1", "margin": "0", "color": "{color.white}", "font-family": "{type.editorial}", "font-size": "26px", "font-weight": "600", "letter-spacing": "0.06em", "line-height": "1.45" },
+    "accent": { "position": "relative", "z-index": "1", "display": "block", "width": "28px", "height": "1px", "margin": "26px auto 0", "background-color": "{color.champagne}", "opacity": "0.8" },
+    "kicker": { "position": "relative", "z-index": "1", "margin": "18px 0 0", "color": "{color.champagne}", "font-family": "{type.body}", "font-size": "10px", "font-weight": "400", "letter-spacing": "0.22em", "line-height": "1.6", "text-align": "{alignment.center}" }
+  },
+  "variants": [
+    { "id": "cover", "label": "森林封面", "priority": 40, "visualWeight": "strong", "surface": "panel", "emphasisCost": 2, "styles": {} },
+    { "id": "quiet", "label": "安静封面", "priority": 10, "visualWeight": "strong", "surface": "open", "emphasisCost": 1, "styles": { "root": { "background-color": "{color.paperWarm}", "padding": "28px 0 24px", "overflow": "hidden" }, "ringTop": { "display": "none" }, "ringBottom": { "display": "none" }, "content": { "color": "{color.forest}", "font-size": "27px" }, "accent": { "margin-top": "18px", "background-color": "{color.champagne}" }, "kicker": { "color": "{color.champagne}", "margin": "12px 0 0" } } }
+  ]
+}

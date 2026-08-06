@@ -1,0 +1,135 @@
+{
+  "specVersion": "2.0",
+  "articleType": "opinion-knowledge",
+  "tone": ["analytical", "warm"],
+  "theme": "quiet-editorial",
+  "density": "balanced",
+  "blocks": [
+    {
+      "id": "title-1",
+      "type": "article-title",
+      "content": "为什么极简主义排版更适合公众号",
+      "component": "masthead",
+      "variant": "editorial",
+      "phase": "entry",
+      "gesture": "anchor",
+      "emphasis": "strong"
+    },
+    {
+      "id": "p-1",
+      "type": "lead",
+      "content": "在信息过载的时代，好的排版不是加法，而是减法。",
+      "component": "prose",
+      "variant": "lead",
+      "phase": "entry",
+      "gesture": "flow",
+      "emphasis": "medium"
+    },
+    {
+      "id": "h-1",
+      "type": "heading",
+      "content": "留白的力量",
+      "component": "heading",
+      "variant": "marker",
+      "phase": "body",
+      "gesture": "pivot",
+      "emphasis": "medium",
+      "level": 2
+    },
+    {
+      "id": "p-2",
+      "type": "paragraph",
+      "content": "当我们打开一篇公众号文章，映入眼帘的往往是密密麻麻的文字和花哨的装饰。但真正能让读者停下来阅读的，恰恰是那些懂得留白的文章。",
+      "component": "prose",
+      "variant": "body",
+      "phase": "body",
+      "gesture": "flow",
+      "emphasis": "quiet"
+    },
+    {
+      "id": "p-3",
+      "type": "paragraph",
+      "content": "留白不是空洞，而是呼吸。它给读者的眼睛一个休息的空间，让文字的力量得以显现。",
+      "component": "prose",
+      "variant": "body",
+      "phase": "body",
+      "gesture": "flow",
+      "emphasis": "quiet"
+    },
+    {
+      "id": "h-2",
+      "type": "heading",
+      "content": "三个核心原则",
+      "component": "heading",
+      "variant": "marker",
+      "phase": "body",
+      "gesture": "pivot",
+      "emphasis": "medium",
+      "level": 2
+    },
+    {
+      "id": "list-1",
+      "type": "list",
+      "content": "1. 层级清晰：标题、正文、引用各归其位\n2. 节奏感：段落之间有呼吸，不紧不松\n3. 克制：不为装饰而装饰",
+      "component": "list",
+      "variant": "editorial",
+      "phase": "body",
+      "gesture": "pause",
+      "emphasis": "medium",
+      "structure": {
+        "ordered": true,
+        "items": [
+          { "ordinal": 1, "content": "层级清晰：标题、正文、引用各归其位" },
+          { "ordinal": 2, "content": "节奏感：段落之间有呼吸，不紧不松" },
+          { "ordinal": 3, "content": "克制：不为装饰而装饰" }
+        ]
+      }
+    },
+    {
+      "id": "q-1",
+      "type": "quote",
+      "content": "好的设计是尽可能少的设计。 — Dieter Rams",
+      "component": "quote",
+      "variant": "inset",
+      "phase": "body",
+      "gesture": "pause",
+      "emphasis": "medium",
+      "structure": {
+        "content": "好的设计是尽可能少的设计。",
+        "hasAttribution": true,
+        "attribution": "Dieter Rams"
+      }
+    },
+    {
+      "id": "h-3",
+      "type": "heading",
+      "content": "实践建议",
+      "component": "heading",
+      "variant": "plain",
+      "phase": "body",
+      "gesture": "pivot",
+      "emphasis": "medium",
+      "level": 2
+    },
+    {
+      "id": "p-4",
+      "type": "paragraph",
+      "content": "选择一个安静的主题，让内容说话。不需要每段都加粗，不需要每句都高亮。信任你的读者，他们会找到重点。",
+      "component": "prose",
+      "variant": "body",
+      "phase": "body",
+      "gesture": "flow",
+      "emphasis": "quiet"
+    },
+    {
+      "id": "end-1",
+      "type": "ending",
+      "content": "排版的最高境界，是让读者忘记排版的存在。",
+      "component": "ending",
+      "variant": "release",
+      "phase": "exit",
+      "gesture": "release",
+      "emphasis": "medium"
+    }
+  ]
+}

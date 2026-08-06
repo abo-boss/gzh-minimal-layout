@@ -9,14 +9,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "cli": "tsx scripts/cli.ts",
-    "skill:validate": "python3 \"$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py\" .",
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "reading:plan": "tsx scripts/cli.ts reading plan",
-    "workflow:run": "tsx scripts/cli.ts workflow run",
-    "layout:candidates": "tsx scripts/cli.ts layout candidates",
-    "layout:plan": "tsx scripts/cli.ts layout plan",
-    "wechat:render": "tsx scripts/cli.ts wechat render"
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "ajv": "^8.17.1",

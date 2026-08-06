@@ -1,82 +1,93 @@
-# Agent workflow reference
+# Agent 工作流参考（v2）
 
-所有命令在 Skill 根目录运行。以下用 `$WORK` 表示任务目录；实际执行时请替换为绝对路径，不要依赖未设置的环境变量。
+所有命令在 Skill 根目录运行。以下用 `$WORK` 表示 `/tmp/gzh-layout/<slug>/`。
 
-## 1. 生成 baseline 骨架
+## 新版工作流
 
-```bash
-npm run --silent cli -- workflow run \
-  --input /tmp/gzh-minimal-layout/article/source.md \
-  --mode baseline \
-  --theme quiet-editorial \
-  --output /tmp/gzh-minimal-layout/article/baseline.wechat.html \
-  --artifacts-dir /tmp/gzh-minimal-layout/article/baseline-artifacts
-```
-
-读取原文、`source-manifest.json`、`article-profile.json`、`block-document.json` 和 `reading-plan.json`。baseline 是来源可追溯的起点，不是最终语义判断。
-
-## 2. 编写 Agent 合同
-
-以 `schemas/` 和 `src/contracts/` 为准，在 `agent/` 下生成：
-
-- `article-profile.json`
-- `block-document.json`
-- `reading-plan.json`
-
-必须满足：
-
-- `ArticleProfile.articleType` 等于 `BlockDocument.articleType`。
-- `ArticleProfile.tone` 等于 `BlockDocument.moods`。
-- `ReadingPlan` 的 Block 顺序与 `BlockDocument` 完全一致。
-- 每个 Source Segment 恰好有一个 `keep` 或 `split` 决策。
-- 所有 `sourceRefs`、`sourceSpans` 和块文本均可回溯到原文，字符不能被改写或重排。
-
-可单独执行验证：
+### 1. 查看可用主题
 
 ```bash
-npm run --silent cli -- profile validate --input /tmp/gzh-minimal-layout/article/agent/article-profile.json
-npm run --silent cli -- blocks validate \
-  --input /tmp/gzh-minimal-layout/article/agent/block-document.json \
-  --source-manifest /tmp/gzh-minimal-layout/article/baseline-artifacts/source-manifest.json
-
-npm run --silent cli -- reading validate \
-  --input /tmp/gzh-minimal-layout/article/agent/reading-plan.json \
-  --blocks /tmp/gzh-minimal-layout/article/agent/block-document.json
+npm run --silent cli -- themes
 ```
 
-## 3. 检查主题能力和候选
+输出 JSON 包含所有主题的 id、名称、描述和组件列表。
+
+### 2. 校验决策文件
 
 ```bash
-npm run --silent cli -- theme inspect --theme whitespace-journal
-
-npm run --silent cli -- layout candidates \
-  --blocks /tmp/gzh-minimal-layout/article/agent/block-document.json \
-  --reading /tmp/gzh-minimal-layout/article/agent/reading-plan.json \
-  --theme whitespace-journal \
-  --output /tmp/gzh-minimal-layout/article/candidates.json
+npm run --silent cli -- validate --decision $WORK/layout-decision.json
 ```
 
-`selections.json` 只能引用 `candidates.json` 中同一 Block 的组件和变体：
+确认所有 component/variant 选择在目标主题中合法。
 
+### 3. 渲染
+
+```bash
+npm run --silent cli -- render \
+  --input $WORK/source.md \
+  --decision $WORK/layout-decision.json \
+  --output $WORK/article.wechat.html \
+  --preview $WORK/article.preview.html
+```
+
+成功输出：
 ```json
-[
-  {
-    "blockId": "block-001",
-    "componentId": "masthead",
-    "variantId": "minimal",
-    "reason": "文章语气克制，降低题头装饰"
-  }
-]
+{
+  "success": true,
+  "output": "/tmp/gzh-layout/slug/article.wechat.html",
+  "preview": "/tmp/gzh-layout/slug/article.preview.html",
+  "theme": "quiet-editorial",
+  "density": "balanced",
+  "blockCount": 15,
+  "contentIntegrity": { "valid": true }
+}
 ```
 
-## 4. 最终运行与硬门槛
+### 4. 带配图渲染
 
-使用 `SKILL.md` 中的最终命令。成功结果必须同时满足：
+```bash
+npm run --silent cli -- render \
+  --input $WORK/source.md \
+  --decision $WORK/layout-decision.json \
+  --image-plan $WORK/image-plan.json \
+  --asset-manifest $WORK/asset-manifest.json \
+  --output $WORK/article.wechat.html
+```
 
-- CLI 报告 `analysisMode: "agent"`。
-- CLI 报告 `contentIntegrity.valid: true`。
-- `analysis-trace.json` 存在且合同哈希与本次输入一致。
-- `.wechat.html` 是无 shell、无脚本、无 class/ID、无调试属性的内联片段。
-- 375px 预览中没有连续强强调、伪造结构、长段失控或结尾节奏断裂。
+## LayoutDecision 合约规范
 
-缺少任一 `--agent-*` 输入、分段审计不完整、合同不一致、来源跨度错误或候选非法时必须停止，不得改用 baseline 交付。
+Schema: `schemas/layout-decision.schema.json`
+
+### 必填字段
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| specVersion | "2.0" | 固定值 |
+| articleType | enum | personal-essay, opinion-knowledge, literary-prose, tutorial, list-driven, other |
+| theme | string | 主题 ID（来自 themes 命令） |
+| density | enum | dense, balanced, airy |
+| blocks | array | 语义块数组 |
+
+### Block 字段
+
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| id | 是 | 唯一标识，如 title-1, p-1, h-1 |
+| type | 是 | 块类型（article-title, paragraph, heading, quote, list 等） |
+| content | 是 | 原文内容，不可改写 |
+| component | 是 | 组件 ID（必须在目标主题中存在） |
+| variant | 是 | 变体 ID（必须在组件中存在） |
+| phase | 否 | entry / body / exit（阅读阶段） |
+| gesture | 否 | flow / pause / pivot / anchor / release（阅读手势） |
+| emphasis | 否 | quiet / medium / strong（强调级别） |
+| level | 否 | 标题层级 1-6 |
+| structure | 否 | 结构数据（list items, quote attribution 等） |
+| marks | 否 | 行内标记（强调、关键词） |
+| reason | 否 | 选择理由 |
+
+### 强调预算
+
+- 每个 section（从一个 heading 到下一个 heading）最多 1 个 emphasis=strong
+- emphasis=strong 的块不能相邻
+- strong 类变体（focus, pull, golden, drop-cap, cover, ritual）总占比不超过 20%
+

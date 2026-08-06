@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gzh-minimal-layout:schema:layout-decision:2.0",
+  "title": "LayoutDecision v2.0",
+  "description": "Agent 对文章的一次性完整决策：文章画像 + 语义分块 + 阅读节奏 + 组件选择，合并为单一合约。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "articleType", "theme", "density", "blocks"],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri-reference" },
+    "specVersion": { "const": "2.0" },
+    "articleType": {
+      "enum": ["personal-essay", "opinion-knowledge", "literary-prose", "tutorial", "list-driven", "other"]
+    },
+    "tone": {
+      "type": "array",
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }
+    },
+    "theme": { "$ref": "#/$defs/id" },
+    "density": { "enum": ["dense", "balanced", "airy"] },
+    "blocks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/block" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "blockType": {
+      "enum": [
+        "article-title", "article-subtitle", "metadata", "lead",
+        "heading", "paragraph", "quote", "list", "image",
+        "divider", "callout", "step", "table", "code",
+        "ending", "cta"
+      ]
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "content", "component", "variant"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "$ref": "#/$defs/blockType" },
+        "content": { "type": "string", "minLength": 1 },
+        "component": { "$ref": "#/$defs/id" },
+        "variant": { "$ref": "#/$defs/id" },
+        "level": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "phase": { "enum": ["entry", "body", "exit"] },
+        "gesture": { "enum": ["flow", "pause", "pivot", "anchor", "release"] },
+        "emphasis": { "enum": ["quiet", "medium", "strong"] },
+        "structure": { "$ref": "#/$defs/structure" },
+        "marks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/mark" }
+        },
+        "reason": { "type": "string" }
+      }
+    },
+    "mark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "start", "end"],
+      "properties": {
+        "type": { "enum": ["emphasis", "strong", "keyword"] },
+        "start": { "type": "integer", "minimum": 0 },
+        "end": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "structure": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "ordered": { "type": "boolean" },
+        "items": { "type": "array" },
+        "hasMarker": { "type": "boolean" },
+        "marker": { "type": "string" },
+        "src": { "type": "string" },
+        "alt": { "type": "string" },
+        "attribution": { "type": "string" },
+        "headers": { "type": "array" },
+        "rows": { "type": "array" },
+        "prompt": { "type": "string" }
+      }
+    }
+  }
+}

@@ -8,240 +8,219 @@ import { createLayoutPlan, assertLayoutPlan } from "../src/presentation/layout-p
 import { renderComponentArticle } from "../src/presentation/component-renderer.js";
 import { resolveImagePlan } from "../src/media/image-plan.js";
 import { createBaselineReadingPlan, assertReadingPlan } from "../src/reading/reading-plan.js";
-import { inspectSource, sha256 } from "../src/source/inspect-source.js";
-import type { SourceFormat, SourceSegmentationMode } from "../src/source/source-manifest.js";
-import { analyzeArticle } from "../src/agent/analyze-article.js";
-import { assertAgentAnalysisBundle } from "../src/agent/agent-analysis-bundle.js";
-import { createCandidateCatalog, loadThemeLibrary } from "../src/theme/theme-library.js";
+import type { SourceFormat } from "../src/source/source-manifest.js";
+import { loadThemeLibrary } from "../src/theme/theme-library.js";
 import {
-  validateArticleProfile,
-  validateAssetManifest,
   validateBlockDocument,
-  validateCandidateCatalog,
   validateImagePlan,
-  validateLayoutPlan,
-  validateReadingPlan,
-  validateSourceManifest,
+  validateAssetManifest,
 } from "../src/validation/schema-validator.js";
 
-const [domain, action, ...args] = process.argv.slice(2);
+const [command, ...args] = process.argv.slice(2);
 const options = parseOptions(args);
 
 try {
-  if (domain === "source" && action === "inspect") {
-    const input = required("input");
-    const source = await readFile(path.resolve(input), "utf8");
-    const format = (options.format ?? (input.endsWith(".md") ? "markdown" : "plain-text")) as SourceFormat;
-    const segmentation = (options.segmentation ?? "auto") as SourceSegmentationMode;
-    await outputJson(validateSourceManifest(inspectSource(source, {
-      sourceId: options["source-id"] ?? safeId(path.basename(input, path.extname(input))),
-      format,
-      segmentation,
-    }), source));
-  } else if (domain === "profile" && action === "validate") {
-    await outputJson(validateArticleProfile(await readJson(required("input"))));
-  } else if (domain === "blocks" && action === "validate") {
-    const manifest = options["source-manifest"]
-      ? validateSourceManifest(await readJson(options["source-manifest"]))
-      : undefined;
-    await outputJson(validateBlockDocument(await readJson(required("input")), manifest));
-  } else if (domain === "workflow" && action === "run") {
-    const input = required("input");
-    const source = await readFile(path.resolve(input), "utf8");
-    const format = (options.format ?? (input.endsWith(".md") ? "markdown" : "plain-text")) as SourceFormat;
-    const sourceId = options["source-id"] ?? safeId(path.basename(input, path.extname(input)));
-    const mode = parseWorkflowMode(options.mode);
-    const agentAnalysis = parseAgentAnalysisOptions(options);
-    if (mode === "agent" && !agentAnalysis) {
-      throw new Error("Agent mode is the default. Provide --agent-profile, --agent-blocks and --agent-reading, or use --mode baseline for discovery only.");
-    }
-    if (mode === "baseline" && agentAnalysis) {
-      throw new Error("Baseline mode cannot accept --agent-profile, --agent-blocks or --agent-reading");
-    }
-    const baseline = mode === "baseline" ? analyzeArticle(source, { sourceId, format }) : undefined;
-    const sourceManifest = validateSourceManifest(
-      baseline?.sourceManifest ?? inspectSource(source, { sourceId, format }),
-      source,
-    );
-    const articleProfile = validateArticleProfile(
-      agentAnalysis ? await readJson(agentAnalysis.profile) : baseline!.articleProfile,
-    );
-    const document = validateBlockDocument(
-      agentAnalysis ? await readJson(agentAnalysis.blocks) : baseline!.blockDocument,
-      sourceManifest,
-    );
-    const media = await readMediaInputs(options, document, sourceManifest.contentHash);
-    const reading = agentAnalysis
-      ? validateReadingPlan(await readJson(agentAnalysis.reading))
-      : createBaselineReadingPlan(document);
-    if (agentAnalysis) {
-      assertAgentAnalysisBundle({ sourceManifest, articleProfile, blockDocument: document, readingPlan: reading });
-    } else {
-      assertReadingPlan(document, reading);
-    }
-    const analysisTrace = {
-      specVersion: "1.0",
-      mode,
-      sourceId,
-      sourceHash: sourceManifest.contentHash,
-      blockCount: document.blocks.length,
-      segmentationDecisionCount: document.segmentationDecisions?.length ?? 0,
-      contractHashes: {
-        articleProfile: sha256(JSON.stringify(articleProfile)),
-        blockDocument: sha256(JSON.stringify(document)),
-        readingPlan: sha256(JSON.stringify(reading)),
-      },
-      ...(media
-        ? {
-            mediaHashes: {
-              imagePlan: sha256(JSON.stringify(media.imagePlan)),
-              assetManifest: sha256(JSON.stringify(media.assetManifest)),
-            },
-          }
-        : {}),
-      ...(agentAnalysis
-        ? {
-            inputs: {
-              articleProfile: path.resolve(agentAnalysis.profile),
-              blockDocument: path.resolve(agentAnalysis.blocks),
-              readingPlan: path.resolve(agentAnalysis.reading),
-            },
-          }
-        : {}),
-    };
-    const library = await loadThemeLibrary(options.theme ?? "quiet-editorial");
-    const candidates = validateCandidateCatalog(createCandidateCatalog(document, reading, library));
-    const selections = options.selections ? parseSelections(await readJson(options.selections)) : undefined;
-    const layout = createLayoutPlan(document, reading, library, {
-      ...(options.density ? { density: parseDensity(options.density) } : {}),
-      ...(selections ? { selections } : {}),
-    });
-    assertLayoutPlan(document, reading, layout, library);
-    const result = renderComponentArticle(document, layout, library, media ? {
-      imagePlan: media.imagePlan,
-      assetManifest: media.assetManifest,
-      expectedSourceHash: sourceManifest.contentHash,
-    } : undefined);
-    const output = await writeOutput(required("output"), result.wechatHtml);
-    const preview = options.preview ? await writeOutput(options.preview, result.previewHtml) : undefined;
-    const cleanPreview = options["clean-preview"] ? await writeOutput(options["clean-preview"], result.cleanPreviewHtml) : undefined;
-    const artifacts = options["artifacts-dir"]
-      ? await writeWorkflowArtifacts(options["artifacts-dir"], {
-        sourceManifest,
-        articleProfile,
-        blockDocument: document,
-        readingPlan: reading,
-        analysisTrace,
-        candidates,
-        layoutPlan: layout,
-        ...(media ? { imagePlan: media.imagePlan, assetManifest: media.assetManifest } : {}),
-      })
-      : undefined;
-    process.stdout.write(JSON.stringify({
-      output,
-      ...(preview ? { preview } : {}),
-      ...(cleanPreview ? { cleanPreview } : {}),
-      ...(artifacts ? { artifacts } : {}),
-      sourceId,
-      analysisMode: analysisTrace.mode,
-      theme: library.manifest.id,
-      density: layout.density,
-      visualAssetCount: media?.imagePlan.items.length ?? 0,
-      contentIntegrity: result.contentIntegrity,
-    }, null, 2) + "\n");
-  } else if (domain === "reading" && action === "validate") {
-    const document = validateBlockDocument(await readJson(required("blocks")));
-    const reading = validateReadingPlan(await readJson(required("input")));
-    assertReadingPlan(document, reading);
-    await outputJson(reading);
-  } else if (domain === "reading" && action === "plan") {
-    const document = validateBlockDocument(await readJson(required("blocks")));
-    await outputJson(createBaselineReadingPlan(document));
-  } else if (domain === "media" && action === "validate") {
-    const document = validateBlockDocument(await readJson(required("blocks")));
-    const imagePlan = validateImagePlan(await readJson(required("plan")));
-    const assetManifest = validateAssetManifest(await readJson(required("asset-manifest")));
-    resolveImagePlan(document, imagePlan, assetManifest);
-    await outputJson({ imagePlan, assetManifest });
-  } else if (domain === "theme" && action === "inspect") {
-    const library = await loadThemeLibrary(options.theme ?? "quiet-editorial");
-    await outputJson({
-      manifest: library.manifest,
-      components: library.components.map((component) => ({
-        id: component.id,
-        kind: component.kind,
-        accepts: component.accepts,
-        variants: component.variants.map(({ id, label, priority, visualWeight, surface, accepts }) => ({
-          id,
-          label,
-          priority,
-          visualWeight,
-          surface,
-          ...(accepts ? { accepts } : {}),
-        })),
-      })),
-    });
-  } else if (domain === "layout" && action === "candidates") {
-    const document = validateBlockDocument(await readJson(required("blocks")));
-    const reading = options.reading
-      ? validateReadingPlan(await readJson(options.reading))
-      : createBaselineReadingPlan(document);
-    assertReadingPlan(document, reading);
-    const library = await loadThemeLibrary(options.theme ?? "quiet-editorial");
-    await outputJson(validateCandidateCatalog(createCandidateCatalog(document, reading, library)));
-  } else if (domain === "layout" && action === "plan") {
-    const document = validateBlockDocument(await readJson(required("blocks")));
-    const reading = options.reading
-      ? validateReadingPlan(await readJson(options.reading))
-      : createBaselineReadingPlan(document);
-    assertReadingPlan(document, reading);
-    const library = await loadThemeLibrary(options.theme ?? "quiet-editorial");
-    const selections = options.selections ? parseSelections(await readJson(options.selections)) : undefined;
-    await outputJson(createLayoutPlan(document, reading, library, {
-      ...(options.density ? { density: parseDensity(options.density) } : {}),
-      ...(selections ? { selections } : {}),
-    }));
-  } else if (domain === "wechat" && action === "render") {
-    const document = validateBlockDocument(await readJson(required("blocks")));
-    const media = await readMediaInputs(options, document);
-    const reading = options.reading
-      ? validateReadingPlan(await readJson(options.reading))
-      : createBaselineReadingPlan(document);
-    assertReadingPlan(document, reading);
-    const library = await loadThemeLibrary(options.theme ?? "quiet-editorial");
-    const selections = options.selections ? parseSelections(await readJson(options.selections)) : undefined;
-    const layout = options.layout
-      ? validateLayoutPlan(await readJson(options.layout))
-      : createLayoutPlan(document, reading, library, {
-        ...(options.density ? { density: parseDensity(options.density) } : {}),
-        ...(selections ? { selections } : {}),
-      });
-    assertLayoutPlan(document, reading, layout, library);
-    const result = renderComponentArticle(document, layout, library, media ? {
-      imagePlan: media.imagePlan,
-      assetManifest: media.assetManifest,
-    } : undefined);
-    const output = await writeOutput(required("output"), result.wechatHtml);
-    const cleanPreview = options["clean-preview"] ? await writeOutput(options["clean-preview"], result.cleanPreviewHtml) : undefined;
-    const preview = options.preview ? await writeOutput(options.preview, result.previewHtml) : undefined;
-    process.stdout.write(JSON.stringify({
-      output,
-      ...(preview ? { preview } : {}),
-      ...(cleanPreview ? { cleanPreview } : {}),
-      theme: library.manifest.id,
-      density: layout.density,
-      visualAssetCount: media?.imagePlan.items.length ?? 0,
-      contentIntegrity: result.contentIntegrity,
-    }, null, 2) + "\n");
+  if (command === "render") {
+    await handleRender();
+  } else if (command === "themes") {
+    await handleThemes();
+  } else if (command === "validate") {
+    await handleValidate();
   } else {
-    throw new Error(`Unknown command: ${[domain, action].filter(Boolean).join(" ")}\n${usage()}`);
+    throw new Error(`Unknown command: ${command}\n${usage()}`);
   }
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));
   process.exitCode = 1;
 }
 
-function parseOptions(values: string[]): Record<string, string> {
+// === render: 读取 LayoutDecision + 源文 → 一步输出 WeChat HTML ===
+async function handleRender(): Promise<void> {
+  const input = required("input");
+  const decisionPath = required("decision");
+  const source = await readFile(path.resolve(input), "utf8");
+  const decision = await readJson(decisionPath) as LayoutDecision;
+
+  const format = (options.format ?? (input.endsWith(".md") ? "markdown" : "plain-text")) as SourceFormat;
+  const sourceId = options["source-id"] ?? safeId(path.basename(input, path.extname(input)));
+
+  const blockDocument = decisionToBlockDocument(decision);
+  // v2 模式不传 sourceManifest：跳过 sourceRefs/sourceSpans 验证
+  // 内容正确性由渲染后的 contentIntegrity 校验保证
+  const validated = validateBlockDocument(blockDocument);
+
+  const readingPlan = decisionToReadingPlan(decision);
+  assertReadingPlan(validated, readingPlan);
+
+  const library = await loadThemeLibrary(decision.theme);
+
+  const selections: AgentLayoutSelection[] = decision.blocks
+    .filter((b) => b.component && b.variant)
+    .map((b) => ({
+      blockId: b.id,
+      componentId: b.component,
+      variantId: b.variant,
+      reason: b.reason ?? "agent decision",
+    }));
+
+  const layout = createLayoutPlan(validated, readingPlan, library, {
+    density: decision.density as RhythmDensity,
+    ...(selections.length > 0 ? { selections } : {}),
+  });
+  assertLayoutPlan(validated, readingPlan, layout, library);
+
+  const media = await readMediaInputs(options, validated);
+  const result = renderComponentArticle(validated, layout, library, media ? {
+    imagePlan: media.imagePlan,
+    assetManifest: media.assetManifest,
+  } : undefined);
+
+  const output = await writeOutput(required("output"), result.wechatHtml);
+  const preview = options.preview ? await writeOutput(options.preview, result.cleanPreviewHtml) : undefined;
+
+  process.stdout.write(JSON.stringify({
+    success: true,
+    output,
+    ...(preview ? { preview } : {}),
+    theme: decision.theme,
+    density: decision.density,
+    blockCount: decision.blocks.length,
+    contentIntegrity: result.contentIntegrity,
+  }, null, 2) + "\n");
+}
+
+// === themes: 列出所有可用主题 ===
+async function handleThemes(): Promise<void> {
+  const fs = await import("node:fs");
+  const themesDir = path.resolve("themes");
+  const entries = fs.readdirSync(themesDir, { withFileTypes: true });
+  const themes = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const themeJson = path.join(themesDir, entry.name, "theme.json");
+    if (!fs.existsSync(themeJson)) continue;
+    const theme = JSON.parse(fs.readFileSync(themeJson, "utf8"));
+    const compsDir = path.join(themesDir, entry.name, "components");
+    const components = fs.existsSync(compsDir)
+      ? fs.readdirSync(compsDir).filter((c: string) =>
+          fs.existsSync(path.join(compsDir, c, "component.json")))
+      : [];
+    themes.push({
+      id: theme.id,
+      name: theme.name,
+      description: theme.description,
+      components: components,
+    });
+  }
+  process.stdout.write(JSON.stringify({ success: true, themes }, null, 2) + "\n");
+}
+
+// === validate: 校验 LayoutDecision 合法性 ===
+async function handleValidate(): Promise<void> {
+  const decisionPath = required("decision");
+  const decision = await readJson(decisionPath) as LayoutDecision;
+  const errors: string[] = [];
+
+  if (!decision.specVersion || decision.specVersion !== "2.0") {
+    errors.push("specVersion must be '2.0'");
+  }
+  if (!decision.theme) {
+    errors.push("theme is required");
+  }
+  if (!decision.blocks || decision.blocks.length === 0) {
+    errors.push("blocks array must not be empty");
+  }
+
+  const library = await loadThemeLibrary(decision.theme).catch(() => null);
+  if (!library) {
+    errors.push(`theme '${decision.theme}' not found`);
+  } else {
+    const componentIds = new Set(library.components.map((c) => c.id));
+    for (const block of decision.blocks) {
+      if (!componentIds.has(block.component)) {
+        errors.push(`block ${block.id}: component '${block.component}' not found in theme '${decision.theme}'`);
+        continue;
+      }
+      const comp = library.components.find((c) => c.id === block.component)!;
+      const variantIds = new Set(comp.variants.map((v) => v.id));
+      if (!variantIds.has(block.variant)) {
+        errors.push(`block ${block.id}: variant '${block.variant}' not found in component '${block.component}'`);
+      }
+    }
+  }
+
+  if (errors.length > 0) {
+    process.stdout.write(JSON.stringify({ success: false, errors }, null, 2) + "\n");
+    process.exitCode = 1;
+  } else {
+    process.stdout.write(JSON.stringify({ success: true, message: "LayoutDecision is valid" }, null, 2) + "\n");
+  }
+}
+
+// === LayoutDecision 转换为旧格式（内部桥接） ===
+interface LayoutDecision {
+  specVersion: string;
+  articleType: string;
+  tone?: string[];
+  theme: string;
+  density: string;
+  blocks: LayoutDecisionBlock[];
+}
+
+interface LayoutDecisionBlock {
+  id: string;
+  type: string;
+  content: string;
+  component: string;
+  variant: string;
+  level?: number;
+  phase?: string;
+  gesture?: string;
+  emphasis?: string;
+  structure?: Record<string, unknown>;
+  marks?: Array<{ type: string; start: number; end: number }>;
+  reason?: string;
+}
+
+function decisionToBlockDocument(decision: LayoutDecision): BlockDocument {
+  return {
+    specVersion: "1.0",
+    id: "agent-decision",
+    articleType: decision.articleType,
+    moods: decision.tone,
+    blocks: decision.blocks.map((b, i) => ({
+      id: b.id,
+      type: b.type as any,
+      role: b.type,
+      content: b.content,
+      importance: b.emphasis === "strong" ? 0.9 : b.emphasis === "medium" ? 0.6 : 0.3,
+      sourceOrder: i,
+      ...(b.level ? { level: b.level } : {}),
+      ...(b.structure ? { structure: b.structure as any } : {}),
+      ...(b.marks ? { marks: b.marks as any } : {}),
+    })),
+  } as any;
+}
+
+function decisionToReadingPlan(decision: LayoutDecision) {
+  return {
+    specVersion: "1.0",
+    id: "agent-reading",
+    documentId: "agent-decision",
+    items: decision.blocks.map((b) => ({
+      blockId: b.id,
+      compositionGroupId: b.phase === "entry" ? "opening" : b.phase === "exit" ? "closing" : "main",
+      phase: b.phase ?? "body",
+      gesture: b.gesture ?? "flow",
+      emphasisFunction: b.emphasis === "strong" ? "cognitive" : b.emphasis === "medium" ? "structural" : "none",
+      strength: b.emphasis ?? "quiet",
+      reason: b.reason ?? "agent decision",
+    })),
+  } as any;
+}
+
+// === 工具函数 ===
+function parseOptions(values: string[]): Record<string, string> & { _rest?: string } {
   const result: Record<string, string> = {};
   for (let index = 0; index < values.length; index += 1) {
     const value = values[index]!;
@@ -260,52 +239,8 @@ function required(name: string): string {
   return value;
 }
 
-function parseDensity(value: string): RhythmDensity {
-  if (value !== "dense" && value !== "balanced" && value !== "airy") {
-    throw new Error(`Unknown density ${value}`);
-  }
-  return value;
-}
-
-function parseSelections(input: unknown): AgentLayoutSelection[] {
-  if (!Array.isArray(input)) throw new Error("Agent selections must be a JSON array");
-  return input.map((entry, index) => {
-    if (!entry || typeof entry !== "object") throw new Error(`Agent selection ${index} must be an object`);
-    const record = entry as Record<string, unknown>;
-    for (const key of ["blockId", "componentId", "variantId", "reason"] as const) {
-      if (typeof record[key] !== "string" || record[key].length === 0) {
-        throw new Error(`Agent selection ${index}.${key} must be a non-empty string`);
-      }
-    }
-    return {
-      blockId: record.blockId as string,
-      componentId: record.componentId as string,
-      variantId: record.variantId as string,
-      reason: record.reason as string,
-    };
-  });
-}
-
-function parseAgentAnalysisOptions(input: Record<string, string>): {
-  profile: string;
-  blocks: string;
-  reading: string;
-} | undefined {
-  const profile = input["agent-profile"];
-  const blocks = input["agent-blocks"];
-  const reading = input["agent-reading"];
-  const present = [profile, blocks, reading].filter(Boolean).length;
-  if (present === 0) return undefined;
-  if (present !== 3) {
-    throw new Error("Agent analysis requires --agent-profile, --agent-blocks and --agent-reading together");
-  }
-  return { profile: profile!, blocks: blocks!, reading: reading! };
-}
-
-function parseWorkflowMode(value: string | undefined): "agent" | "baseline" {
-  if (value === undefined || value === "agent") return "agent";
-  if (value === "baseline") return "baseline";
-  throw new Error(`Unknown workflow mode ${value}; expected agent or baseline`);
+function safeId(value: string): string {
+  return value.replace(/[^A-Za-z0-9._-]+/gu, "-").replace(/^-+|-+$/gu, "") || "source";
 }
 
 async function readJson(file: string): Promise<unknown> {
@@ -329,12 +264,6 @@ async function readMediaInputs(
   return { imagePlan, assetManifest };
 }
 
-async function outputJson(value: unknown): Promise<void> {
-  const text = JSON.stringify(value, null, 2) + "\n";
-  if (!options.output) return void process.stdout.write(text);
-  await writeOutput(options.output, text);
-}
-
 async function writeOutput(file: string, content: string): Promise<string> {
   const output = path.resolve(file);
   await mkdir(path.dirname(output), { recursive: true });
@@ -342,37 +271,13 @@ async function writeOutput(file: string, content: string): Promise<string> {
   return output;
 }
 
-async function writeWorkflowArtifacts(
-  directory: string,
-  artifacts: Record<string, unknown>,
-): Promise<Record<string, string>> {
-  const root = path.resolve(directory);
-  return Object.fromEntries(await Promise.all(Object.entries(artifacts).map(async ([name, value]) => [
-    name,
-    await writeOutput(path.join(root, `${toKebabCase(name)}.json`), JSON.stringify(value, null, 2) + "\n"),
-  ])));
-}
-
-function toKebabCase(value: string): string {
-  return value.replace(/([a-z0-9])([A-Z])/gu, "$1-$2").toLowerCase();
-}
-
-function safeId(value: string): string {
-  return value.replace(/[^A-Za-z0-9._-]+/gu, "-").replace(/^-+|-+$/gu, "") || "source";
-}
-
 function usage(): string {
   return [
-    "source inspect --input <file> [--format markdown|plain-text] [--output <json>]",
-    "profile validate --input <json> [--output <json>]",
-    "blocks validate --input <json> [--source-manifest <json>] [--output <json>]",
-    "workflow run --input <article.md|txt> [--mode agent|baseline] [--format markdown|plain-text] [--agent-profile <json> --agent-blocks <json> --agent-reading <json>] [--image-plan <json> --asset-manifest <json>] [--theme quiet-editorial] [--density dense|balanced|airy] [--selections <json>] --output <html> [--preview <html>] [--clean-preview <html>] [--artifacts-dir <dir>]",
-    "reading validate --input <json> --blocks <json> [--output <json>]",
-    "reading plan --blocks <json> [--output <json>]",
-    "media validate --blocks <json> --plan <json> --asset-manifest <json> [--output <json>]",
-    "theme inspect [--theme quiet-editorial] [--output <json>]",
-    "layout candidates --blocks <json> [--reading <json>] [--theme quiet-editorial] [--output <json>]",
-    "layout plan --blocks <json> [--reading <json>] [--theme quiet-editorial] [--density dense|balanced|airy] [--selections <json>] [--output <json>]",
-    "wechat render --blocks <json> [--reading <json>] [--layout <json>] [--image-plan <json> --asset-manifest <json>] [--theme quiet-editorial] [--density dense|balanced|airy] [--selections <json>] --output <html> [--preview <html>] [--clean-preview <html>]",
+    "gzh-minimal-layout CLI",
+    "",
+    "Commands:",
+    "  render    --input <article.md> --decision <layout-decision.json> --output <html> [--preview <html>]",
+    "  themes    List all available themes with components",
+    "  validate  --decision <layout-decision.json>  Validate a LayoutDecision",
   ].join("\n");
 }

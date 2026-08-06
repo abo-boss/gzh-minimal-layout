@@ -1,122 +1,123 @@
 # gzh-minimal-layout
 
-一个面向微信公众号文章的智能排版 agent Skill。它把文章理解、阅读节奏、主题选择和 HTML 渲染拆成可追踪的中间合同，让 Agent 负责“怎么排”，让 Renderer 负责“稳定地排出来”。
+微信公众号智能排版 Skill。分析文章结构与语义，生成可直接粘贴到公众号编辑器的内联样式 HTML。
 
-项目适合需要将 Markdown 或纯文本文章转换为微信公众号 HTML 的开发者，也适合作为 Agent 驱动内容工具的排版基础设施。
-
-项目采用极简主义美学的排版理念，让设计回归阅读本身。它以文字块为基本组织单元，结合文章的上下文语境，对内容进行拆分、合并与分组，建立标题、正文、引用、图片和留白之间的自然节奏。通过克制无关装饰、强化信息层级，并保持原文完整与语义可追溯，项目将 Markdown 或纯文本转化为具有杂志感的微信公众号文章页面，提升长文的阅读体验。
+采用极简主义美学理念，让设计回归阅读本身。通过克制装饰、强化信息层级，将 Markdown 或纯文本转化为具有杂志感的公众号文章。
 
 ![gzh-minimal-layout editorial layout system](assets/promo/gzh-minimal-layout-hero.png)
 
-## 项目特点
+## 快速开始
 
-- **结构化文章理解**：将原始文章拆解为文章画像、语义 Block 和阅读计划，保留来源可追溯关系。
-- **Agent 与 Renderer 分工**：Agent 决定文章结构、阅读节奏、主题和组件取舍；Renderer 只消费经过校验的合同，不重新猜测语义。
-- **主题与组件系统**：通过主题 Token、组件能力和模板插槽组织视觉表现，支持多种编辑式、文学式和杂志式主题。
-- **微信公众号适配**：生成适合公众号编辑器的内联 HTML，同时提供调试预览、375px 预览和清洁预览。
-- **内容完整性保护**：渲染前后校验来源 Block，避免遗漏、重复、改写或无依据的内容重排；图片等外部资产也必须经过独立合同验证。
-- **可测试、可复现**：关键阶段都有 JSON Schema、CLI 命令和自动化测试，生成物默认写入临时目录，不污染源码。
+```bash
+npm install
+npm run --silent cli -- render \
+  --input examples/sample-article.md \
+  --decision examples/sample-decision.json \
+  --output /tmp/output.wechat.html \
+  --preview /tmp/output.preview.html
+```
 
-## 核心流程
+## 工作流
 
 ```text
-Raw Article → SourceManifest → Agent ArticleProfile + BlockDocument
-→ Agent ReadingPlan → Theme Candidates → Agent Selections
-→ LayoutPlan → Component Renderer → WeChat HTML + 375px previews
+Source → Agent 读主题参考 → Agent 输出 LayoutDecision → CLI render → WeChat HTML
 ```
 
-- 原文是唯一内容来源，任何遗漏、重复、改写或重排都会失败。
-- baseline 分析只提供来源可追溯的合同骨架，最终交付应使用 Agent 编写的三份分析合同。
-- Agent 决定文章画像、语义结构、阅读节奏、主题和候选取舍。
-- Theme 决定组件能力、Token、间距档位和强调预算。
-- Renderer 不重新解释语义，只绑定安全插槽、生成内联样式并验证内容完整性。
+Agent 只需做一次决策（选主题 + 分块 + 选组件），CLI 一步完成渲染和校验。
 
-![从原文到结构化排版的编辑工作台](assets/promo/gzh-minimal-layout-editorial.png)
-
-## 使用
+### 1. 查看可用主题
 
 ```bash
-# 仅首次使用或 node_modules 不存在时
-npm install
-npm run typecheck
-npm test
+npm run --silent cli -- themes
 ```
 
-如需生成来源骨架，显式运行 baseline 模式：
+### 2. 编写 LayoutDecision
+
+参考 `references/theme-index.md` 和 `references/component-mapping.md`，为文章生成一份 `layout-decision.json`：
+
+```json
+{
+  "specVersion": "2.0",
+  "articleType": "opinion-knowledge",
+  "theme": "quiet-editorial",
+  "density": "balanced",
+  "blocks": [
+    {
+      "id": "title-1",
+      "type": "article-title",
+      "content": "原文标题",
+      "component": "masthead",
+      "variant": "editorial"
+    }
+  ]
+}
+```
+
+### 3. 渲染
 
 ```bash
-npm run --silent cli -- workflow run \
+npm run --silent gzh -- render \
   --input article.md \
-  --mode baseline \
-  --theme quiet-editorial \
-  --output /tmp/article-baseline.wechat.html \
-  --artifacts-dir /tmp/article-baseline-artifacts
+  --decision layout-decision.json \
+  --output article.wechat.html
 ```
 
-阅读原文和 baseline 后，按 `schemas/` 编写 `ArticleProfile`、`BlockDocument` 与 `ReadingPlan`，再运行正式 Agent 工作流。`workflow run` 默认就是 Agent 模式：
+### 4. 校验（可选）
 
 ```bash
-npm run --silent cli -- workflow run \
-  --input article.md \
-  --agent-profile agent/article-profile.json \
-  --agent-blocks agent/block-document.json \
-  --agent-reading agent/reading-plan.json \
-  --theme whitespace-journal \
-  --selections selections.json \
-  --output /tmp/article.wechat.html \
-  --preview /tmp/article.debug.html \
-  --clean-preview /tmp/article.preview.html \
-  --artifacts-dir /tmp/article-artifacts
+npm run --silent gzh -- validate --decision layout-decision.json
 ```
-
-没有自定义候选选择时可省略 `--selections`。三份 `--agent-*` 输入必须一起出现；正式结果应报告 `analysisMode: "agent"` 和 `contentIntegrity.valid: true`。
-
-完整 Agent 操作规范见 [SKILL.md](SKILL.md) 和 [references/agent-workflow.md](references/agent-workflow.md)。
 
 ## 主题
 
 | 主题 | 视觉方向 | 适合内容 |
 | --- | --- | --- |
 | `quiet-editorial` | 开放、安静、编辑式 | 通用长文、知识解释 |
-| `forest-order` | 森林绿、香槟金、章节仪式感 | 结构丰富、判断鲜明的正式长文 |
-| `whitespace-journal` | 暖纸、非对称轨道、克制留白 | 随笔、叙事、文学表达 |
-| `prussian-judgment` | 冷墨蓝、封面叠字、窄幅章节 | 判断、决策、观点型长文 |
-| `brick-literary` | 砖红纸张、首字下沉、章节仪式 | 文学感叙事、阅读方法 |
-| `champagne-editorial` | 香槟金、居中题头、细线轨道 | 编辑式知识长文 |
-| `cobalt-essay` | 冷白纸张、极简字距、开放正文 | 随笔、观点、散文 |
-| `minimal-magazine` | 纯白杂志、极宽字距、轻量分隔 | 品牌文章、设计评论 |
-| `moss-staircase` | 苔绿宣纸、阶梯偏移、长节奏 | 生活方式、叙事长文 |
-| `efficiency-system` | 现代冷灰、圆角模块、编号章节 | 方法论、效率与工具 |
-| `warm-card-magazine` | 暖灰背景、卡片章节、柔和强调 | 杂志式知识文章 |
+| `whitespace-journal` | 暖纸、克制留白 | 随笔、叙事、文学 |
+| `forest-order` | 森林绿、章节仪式感 | 结构丰富、正式长文 |
+| `efficiency-system` | 现代冷灰、圆角模块 | 教程、效率型内容 |
+| `cobalt-essay` | 冷白、极简 | 散文、冷调思考 |
+| `minimal-magazine` | 纯白杂志 | 品牌文章 |
+| `brick-literary` | 砖红纸页 | 文艺叙事 |
+| `moss-staircase` | 苔绿宣纸 | 实验性排版 |
+| `warm-card-magazine` | 暖灰卡片 | 信息密集型 |
+| `champagne-editorial` | 香槟金 | 优雅品牌文 |
+| `prussian-judgment` | 冷墨蓝 | 严肃判断 |
 
-所有主题都通过 `component.json + template.html` 声明能力。结构组件只能使用 `BlockDocument` 已声明的来源字段；没有真实图片 URL 时不会制造图片。
+## CLI 命令
 
-## 目录
+| 命令 | 用途 |
+|------|------|
+| `npm run cli -- render` | 渲染 WeChat HTML |
+| `npm run cli -- themes` | 列出所有主题 |
+| `npm run cli -- validate` | 校验 LayoutDecision |
+
+## 项目结构
 
 ```text
-SKILL.md                   Codex Skill 入口与交付规范
-agents/openai.yaml         Skill UI 元数据与默认提示
-references/                Agent 工作流参考
-schemas/                   JSON 合同
-src/agent/                 baseline 分析与 Agent 合同交叉校验
-src/reading/               主题无关的 ReadingPlan
-src/theme/                 主题加载、候选解析与模板安全
-src/presentation/          LayoutPlan 与组件渲染
-src/adapters/              微信公众号输出适配
-themes/                    现有主题与组件模板
-fixtures/                  最小测试夹具与完整 Agent 示例
-tests/                     当前主链路测试
+SKILL.md                   Agent Skill 入口
+references/                主题索引 + 组件映射参考
+schemas/                   JSON Schema（含 layout-decision）
+scripts/cli.ts             CLI（3命令：render/themes/validate）
+src/                       渲染引擎
+themes/                    11 个主题
+examples/                  示例文章 + 决策文件
 ```
 
-组件开发规范见 [docs/COMPONENT_LIBRARY.md](docs/COMPONENT_LIBRARY.md)。最小 Agent 流程夹具位于 `fixtures/agent-workflow/`。
+## 设计理念
+
+- **Agent 负责理解**：分析文章类型、选择主题、为每个段落选择组件
+- **CLI 负责执行**：验证决策合法性、渲染 HTML、校验内容完整性
+- **一次决策、一步渲染**：不需要多轮交互，减少 60-70% 执行时间
+- **原文零改写**：所有内容必须来自原文，渲染后自动校验
 
 ## 验证
 
 ```bash
 npm run typecheck
 npm test
-npm run build
-npm run skill:validate
 ```
 
-用户最终只需要 `<slug>.wechat.html`；`preview.html`、`debug.html`、`artifacts/` 和 baseline HTML 都是内部或按需检查产物。生成物默认写到 `/tmp`；仓库内的 `dist/`、`outputs/`、`previews/` 和任务 artifacts 均被忽略，可随时重新生成。
+## 许可
+
+见 [LICENSE](LICENSE)。

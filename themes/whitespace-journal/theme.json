@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "留白志",
   "description": "温暖纸张上的克制杂志排版。以正文、缩进、窄幅居中、中轴与装饰越界五条对齐轨道建立非对称但稳定的阅读节奏。",
+  "recommendation": {
+    "summary": "温暖、缓慢、以经历与感受展开的叙事随笔",
+    "articleTypes": ["personal-essay", "literary-prose"],
+    "tones": ["warm", "reflective", "narrative", "quiet"],
+    "structurePatterns": ["experience-reflection-conclusion", "narrative-reflection"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

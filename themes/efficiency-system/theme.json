@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "效率系统",
   "description": "现代效率主题，提取 430px 卡片画布、24px 内容轨、14px 正文和圆角模块结构。",
+  "recommendation": {
+    "summary": "步骤清晰、信息密集的工具与方法文章",
+    "articleTypes": ["tutorial", "list-driven", "opinion-knowledge"],
+    "tones": ["practical", "instructional", "systematic", "clear"],
+    "structurePatterns": ["list-driven", "argument-evidence-conclusion"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "砖红纸页",
   "description": "砖红纸张与章节仪式，提取 375px 画布、28px 内轨、16/9 头图和大段落留白。",
+  "recommendation": {
+    "summary": "有纸页感与章节仪式的文学叙事",
+    "articleTypes": ["literary-prose", "personal-essay"],
+    "tones": ["literary", "warm", "narrative", "handmade"],
+    "structurePatterns": ["narrative-reflection", "experience-reflection-conclusion"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

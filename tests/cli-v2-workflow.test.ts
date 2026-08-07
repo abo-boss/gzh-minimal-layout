@@ -164,9 +164,37 @@ describe("workflow CLI v2", () => {
       { cwd: process.cwd() },
     );
 
-    const result = JSON.parse(stdout) as { success: boolean; themes: Array<{ id: string }> };
+    const result = JSON.parse(stdout) as {
+      success: boolean;
+      themes: Array<{ id: string; recommendation: { articleTypes: string[] } }>;
+    };
     expect(result.success).toBe(true);
     expect(result.themes.length).toBeGreaterThanOrEqual(11);
     expect(result.themes.map((t) => t.id)).toContain("quiet-editorial");
+    expect(result.themes.find((theme) => theme.id === "cobalt-essay")?.recommendation.articleTypes).toContain("literary-prose");
+  }, 10_000);
+
+  it("ranks explainable theme candidates instead of returning a single default", async () => {
+    const { stdout } = await execFileAsync(
+      path.resolve("node_modules/.bin/tsx"),
+      [
+        "scripts/cli.ts",
+        "recommend",
+        "--article-type", "literary-prose",
+        "--tone", "cool,reflective,minimal",
+        "--structure", "fragmented-prose",
+      ],
+      { cwd: process.cwd() },
+    );
+
+    const result = JSON.parse(stdout) as {
+      success: boolean;
+      recommendations: Array<{ themeId: string; score: number; reasons: string[] }>;
+    };
+    expect(result.success).toBe(true);
+    expect(result.recommendations).toHaveLength(3);
+    expect(result.recommendations[0]).toMatchObject({ themeId: "cobalt-essay" });
+    expect(result.recommendations[0]?.reasons).toContain("匹配语气：cool");
+    expect(result.recommendations[0]!.score).toBeGreaterThan(result.recommendations[1]!.score);
   }, 10_000);
 });

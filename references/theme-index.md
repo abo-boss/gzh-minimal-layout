@@ -2,21 +2,25 @@
 
 Agent 根据文章类型和气质选择主题。每个主题是一套完整的视觉系统，定义颜色、字体、节奏和组件。
 
-## 选择指南
+## 选择流程
 
-| 文章类型 | 推荐主题 | 理由 |
-|---------|---------|------|
-| 随笔/叙事/文学 | whitespace-journal | 留白克制，适合慢阅读 |
-| 知识长文/观点 | quiet-editorial | 开放式编辑排版，层级清晰 |
-| 判断/论述/正式 | forest-order | 章节仪式感，绿金配色 |
-| 教程/步骤/效率 | efficiency-system | 圆角模块，现代高效 |
-| 散文/冷调 | cobalt-essay | 极简冷白，2.3行高 |
-| 杂志/视觉型 | minimal-magazine | 纯白杂志纸张，宽字距 |
-| 砖红/文艺/手工感 | brick-literary | 砖红纸页，章节仪式 |
-| 阶梯/实验性 | moss-staircase | 非对称轨道，苔绿宣纸 |
-| 暖灰/卡片/模块 | warm-card-magazine | 暖灰背景，卡片章节 |
-| 香槟金/优雅 | champagne-editorial | 居中题头，编辑留白 |
-| 蓝墨/冷峻判断 | prussian-judgment | 冷墨蓝封面，窄幅章节 |
+不要把文章类型直接映射为单一主题。先判断 `articleType`、1–3 个语气标签和结构，再运行 `npm run --silent cli -- recommend` 获取 Top 3。候选第一名代表规则匹配度最高，不替代对原文意象、视觉气质和用户偏好的判断。
+
+| 文章方向 | 候选池 | 区分信号 |
+|---------|--------|----------|
+| 文学散文/随笔 | cobalt-essay, whitespace-journal, brick-literary, moss-staircase, minimal-magazine | 冷调极简 / 温暖叙事 / 文艺手工 / 实验自然 / 视觉现代 |
+| 观点/知识长文 | quiet-editorial, forest-order, prussian-judgment, champagne-editorial, warm-card-magazine | 清晰克制 / 正式判断 / 冷峻论证 / 优雅品牌 / 模块化信息 |
+| 教程/清单 | efficiency-system, warm-card-magazine, quiet-editorial | 步骤效率 / 卡片模块 / 开放编辑 |
+
+### 散文分流
+
+| 原文气质或结构 | 优先候选 | 推荐标签示例 |
+|---------------|----------|--------------|
+| 冷调、抽离、极简、片段式 | cobalt-essay | `cool,reflective,minimal` + `fragmented-prose` |
+| 温暖、日常、缓慢叙事 | whitespace-journal | `warm,reflective,narrative` + `narrative-reflection` |
+| 文艺、手工感、章节仪式 | brick-literary | `literary,handmade,narrative` + `narrative-reflection` |
+| 自然意象、多层次、实验性 | moss-staircase | `experimental,poetic,nature` + `fragmented-prose` |
+| 视觉现代、设计评论、杂志感 | minimal-magazine | `visual,minimal,modern` + `fragmented-prose` |
 
 ## 主题详情
 

@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "苔绿阶梯",
   "description": "苔绿宣纸与非对称阶梯轨道，提取 600px 宽度、32px 主轨、24/48/80/120/160px 间距序列。",
+  "recommendation": {
+    "summary": "层次丰富、带实验感与自然意象的叙事",
+    "articleTypes": ["literary-prose", "personal-essay"],
+    "tones": ["experimental", "poetic", "nature", "layered"],
+    "structurePatterns": ["fragmented-prose", "narrative-reflection"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

@@ -4,15 +4,28 @@
 
 ## 新版工作流
 
-### 1. 查看可用主题
+### 1. 查看可用主题与推荐画像
 
 ```bash
 npm run --silent cli -- themes
 ```
 
-输出 JSON 包含所有主题的 id、名称、描述和组件列表。
+输出 JSON 包含所有主题的 id、名称、描述、组件列表，以及机器可读的推荐画像。
 
-### 2. 校验决策文件
+### 2. 排序主题候选
+
+先从原文判断文章类型、语气标签和结构，再运行：
+
+```bash
+npm run --silent cli -- recommend \
+  --article-type literary-prose \
+  --tone warm,reflective,narrative \
+  --structure narrative-reflection
+```
+
+命令固定返回 3 个候选及每个候选的分数、匹配语气与结构理由。Top 1 只是首选，不是强制选择；最终主题必须取自 Top 3，并在 `themeReason` 记录取舍。
+
+### 3. 校验决策文件
 
 ```bash
 npm run --silent cli -- validate --decision $WORK/layout-decision.json
@@ -20,7 +33,7 @@ npm run --silent cli -- validate --decision $WORK/layout-decision.json
 
 确认所有 component/variant 选择在目标主题中合法。
 
-### 3. 渲染
+### 4. 渲染
 
 ```bash
 npm run --silent cli -- render \
@@ -43,7 +56,7 @@ npm run --silent cli -- render \
 }
 ```
 
-### 4. 带配图渲染
+### 5. 带配图渲染
 
 ```bash
 npm run --silent cli -- render \
@@ -65,6 +78,7 @@ Schema: `schemas/layout-decision.schema.json`
 | specVersion | "2.0" | 固定值 |
 | articleType | enum | personal-essay, opinion-knowledge, literary-prose, tutorial, list-driven, other |
 | theme | string | 主题 ID（来自 themes 命令） |
+| themeReason | 否 | 最终主题为何比本次另外两个候选更适合原文 |
 | density | enum | dense, balanced, airy |
 | blocks | array | 语义块数组 |
 
@@ -90,4 +104,3 @@ Schema: `schemas/layout-decision.schema.json`
 - 每个 section（从一个 heading 到下一个 heading）最多 1 个 emphasis=strong
 - emphasis=strong 的块不能相邻
 - strong 类变体（focus, pull, golden, drop-cap, cover, ritual）总占比不超过 20%
-

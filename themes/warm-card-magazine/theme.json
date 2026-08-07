@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "暖灰卡片",
   "description": "暖灰杂志背景与卡片章节，提取 576px 内容宽度、24/36px 卡片内距和 24px 模块间距。",
+  "recommendation": {
+    "summary": "模块化、友好且信息组织明确的内容",
+    "articleTypes": ["opinion-knowledge", "tutorial", "list-driven"],
+    "tones": ["warm", "modular", "friendly", "informative"],
+    "structurePatterns": ["list-driven", "argument-evidence-conclusion"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

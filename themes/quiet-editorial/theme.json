@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "静读编辑部",
   "description": "面向公众号长文阅读的开放式排版：用层级、细线和主题节奏区分块，不把正文装进卡片。",
+  "recommendation": {
+    "summary": "克制、清晰、以内容层级为主的编辑式长文",
+    "articleTypes": ["opinion-knowledge", "tutorial", "other"],
+    "tones": ["calm", "analytical", "restrained", "clear"],
+    "structurePatterns": ["argument-evidence-conclusion", "list-driven", "other"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

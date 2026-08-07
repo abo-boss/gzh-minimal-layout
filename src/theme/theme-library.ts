@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { BLOCK_RELATIONS, type Block, type BlockDocument } from "../contracts/block-document.js";
@@ -46,6 +46,16 @@ export async function loadThemeLibrary(
     throw new Error(`Theme ${themeId} contains duplicate component ids`);
   }
   return { manifest, components };
+}
+
+export async function loadThemeLibraries(repositoryRoot = process.cwd()): Promise<ThemeLibrary[]> {
+  const themesRoot = path.resolve(repositoryRoot, "themes");
+  const entries = await readdir(themesRoot, { withFileTypes: true });
+  const themeIds = entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort((left, right) => left.localeCompare(right));
+  return Promise.all(themeIds.map((themeId) => loadThemeLibrary(themeId, repositoryRoot)));
 }
 
 function assertThemeManifest(manifest: ThemeLibrary["manifest"]): void {

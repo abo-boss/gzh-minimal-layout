@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "冷墨蓝判断",
   "description": "冷墨蓝封面与窄幅章节，提取 375px 画布、24px 内容轨和 4/5 头图比例。",
+  "recommendation": {
+    "summary": "冷峻、严肃、论证密度高的判断型文章",
+    "articleTypes": ["opinion-knowledge", "other"],
+    "tones": ["cool", "serious", "analytical", "academic"],
+    "structurePatterns": ["argument-evidence-conclusion", "other"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

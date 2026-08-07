@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "极简杂志",
   "description": "纯白杂志纸张与极宽字距，提取 640px 容器、40px 横向内边距和 55/60px 题头节奏。",
+  "recommendation": {
+    "summary": "视觉表达优先、干净现代的杂志式文章",
+    "articleTypes": ["other", "personal-essay", "literary-prose"],
+    "tones": ["visual", "minimal", "modern", "design"],
+    "structurePatterns": ["fragmented-prose", "other"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

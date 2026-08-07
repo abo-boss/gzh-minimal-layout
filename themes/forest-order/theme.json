@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "森序",
   "description": "以深森林绿、香槟金与杂志式留白组织长文。强调判断、删减和章节仪式感，正文保持安静开放。",
+  "recommendation": {
+    "summary": "判断鲜明、章节完整的正式长文",
+    "articleTypes": ["opinion-knowledge", "other"],
+    "tones": ["formal", "analytical", "serious", "decisive"],
+    "structurePatterns": ["argument-evidence-conclusion", "other"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

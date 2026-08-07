@@ -31,15 +31,27 @@ Agent 只需做一次决策（选主题 + 分块 + 选组件），CLI 一步完�
 npm run --silent cli -- themes
 ```
 
-### 2. 编写 LayoutDecision
+### 2. 获取主题候选
+
+```bash
+npm run --silent cli -- recommend \
+  --article-type literary-prose \
+  --tone cool,reflective,minimal \
+  --structure fragmented-prose
+```
+
+命令返回带理由的 Top 3 候选。最终主题必须从中选择，并在决策中说明取舍；不要因为示例或“通用主题”直接固定选择某个主题。
+
+### 3. 编写 LayoutDecision
 
 参考 `references/theme-index.md` 和 `references/component-mapping.md`，为文章生成一份 `layout-decision.json`：
 
 ```json
 {
   "specVersion": "2.0",
-  "articleType": "opinion-knowledge",
-  "theme": "quiet-editorial",
+  "articleType": "literary-prose",
+  "theme": "<theme-id-from-recommend>",
+  "themeReason": "<why this candidate best fits the article>",
   "density": "balanced",
   "blocks": [
     {
@@ -53,7 +65,7 @@ npm run --silent cli -- themes
 }
 ```
 
-### 3. 渲染
+### 4. 渲染
 
 ```bash
 npm run --silent gzh -- render \
@@ -62,7 +74,7 @@ npm run --silent gzh -- render \
   --output article.wechat.html
 ```
 
-### 4. 校验（可选）
+### 5. 校验（可选）
 
 ```bash
 npm run --silent gzh -- validate --decision layout-decision.json
@@ -90,6 +102,7 @@ npm run --silent gzh -- validate --decision layout-decision.json
 |------|------|
 | `npm run cli -- render` | 渲染 WeChat HTML |
 | `npm run cli -- themes` | 列出所有主题 |
+| `npm run cli -- recommend` | 按文章类型、语气、结构输出 Top 3 主题候选 |
 | `npm run cli -- validate` | 校验 LayoutDecision |
 
 ## 项目结构

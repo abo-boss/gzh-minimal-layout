@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "冷蓝散文",
   "description": "冷白纸张上的极简随笔，提取 640px 阅读宽度、40px 横向内边距和 2.3 行高。",
+  "recommendation": {
+    "summary": "冷调、极简、需要长呼吸留白的散文",
+    "articleTypes": ["literary-prose", "personal-essay"],
+    "tones": ["cool", "reflective", "minimal", "quiet"],
+    "structurePatterns": ["fragmented-prose", "narrative-reflection", "experience-reflection-conclusion"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

@@ -40,16 +40,28 @@ Source → Agent 读主题参考 → Agent 输出 LayoutDecision → CLI render 
 
 用户给出文件时直接读取；粘贴文章时保存为 `/tmp/gzh-layout/<slug>/source.md`。
 
-### Step 2: 决策
+### Step 2: 推荐后再决策
+
+先通读原文，判断 `articleType`、1–3 个英文 `tone` 标签和 `structure`。必须运行主题推荐命令，再从返回的 Top 3 中选择主题；不得因示例、主题索引的排列顺序或“通用”标签直接固定选择某个主题。
+
+```bash
+npm run --silent cli -- recommend \
+  --article-type literary-prose \
+  --tone cool,reflective,minimal \
+  --structure fragmented-prose
+```
+
+散文必须先区分气质：冷调极简优先比较 `cobalt-essay`，温暖叙事优先比较 `whitespace-journal`，文艺手工感优先比较 `brick-literary`，实验/自然意象优先比较 `moss-staircase`。Top 1 不是强制选择；若候选得分接近，按文章的真实视觉气质选择，并写明 `themeReason`。
 
 读取 [references/theme-index.md](references/theme-index.md) 和 [references/component-mapping.md](references/component-mapping.md)，然后为文章写出一份 `layout-decision.json`：
 
 ```json
 {
   "specVersion": "2.0",
-  "articleType": "opinion-knowledge",
-  "tone": ["analytical", "warm"],
-  "theme": "quiet-editorial",
+  "articleType": "literary-prose",
+  "tone": ["cool", "reflective", "minimal"],
+  "theme": "<theme-id-from-recommend>",
+  "themeReason": "<why this candidate fits the source better than the other two>",
   "density": "balanced",
   "blocks": [
     {
@@ -78,6 +90,7 @@ Source → Agent 读主题参考 → Agent 输出 LayoutDecision → CLI render 
 
 决策要求：
 - `content` 必须是原文原样，不改写
+- `theme` 必须来自本次 `recommend` 的 Top 3；`themeReason` 要说明文章气质或结构为何匹配该候选
 - `component` 和 `variant` 必须是所选主题的合法组件（参考 component-mapping.md）
 - 每个 section 最多 1 个 emphasis=strong
 - strong 块不能相邻
@@ -100,7 +113,7 @@ npm run --silent cli -- render \
 
 ## 快速模式
 
-短文或结构简单时，跳过 Step 2 的详细分析，直接按默认映射生成：
+短文或结构简单时，可以跳过详细分块分析，但仍必须运行一次 `recommend`；不得直接按某个默认主题生成：
 
 ```bash
 npm run --silent cli -- render \

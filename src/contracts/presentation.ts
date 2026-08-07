@@ -13,6 +13,24 @@ export type EmphasisFunction = (typeof EMPHASIS_FUNCTIONS)[number];
 export type EmphasisStrength = (typeof EMPHASIS_STRENGTHS)[number];
 export type RhythmDensity = (typeof RHYTHM_DENSITIES)[number];
 export type RhythmToken = (typeof RHYTHM_TOKENS)[number];
+export const THEME_RECOMMENDATION_ARTICLE_TYPES = [
+  "personal-essay",
+  "opinion-knowledge",
+  "literary-prose",
+  "tutorial",
+  "list-driven",
+  "other",
+] as const;
+export const THEME_RECOMMENDATION_STRUCTURE_PATTERNS = [
+  "experience-reflection-conclusion",
+  "argument-evidence-conclusion",
+  "narrative-reflection",
+  "fragmented-prose",
+  "list-driven",
+  "other",
+] as const;
+export type ThemeRecommendationArticleType = (typeof THEME_RECOMMENDATION_ARTICLE_TYPES)[number];
+export type ThemeRecommendationStructurePattern = (typeof THEME_RECOMMENDATION_STRUCTURE_PATTERNS)[number];
 
 export interface ReadingPlanItem {
   blockId: string;
@@ -97,6 +115,12 @@ export interface ThemeManifest {
   version: string;
   name: string;
   description: string;
+  recommendation: {
+    summary: string;
+    articleTypes: ThemeRecommendationArticleType[];
+    tones: string[];
+    structurePatterns: ThemeRecommendationStructurePattern[];
+  };
   defaultDensity: RhythmDensity;
   tokens: Record<string, unknown>;
   rhythm: {

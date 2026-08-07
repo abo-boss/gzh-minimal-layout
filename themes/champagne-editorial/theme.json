@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "name": "香槟编辑",
   "description": "香槟金编辑式留白与居中题头，提取 375px 画布、24px 内轨、60/50px 题头节奏。",
+  "recommendation": {
+    "summary": "优雅、克制且有品牌感的编辑式表达",
+    "articleTypes": ["opinion-knowledge", "other"],
+    "tones": ["elegant", "refined", "brand", "calm"],
+    "structurePatterns": ["argument-evidence-conclusion", "other"]
+  },
   "defaultDensity": "balanced",
   "tokens": {
     "color": {

@@ -3,13 +3,21 @@ import path from "node:path";
 
 import type { BlockDocument } from "../src/contracts/block-document.js";
 import type { AssetManifest, ImagePlan } from "../src/contracts/media.js";
-import type { AgentLayoutSelection, RhythmDensity } from "../src/contracts/presentation.js";
+import {
+  THEME_RECOMMENDATION_ARTICLE_TYPES,
+  THEME_RECOMMENDATION_STRUCTURE_PATTERNS,
+  type AgentLayoutSelection,
+  type RhythmDensity,
+  type ThemeRecommendationArticleType,
+  type ThemeRecommendationStructurePattern,
+} from "../src/contracts/presentation.js";
 import { createLayoutPlan, assertLayoutPlan } from "../src/presentation/layout-plan.js";
 import { renderComponentArticle } from "../src/presentation/component-renderer.js";
 import { resolveImagePlan } from "../src/media/image-plan.js";
 import { createBaselineReadingPlan, assertReadingPlan } from "../src/reading/reading-plan.js";
 import type { SourceFormat } from "../src/source/source-manifest.js";
-import { loadThemeLibrary } from "../src/theme/theme-library.js";
+import { loadThemeLibraries, loadThemeLibrary } from "../src/theme/theme-library.js";
+import { recommendThemes } from "../src/theme/theme-recommendation.js";
 import {
   validateBlockDocument,
   validateImagePlan,
@@ -24,6 +32,8 @@ try {
     await handleRender();
   } else if (command === "themes") {
     await handleThemes();
+  } else if (command === "recommend") {
+    await handleRecommend();
   } else if (command === "validate") {
     await handleValidate();
   } else {
@@ -91,28 +101,46 @@ async function handleRender(): Promise<void> {
 
 // === themes: 列出所有可用主题 ===
 async function handleThemes(): Promise<void> {
-  const fs = await import("node:fs");
-  const themesDir = path.resolve("themes");
-  const entries = fs.readdirSync(themesDir, { withFileTypes: true });
-  const themes = [];
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
-    const themeJson = path.join(themesDir, entry.name, "theme.json");
-    if (!fs.existsSync(themeJson)) continue;
-    const theme = JSON.parse(fs.readFileSync(themeJson, "utf8"));
-    const compsDir = path.join(themesDir, entry.name, "components");
-    const components = fs.existsSync(compsDir)
-      ? fs.readdirSync(compsDir).filter((c: string) =>
-          fs.existsSync(path.join(compsDir, c, "component.json")))
-      : [];
-    themes.push({
-      id: theme.id,
-      name: theme.name,
-      description: theme.description,
-      components: components,
-    });
-  }
+  const themes = (await loadThemeLibraries()).map((library) => ({
+    id: library.manifest.id,
+    name: library.manifest.name,
+    description: library.manifest.description,
+    recommendation: library.manifest.recommendation,
+    components: library.components.map((component) => component.id),
+  }));
   process.stdout.write(JSON.stringify({ success: true, themes }, null, 2) + "\n");
+}
+
+// === recommend: 根据文章画像排序主题候选 ===
+async function handleRecommend(): Promise<void> {
+  const articleType = requiredRecommendationValue(
+    "article-type",
+    THEME_RECOMMENDATION_ARTICLE_TYPES,
+  );
+  const structure = optionalRecommendationValue(
+    "structure",
+    THEME_RECOMMENDATION_STRUCTURE_PATTERNS,
+  );
+  const tones = (options.tone ?? "")
+    .split(",")
+    .map((tone) => tone.trim().toLowerCase())
+    .filter(Boolean);
+  const libraries = await loadThemeLibraries();
+  const recommendations = recommendThemes(libraries, {
+    articleType,
+    ...(tones.length > 0 ? { tones } : {}),
+    ...(structure ? { structurePattern: structure } : {}),
+  });
+
+  process.stdout.write(JSON.stringify({
+    success: true,
+    input: {
+      articleType,
+      ...(tones.length > 0 ? { tones } : {}),
+      ...(structure ? { structurePattern: structure } : {}),
+    },
+    recommendations,
+  }, null, 2) + "\n");
 }
 
 // === validate: 校验 LayoutDecision 合法性 ===
@@ -161,6 +189,7 @@ async function handleValidate(): Promise<void> {
 interface LayoutDecision {
   specVersion: string;
   articleType: string;
+  themeReason?: string;
   tone?: string[];
   theme: string;
   density: string;
@@ -239,6 +268,29 @@ function required(name: string): string {
   return value;
 }
 
+function requiredRecommendationValue<T extends readonly string[]>(
+  name: string,
+  allowed: T,
+): T[number] {
+  const value = required(name);
+  if (!allowed.includes(value)) {
+    throw new Error(`Invalid --${name} '${value}'. Expected one of: ${allowed.join(", ")}`);
+  }
+  return value as T[number];
+}
+
+function optionalRecommendationValue<T extends readonly string[]>(
+  name: string,
+  allowed: T,
+): T[number] | undefined {
+  const value = options[name];
+  if (!value) return undefined;
+  if (!allowed.includes(value)) {
+    throw new Error(`Invalid --${name} '${value}'. Expected one of: ${allowed.join(", ")}`);
+  }
+  return value as T[number];
+}
+
 function safeId(value: string): string {
   return value.replace(/[^A-Za-z0-9._-]+/gu, "-").replace(/^-+|-+$/gu, "") || "source";
 }
@@ -277,7 +329,8 @@ function usage(): string {
     "",
     "Commands:",
     "  render    --input <article.md> --decision <layout-decision.json> --output <html> [--preview <html>]",
-    "  themes    List all available themes with components",
+    "  themes    List all available themes with components and recommendation profiles",
+    "  recommend --article-type <type> [--tone <a,b>] [--structure <pattern>]  Rank the top 3 themes",
     "  validate  --decision <layout-decision.json>  Validate a LayoutDecision",
   ].join("\n");
 }

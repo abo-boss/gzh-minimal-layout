@@ -12,6 +12,7 @@
     "articleType": {
       "enum": ["personal-essay", "opinion-knowledge", "literary-prose", "tutorial", "list-driven", "other"]
     },
+    "themeReason": { "type": "string", "minLength": 1 },
     "tone": {
       "type": "array",
       "maxItems": 3,

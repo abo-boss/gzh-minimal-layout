@@ -109,6 +109,14 @@ export interface ComponentDefinition {
   variants: ComponentVariant[];
 }
 
+export interface EssayRhythmVariant {
+  label: string;
+  visualWeight: EmphasisStrength;
+  surface: "open" | "panel";
+  emphasisCost: number;
+  styles: StyleMap;
+}
+
 export interface ThemeManifest {
   specVersion: "1.0";
   id: string;
@@ -131,6 +139,12 @@ export interface ThemeManifest {
     maxStrongPerSection: number;
     maxSurfaceRatio: number;
     noAdjacentStrong: boolean;
+  };
+  essay?: {
+    flow: EssayRhythmVariant;
+    pause: EssayRhythmVariant;
+    pivot: EssayRhythmVariant;
+    release: EssayRhythmVariant;
   };
   componentPaths: string[];
 }

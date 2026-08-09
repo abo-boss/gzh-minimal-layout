@@ -1,0 +1,101 @@
+{
+  "specVersion": "1.0",
+  "id": "ending",
+  "template": "template.html",
+  "kind": "ending",
+  "accepts": {
+    "blockTypes": [
+      "ending"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "36px 0 0",
+      "padding": "48px 32px 64px",
+      "border-top": "8px solid #2c4c3b",
+      "color": "#fcfbf8",
+      "font-family": "LXGW WenKai, LXGW WenKai Mono TC, Songti SC, Georgia, serif",
+      "font-size": "14px",
+      "line-height": "1.9",
+      "text-align": "center"
+    },
+    "r1": {
+      "color": "#c49a6c",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "11px",
+      "letter-spacing": ".3em",
+      "margin-bottom": "24px"
+    },
+    "r2": {
+      "margin": "0 0 32px",
+      "color": "#e6dfce",
+      "line-height": "1.9"
+    },
+    "r3": {
+      "padding": "24px",
+      "border": "1px solid rgba(196,154,108,.22)",
+      "border-radius": "20px",
+      "color": "#18263a"
+    },
+    "r4": {
+      "margin": "0 0 12px",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "13px",
+      "color": "#6f746f"
+    },
+    "r5": {
+      "display": "block",
+      "margin-bottom": "12px",
+      "color": "#2c4c3b",
+      "font-size": "20px",
+      "letter-spacing": ".2em"
+    },
+    "r6": {
+      "margin": "0",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "12px",
+      "line-height": "1.8"
+    },
+    "r7": {
+      "display": "flex",
+      "align-items": "center",
+      "justify-content": "center",
+      "gap": "16px",
+      "margin-top": "48px",
+      "opacity": ".42"
+    },
+    "r8": {
+      "width": "48px",
+      "height": "1px"
+    },
+    "r9": {
+      "color": "#c0ac92",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "10px",
+      "letter-spacing": ".2em"
+    },
+    "r10": {
+      "width": "48px",
+      "height": "1px"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO ending",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

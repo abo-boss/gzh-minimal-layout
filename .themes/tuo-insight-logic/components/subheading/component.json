@@ -1,0 +1,87 @@
+{
+  "specVersion": "1.0",
+  "id": "subheading",
+  "template": "template.html",
+  "kind": "heading",
+  "accepts": {
+    "blockTypes": [
+      "heading"
+    ],
+    "levels": [
+      3
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "position": "relative",
+      "display": "block",
+      "width": "fit-content",
+      "max-width": "calc(100% - 3px)",
+      "margin": "44px 24px 0",
+      "padding": "0 3px 3px 0",
+      "text-align": "left"
+    },
+    "r1": {
+      "position": "absolute",
+      "z-index": "0",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "3px",
+      "border-radius": "10px",
+      "background-color": "#eef3f8"
+    },
+    "r2": {
+      "position": "relative",
+      "z-index": "1",
+      "display": "inline-block",
+      "max-width": "100%",
+      "padding": "12px",
+      "border": "1px solid #eef3f8",
+      "border-radius": "10px",
+      "background-color": "#ffffff"
+    },
+    "r3": {
+      "display": "flex",
+      "align-items": "center",
+      "gap": "10px",
+      "text-align": "left"
+    },
+    "r4": {
+      "color": "#162a45",
+      "font-family": "Noto Serif SC, Songti SC, SimSun, Times New Roman, Georgia, serif",
+      "font-size": "14.5px",
+      "font-weight": "600",
+      "line-height": "1",
+      "letter-spacing": "0.04em"
+    },
+    "r5": {
+      "margin": "0",
+      "color": "#242830",
+      "font-family": "Noto Serif SC, Songti SC, SimSun, Times New Roman, Georgia, serif",
+      "font-size": "14.5px",
+      "font-weight": "700",
+      "line-height": "1.5",
+      "letter-spacing": "0.04em"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO subheading",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

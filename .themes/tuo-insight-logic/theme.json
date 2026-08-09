@@ -1,0 +1,164 @@
+{
+  "specVersion": "1.0",
+  "id": "tuo-insight-logic",
+  "version": "1.0.0",
+  "name": "冷峻蓝冰",
+  "description": "冷白纸张、普鲁士墨蓝与重叠编号，适合观点、决策和理性思考类长文。",
+  "recommendation": {
+    "summary": "INSIGHT & LOGIC",
+    "articleTypes": [
+      "opinion-knowledge",
+      "tutorial"
+    ],
+    "tones": [
+      "analytical",
+      "clear",
+      "structured"
+    ],
+    "structurePatterns": [
+      "argument-evidence-conclusion",
+      "list-driven"
+    ]
+  },
+  "defaultDensity": "balanced",
+  "essay": {
+    "flow": {
+      "label": "正文流动",
+      "visualWeight": "quiet",
+      "surface": "open",
+      "emphasisCost": 0,
+      "styles": {}
+    },
+    "pause": {
+      "label": "短句停顿",
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {
+        "r0": {
+          "border-left": "2px solid {color.accent}",
+          "padding-left": "14px"
+        }
+      }
+    },
+    "pivot": {
+      "label": "论述转场",
+      "visualWeight": "medium",
+      "surface": "panel",
+      "emphasisCost": 1,
+      "styles": {
+        "r0": {
+          "background-color": "{color.soft}",
+          "padding": "18px",
+          "border-radius": "{radius}"
+        }
+      }
+    },
+    "release": {
+      "label": "结尾余韵",
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {
+        "r0": {
+          "color": "{color.accent}",
+          "text-align": "center"
+        }
+      }
+    }
+  },
+  "tokens": {
+    "color": {
+      "paper": "#ffffff",
+      "ink": "#242830",
+      "muted": "#848991",
+      "accent": "#162a45",
+      "soft": "#eef3f8"
+    },
+    "type": {
+      "body": "-apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue, Microsoft YaHei, sans-serif",
+      "heading": "Noto Serif SC, Songti SC, SimSun, Times New Roman, Georgia, serif"
+    },
+    "size": {
+      "title": "29px",
+      "heading": "17px",
+      "body": "14px",
+      "meta": "11px"
+    },
+    "lineHeight": {
+      "body": "2.25",
+      "heading": "1.6",
+      "compact": "1.5"
+    },
+    "alignment": {
+      "left": "left",
+      "center": "center",
+      "right": "right",
+      "justify": "justify"
+    },
+    "canvas": {
+      "background": "#fcfcfd",
+      "padding": "0 20px 96px"
+    },
+    "radius": "8px"
+  },
+  "rhythm": {
+    "modes": {
+      "dense": {
+        "close": 11,
+        "flow": 22,
+        "break": 34,
+        "turn": 44,
+        "section": 56,
+        "release": 69
+      },
+      "balanced": {
+        "close": 14,
+        "flow": 28,
+        "break": 44,
+        "turn": 56,
+        "section": 72,
+        "release": 88
+      },
+      "airy": {
+        "close": 18,
+        "flow": 36,
+        "break": 56,
+        "turn": 72,
+        "section": 92,
+        "release": 113
+      }
+    },
+    "relationMap": {
+      "default": "flow",
+      "same-group": "break",
+      "continuation": "flow",
+      "new-argument": "break",
+      "turning-point": "turn",
+      "before-strong-block": "turn",
+      "after-strong-block": "flow",
+      "new-section": "section",
+      "before-ending": "release"
+    }
+  },
+  "budgets": {
+    "maxStrongPerSection": 1,
+    "maxSurfaceRatio": 0.3,
+    "noAdjacentStrong": true
+  },
+  "componentPaths": [
+    "components/masthead/component.json",
+    "components/heading/component.json",
+    "components/subheading/component.json",
+    "components/minor/component.json",
+    "components/lead/component.json",
+    "components/prose/component.json",
+    "components/focus/component.json",
+    "components/list/component.json",
+    "components/quote/component.json",
+    "components/callout/component.json",
+    "components/cta/component.json",
+    "components/image/component.json",
+    "components/ending/component.json"
+  ]
+}

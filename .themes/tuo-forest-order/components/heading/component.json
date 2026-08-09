@@ -1,0 +1,64 @@
+{
+  "specVersion": "1.0",
+  "id": "heading",
+  "template": "template.html",
+  "kind": "heading",
+  "accepts": {
+    "blockTypes": [
+      "heading"
+    ],
+    "levels": [
+      2
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "28px 0 0",
+      "padding": "0"
+    },
+    "r1": {
+      "display": "block",
+      "color": "#c0ac92",
+      "font-family": "Georgia,serif",
+      "font-size": "42px",
+      "font-style": "italic",
+      "line-height": "1",
+      "letter-spacing": "0"
+    },
+    "r2": {
+      "display": "inline-block",
+      "width": "64px",
+      "height": "1px",
+      "margin": "0 0 10px 14px",
+      "background-color": "#e3d9c6"
+    },
+    "r3": {
+      "margin": "13px 0 0",
+      "color": "#11413e",
+      "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+      "font-size": "17px",
+      "font-weight": "700",
+      "line-height": "1.5",
+      "letter-spacing": "0.04em"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO heading",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

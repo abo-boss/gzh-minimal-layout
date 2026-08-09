@@ -226,10 +226,27 @@ function resolveStructure(
 }
 
 function sectionHeading(content: string): { marker: string; ordinal: number; title: string } | undefined {
-  const matched = stripHeadingSyntax(content).match(/^([一二三四五六七八九十]+、)\s*(.+)$/u);
-  if (!matched) return undefined;
-  const ordinal = chineseOrdinal(matched[1]!.slice(0, -1));
-  return ordinal ? { marker: matched[1]!, ordinal, title: matched[2]! } : undefined;
+  const value = stripHeadingSyntax(content).trim();
+  const chinese = value.match(/^([一二三四五六七八九十]+)(?:、\s*(.*))?$/u);
+  if (chinese) {
+    const ordinal = chineseOrdinal(chinese[1]!);
+    if (!ordinal) return undefined;
+    const title = chinese[2]?.trim() || chinese[1]!;
+    return {
+      marker: chinese[2] === undefined ? chinese[1]! : `${chinese[1]}、`,
+      ordinal,
+      title,
+    };
+  }
+  const arabic = value.match(/^(\d{1,2})([｜|])\s*(.+)$/u);
+  if (!arabic) return undefined;
+  const ordinal = Number(arabic[1]);
+  if (!Number.isInteger(ordinal) || ordinal < 1) return undefined;
+  return {
+    marker: `${arabic[1]}${arabic[2]}`,
+    ordinal,
+    title: arabic[3]!.trim(),
+  };
 }
 
 function isSectionHeading(content: string): boolean { return sectionHeading(content) !== undefined; }

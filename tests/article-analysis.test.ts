@@ -22,6 +22,25 @@ const source = [
 ].join("\n");
 
 describe("raw article analysis", () => {
+  it("recognizes Markdown-only ordinal lines as section headings", () => {
+    const result = analyzeArticle(
+      "# 雪山之上，草原之间\n\n## 一\n\n雪线以上，没有树木。",
+      { sourceId: "ordinal-markdown-heading", format: "markdown" },
+    );
+
+    expect(result.blockDocument.blocks.map((block) => [block.type, block.role])).toEqual([
+      ["article-title", "title"],
+      ["heading", "section-heading"],
+      ["paragraph", "body"],
+    ]);
+    expect(result.blockDocument.blocks[1]?.structure).toMatchObject({
+      hasMarker: true,
+      marker: "一",
+      ordinal: 1,
+      title: "一",
+    });
+  });
+
   it("preserves source segments while deriving semantic Blocks for a theme workflow", async () => {
     const result = analyzeArticle(source, { sourceId: "whitespace-real", format: "plain-text" });
     expect(validateSourceManifest(result.sourceManifest, source)).toEqual(result.sourceManifest);
@@ -39,7 +58,7 @@ describe("raw article analysis", () => {
     expect(result.blockDocument.blocks[4]?.structure).toMatchObject({ ordered: false });
     expect((result.blockDocument.blocks[4]?.structure as { items: Array<{ content: string }> }).items[0]).toEqual({ content: "小间距，用于标题与副标题；" });
 
-    const library = await loadThemeLibrary("whitespace-journal");
+    const library = await loadThemeLibrary("tuo-whitespace-narrative");
     const reading = createBaselineReadingPlan(result.blockDocument);
     const layout = createLayoutPlan(result.blockDocument, reading, library);
     const rendered = renderComponentArticle(result.blockDocument, layout, library);

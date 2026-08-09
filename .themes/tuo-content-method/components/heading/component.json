@@ -1,0 +1,62 @@
+{
+  "specVersion": "1.0",
+  "id": "heading",
+  "template": "template.html",
+  "kind": "heading",
+  "accepts": {
+    "blockTypes": [
+      "heading"
+    ],
+    "levels": [
+      2
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "display": "flex",
+      "align-items": "center",
+      "gap": "16px",
+      "margin": "40px 0 24px"
+    },
+    "r1": {
+      "display": "flex",
+      "align-items": "center",
+      "justify-content": "center",
+      "width": "40px",
+      "height": "40px",
+      "color": "#FCFAF5",
+      "font-family": "-apple-system,BlinkMacSystemFont,PingFang SC,Helvetica Neue,STHeiti,sans-serif",
+      "font-size": "14px",
+      "font-weight": "700",
+      "border-radius": "50%"
+    },
+    "r2": {
+      "margin": "0",
+      "color": "#3A3732",
+      "font-family": "-apple-system,BlinkMacSystemFont,PingFang SC,Helvetica Neue,STHeiti,sans-serif",
+      "font-size": "17px",
+      "font-weight": "700",
+      "line-height": "1.35",
+      "letter-spacing": ".04em"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO heading",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

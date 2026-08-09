@@ -1,0 +1,41 @@
+{
+  "specVersion": "1.0",
+  "id": "callout",
+  "template": "template.html",
+  "kind": "prose",
+  "accepts": {
+    "blockTypes": [
+      "callout"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "40px 0 40px",
+      "padding": "32px",
+      "border-radius": "24px",
+      "color": "#3A3732",
+      "font-family": "-apple-system,BlinkMacSystemFont,PingFang SC,Helvetica Neue,STHeiti,sans-serif",
+      "font-size": "16px",
+      "line-height": "1.85"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO callout",
+      "priority": 60,
+      "visualWeight": "strong",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

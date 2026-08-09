@@ -1,0 +1,480 @@
+{
+  "specVersion": "tuo-theme-export/1.0",
+  "sourceGitHead": "49b137217a4769a83bebd0e562d422025595030a",
+  "sourceThemeId": "content-method",
+  "name": "黑色幽默",
+  "description": "暖纸白、柔和炭黑与哑光金的结构化教程主题，适合方法论、内容创作和知识文章。",
+  "eyebrow": "CONTENT METHOD",
+  "tokens": {
+    "background": "#F7F5EF",
+    "paper": "#FCFAF5",
+    "color": "#3A3732",
+    "muted": "#7C7468",
+    "headingFont": "-apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue, STHeiti, sans-serif",
+    "bodyFont": "-apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue, STHeiti, sans-serif",
+    "accent": "#B08A52",
+    "accentSoft": "#EDE4D3",
+    "radius": 24,
+    "paragraphGap": 24,
+    "blockGap": 40,
+    "sectionGap": 80,
+    "lineHeight": 1.85,
+    "alignment": "left",
+    "layout": {
+      "rhythm": {
+        "modes": {
+          "compact": {
+            "close": 9,
+            "flow": 19,
+            "break": 31,
+            "turn": 44,
+            "section": 62,
+            "release": 75
+          },
+          "balanced": {
+            "close": 12,
+            "flow": 24,
+            "break": 40,
+            "turn": 56,
+            "section": 80,
+            "release": 96
+          },
+          "spacious": {
+            "close": 15,
+            "flow": 31,
+            "break": 51,
+            "turn": 72,
+            "section": 102,
+            "release": 123
+          }
+        },
+        "relationMap": {
+          "continuation": "flow",
+          "sameGroup": "break",
+          "newArgument": "break",
+          "turningPoint": "turn",
+          "beforeStrong": "turn",
+          "afterStrong": "flow",
+          "newSection": "section",
+          "beforeEnding": "release"
+        }
+      },
+      "rails": {
+        "flow": {
+          "inset": 0,
+          "align": "justify"
+        },
+        "inset": {
+          "inset": 0,
+          "align": "left"
+        },
+        "focus": {
+          "inset": 0,
+          "maxWidth": "92%",
+          "align": "center"
+        },
+        "fullBleed": {
+          "inset": 0,
+          "align": "center"
+        }
+      },
+      "componentRhythm": {
+        "masthead": {
+          "bleedTop": 0,
+          "bleedInline": false,
+          "top": 50,
+          "horizontal": 24,
+          "bottom": 100,
+          "labelTop": 0,
+          "ornament": 0,
+          "ornamentLarge": 0
+        },
+        "heading": {
+          "markerSize": 40,
+          "ruleWidth": 0,
+          "ruleOffset": 0,
+          "titleTop": 0,
+          "subheadingInset": 0
+        },
+        "list": {
+          "orderedMarkerWidth": 26,
+          "unorderedMarkerWidth": 20,
+          "itemGap": 24
+        },
+        "quote": {
+          "verticalInset": 32,
+          "horizontalInset": 32,
+          "sourceTop": 12,
+          "watermarkSize": 0
+        },
+        "callout": {
+          "ctaBleed": 0,
+          "ctaVerticalInset": 32,
+          "ctaHorizontalInset": 32,
+          "labelBottom": 16,
+          "focusVerticalInset": 32
+        },
+        "ending": {
+          "topInset": 40,
+          "labelBottom": 0
+        },
+        "editorial": {
+          "headerBottom": 64,
+          "headerRuleWidth": 0,
+          "headerRuleBottom": 0,
+          "imageCaptionTop": 8,
+          "chapterGhostSize": 40,
+          "chapterGhostOffset": 0,
+          "headingRuleBottom": 0,
+          "listItemGap": 16,
+          "emphasisVertical": 32,
+          "emphasisInset": 20
+        }
+      }
+    }
+  },
+  "resolvedDefaultStyle": {
+    "background": "transparent",
+    "paper": "#FCFAF5",
+    "color": "#3A3732",
+    "muted": "#7C7468",
+    "fontFamily": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+    "headingFont": "-apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue, STHeiti, sans-serif",
+    "headingSize": 17,
+    "accent": "#B08A52",
+    "accentSoft": "#EDE4D3",
+    "calloutBackground": "#ede4d4",
+    "radius": 24,
+    "maxWidth": 560,
+    "contentPadding": 11,
+    "fontScale": 0.9,
+    "lineHeight": 1.85,
+    "paragraphGap": 24,
+    "blockGap": 40,
+    "sectionGap": 80,
+    "rhythmPreset": "balanced",
+    "rhythm": {
+      "close": 12,
+      "flow": 24,
+      "break": 40,
+      "turn": 56,
+      "section": 80,
+      "release": 96
+    },
+    "layout": {
+      "rhythm": {
+        "modes": {
+          "compact": {
+            "close": 9,
+            "flow": 19,
+            "break": 31,
+            "turn": 44,
+            "section": 62,
+            "release": 75
+          },
+          "balanced": {
+            "close": 12,
+            "flow": 24,
+            "break": 40,
+            "turn": 56,
+            "section": 80,
+            "release": 96
+          },
+          "spacious": {
+            "close": 15,
+            "flow": 31,
+            "break": 51,
+            "turn": 72,
+            "section": 102,
+            "release": 123
+          }
+        },
+        "relationMap": {
+          "continuation": "flow",
+          "sameGroup": "break",
+          "newArgument": "break",
+          "turningPoint": "turn",
+          "beforeStrong": "turn",
+          "afterStrong": "flow",
+          "newSection": "section",
+          "beforeEnding": "release"
+        }
+      },
+      "rails": {
+        "flow": {
+          "inset": 0,
+          "align": "justify"
+        },
+        "inset": {
+          "inset": 0,
+          "align": "left"
+        },
+        "focus": {
+          "inset": 0,
+          "maxWidth": "92%",
+          "align": "center"
+        },
+        "fullBleed": {
+          "inset": 0,
+          "align": "center"
+        }
+      },
+      "componentRhythm": {
+        "masthead": {
+          "bleedTop": 0,
+          "bleedInline": false,
+          "top": 50,
+          "horizontal": 24,
+          "bottom": 100,
+          "labelTop": 0,
+          "ornament": 0,
+          "ornamentLarge": 0
+        },
+        "heading": {
+          "markerSize": 40,
+          "ruleWidth": 0,
+          "ruleOffset": 0,
+          "titleTop": 0,
+          "subheadingInset": 0
+        },
+        "list": {
+          "orderedMarkerWidth": 26,
+          "unorderedMarkerWidth": 20,
+          "itemGap": 24
+        },
+        "quote": {
+          "verticalInset": 32,
+          "horizontalInset": 32,
+          "sourceTop": 12,
+          "watermarkSize": 0
+        },
+        "callout": {
+          "ctaBleed": 0,
+          "ctaVerticalInset": 32,
+          "ctaHorizontalInset": 32,
+          "labelBottom": 16,
+          "focusVerticalInset": 32
+        },
+        "ending": {
+          "topInset": 40,
+          "labelBottom": 0
+        },
+        "editorial": {
+          "headerBottom": 64,
+          "headerRuleWidth": 0,
+          "headerRuleBottom": 0,
+          "imageCaptionTop": 8,
+          "chapterGhostSize": 40,
+          "chapterGhostOffset": 0,
+          "headingRuleBottom": 0,
+          "listItemGap": 16,
+          "emphasisVertical": 32,
+          "emphasisInset": 20
+        }
+      }
+    },
+    "rails": {
+      "flow": {
+        "inset": 0,
+        "align": "justify"
+      },
+      "inset": {
+        "inset": 0,
+        "align": "left"
+      },
+      "focus": {
+        "inset": 0,
+        "maxWidth": "92%",
+        "align": "center"
+      },
+      "fullBleed": {
+        "inset": 0,
+        "align": "center"
+      }
+    },
+    "componentRhythm": {
+      "masthead": {
+        "bleedTop": 0,
+        "bleedInline": false,
+        "top": 50,
+        "horizontal": 24,
+        "bottom": 100,
+        "labelTop": 0,
+        "ornament": 0,
+        "ornamentLarge": 0
+      },
+      "heading": {
+        "markerSize": 40,
+        "ruleWidth": 0,
+        "ruleOffset": 0,
+        "titleTop": 0,
+        "subheadingInset": 0
+      },
+      "list": {
+        "orderedMarkerWidth": 26,
+        "unorderedMarkerWidth": 20,
+        "itemGap": 24
+      },
+      "quote": {
+        "verticalInset": 32,
+        "horizontalInset": 32,
+        "sourceTop": 12,
+        "watermarkSize": 0
+      },
+      "callout": {
+        "ctaBleed": 0,
+        "ctaVerticalInset": 32,
+        "ctaHorizontalInset": 32,
+        "labelBottom": 16,
+        "focusVerticalInset": 32
+      },
+      "ending": {
+        "topInset": 40,
+        "labelBottom": 0
+      },
+      "editorial": {
+        "headerBottom": 64,
+        "headerRuleWidth": 0,
+        "headerRuleBottom": 0,
+        "imageCaptionTop": 8,
+        "chapterGhostSize": 40,
+        "chapterGhostOffset": 0,
+        "headingRuleBottom": 0,
+        "listItemGap": 16,
+        "emphasisVertical": 32,
+        "emphasisInset": 20
+      }
+    },
+    "imageWidth": "content",
+    "imageScale": 1,
+    "imageRadiusPreset": "none",
+    "imageRadius": 0
+  },
+  "variants": {
+    "articleHeader": {
+      "default": "content-method-hero",
+      "focus": "content-method-hero"
+    },
+    "heading": {
+      "default": "content-method-step-heading",
+      "focus": "content-method-step-heading",
+      "contrast": "content-method-subheading"
+    },
+    "prose": {
+      "default": "content-method-prose",
+      "focus": "content-method-prose",
+      "contrast": "content-method-prose",
+      "pause": "content-method-prose"
+    },
+    "list": {
+      "default": "content-method-list-card",
+      "focus": "content-method-list-card"
+    },
+    "quote": {
+      "default": "content-method-dark-callout",
+      "contrast": "content-method-dark-callout",
+      "focus": "content-method-dark-callout"
+    },
+    "media": {
+      "default": "content-method-media",
+      "focus": "content-method-media"
+    },
+    "emphasis": {
+      "default": "content-method-soft-card",
+      "focus": "content-method-dark-callout",
+      "contrast": "content-method-soft-card"
+    },
+    "divider": {
+      "default": "content-method-divider",
+      "pause": "content-method-divider"
+    },
+    "ending": {
+      "default": "content-method-ending",
+      "focus": "content-method-ending",
+      "pause": "content-method-ending"
+    }
+  },
+  "inlineEmphasis": {
+    "highlight": "underline",
+    "strong": "accent"
+  },
+  "heroImage": null,
+  "componentSamples": [
+    {
+      "slug": "01-masthead",
+      "label": "文章题头 / Masthead",
+      "file": "components/01-masthead.html"
+    },
+    {
+      "slug": "02-heading-h2",
+      "label": "二级章节 / H2",
+      "file": "components/02-heading-h2.html"
+    },
+    {
+      "slug": "03-subheading-h3",
+      "label": "三级标题 / H3",
+      "file": "components/03-subheading-h3.html"
+    },
+    {
+      "slug": "04-minor-heading-h4",
+      "label": "四级标题 / H4",
+      "file": "components/04-minor-heading-h4.html"
+    },
+    {
+      "slug": "05-lead",
+      "label": "开篇正文 / Lead",
+      "file": "components/05-lead.html"
+    },
+    {
+      "slug": "06-prose",
+      "label": "普通正文 / Prose",
+      "file": "components/06-prose.html"
+    },
+    {
+      "slug": "07-focus-prose",
+      "label": "重点正文 / Focus prose",
+      "file": "components/07-focus-prose.html"
+    },
+    {
+      "slug": "08-ordered-list",
+      "label": "有序列表 / Ordered list",
+      "file": "components/08-ordered-list.html"
+    },
+    {
+      "slug": "09-unordered-list",
+      "label": "无序列表 / Unordered list",
+      "file": "components/09-unordered-list.html"
+    },
+    {
+      "slug": "10-quote",
+      "label": "引用 / Quote",
+      "file": "components/10-quote.html"
+    },
+    {
+      "slug": "11-callout",
+      "label": "重点卡 / Callout",
+      "file": "components/11-callout.html"
+    },
+    {
+      "slug": "12-cta",
+      "label": "行动提示 / CTA",
+      "file": "components/12-cta.html"
+    },
+    {
+      "slug": "13-image",
+      "label": "图片与图注 / Image",
+      "file": "components/13-image.html"
+    },
+    {
+      "slug": "14-divider",
+      "label": "分隔 / Divider",
+      "file": "components/14-divider.html"
+    },
+    {
+      "slug": "15-ending",
+      "label": "收束 / Ending",
+      "file": "components/15-ending.html"
+    }
+  ],
+  "compositionNote": "Each component is rendered independently; full reading rhythm is shown in reference.wechat.html."
+}

@@ -1,0 +1,49 @@
+{
+  "specVersion": "1.0",
+  "id": "minor",
+  "template": "template.html",
+  "kind": "heading",
+  "accepts": {
+    "blockTypes": [
+      "heading"
+    ],
+    "levels": [
+      4
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "heading-title",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "0",
+      "padding-left": "13px",
+      "padding-right": "13px",
+      "position": "relative",
+      "padding": "2px 0 2px 8px",
+      "border-left": "2px solid #ebe8df",
+      "color": "#2c4c3b",
+      "font-family": "LXGW WenKai, LXGW WenKai Mono TC, Songti SC, Georgia, serif",
+      "font-size": "14px",
+      "font-weight": "700",
+      "line-height": "1.6",
+      "letter-spacing": ".06em"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO minor",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

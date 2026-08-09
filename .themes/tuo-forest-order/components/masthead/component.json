@@ -1,0 +1,83 @@
+{
+  "specVersion": "1.0",
+  "id": "masthead",
+  "template": "template.html",
+  "kind": "masthead",
+  "accepts": {
+    "blockTypes": [
+      "article-title"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "position": "relative",
+      "margin": "-36px 0px 0",
+      "padding": "76px 28px 64px",
+      "overflow": "hidden",
+      "background-color": "#11413e",
+      "text-align": "center"
+    },
+    "r1": {
+      "position": "absolute",
+      "width": "180px",
+      "height": "180px",
+      "border": "1px solid #e3d9c6",
+      "border-radius": "50%",
+      "opacity": "0.24",
+      "top": "-72px",
+      "right": "-58px"
+    },
+    "r2": {
+      "position": "absolute",
+      "width": "260px",
+      "height": "260px",
+      "border": "1px solid #e3d9c6",
+      "border-radius": "50%",
+      "opacity": "0.24",
+      "bottom": "-104px",
+      "left": "-76px"
+    },
+    "r3": {
+      "position": "relative",
+      "z-index": "1",
+      "margin": "0",
+      "color": "#ffffff",
+      "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+      "font-size": "27px",
+      "font-weight": "700",
+      "line-height": "1.45",
+      "letter-spacing": "0.12em",
+      "text-align": "center"
+    },
+    "r4": {
+      "position": "relative",
+      "z-index": "1",
+      "display": "block",
+      "margin": "24px 0 0",
+      "color": "#c0ac92",
+      "font-size": "10px",
+      "font-weight": "600",
+      "letter-spacing": "0.3em",
+      "text-align": "center"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO masthead",
+      "priority": 60,
+      "visualWeight": "strong",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "specVersion": "1.0",
+  "id": "ending",
+  "template": "template.html",
+  "kind": "ending",
+  "accepts": {
+    "blockTypes": [
+      "ending"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "36px 0 0",
+      "padding-top": "24px",
+      "color": "#7a7a78",
+      "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+      "font-size": "14px",
+      "line-height": "1.9",
+      "text-align": "justify"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO ending",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

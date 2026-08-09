@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "cli": "tsx scripts/cli.ts",
+    "preview:themes": "tsx scripts/generate-theme-gallery.ts",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

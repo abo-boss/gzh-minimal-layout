@@ -1,0 +1,41 @@
+{
+  "specVersion": "1.0",
+  "id": "focus",
+  "template": "template.html",
+  "kind": "prose",
+  "accepts": {
+    "blockTypes": [
+      "paragraph"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "42px 0 0",
+      "color": "#3f3f3f",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "14px",
+      "line-height": "1.85",
+      "letter-spacing": "0.05em",
+      "text-align": "justify"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO focus",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

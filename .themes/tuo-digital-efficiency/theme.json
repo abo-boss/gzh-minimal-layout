@@ -1,0 +1,164 @@
+{
+  "specVersion": "1.0",
+  "id": "tuo-digital-efficiency",
+  "version": "1.0.0",
+  "name": "松石阶梯",
+  "description": "松石墨绿、金棕点缀与纸张卡片构成的效率方法论长文版式。",
+  "recommendation": {
+    "summary": "SYSTEM / WORKFLOW",
+    "articleTypes": [
+      "tutorial",
+      "opinion-knowledge"
+    ],
+    "tones": [
+      "calm",
+      "structured",
+      "practical"
+    ],
+    "structurePatterns": [
+      "argument-evidence-conclusion",
+      "list-driven"
+    ]
+  },
+  "defaultDensity": "balanced",
+  "essay": {
+    "flow": {
+      "label": "正文流动",
+      "visualWeight": "quiet",
+      "surface": "open",
+      "emphasisCost": 0,
+      "styles": {}
+    },
+    "pause": {
+      "label": "短句停顿",
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {
+        "r0": {
+          "border-left": "2px solid {color.accent}",
+          "padding-left": "14px"
+        }
+      }
+    },
+    "pivot": {
+      "label": "论述转场",
+      "visualWeight": "medium",
+      "surface": "panel",
+      "emphasisCost": 1,
+      "styles": {
+        "r0": {
+          "background-color": "{color.soft}",
+          "padding": "18px",
+          "border-radius": "{radius}"
+        }
+      }
+    },
+    "release": {
+      "label": "结尾余韵",
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {
+        "r0": {
+          "color": "{color.accent}",
+          "text-align": "center"
+        }
+      }
+    }
+  },
+  "tokens": {
+    "color": {
+      "paper": "#f9f8f4",
+      "ink": "#333333",
+      "muted": "#6f746f",
+      "accent": "#2c4c3b",
+      "soft": "#ebe8df"
+    },
+    "type": {
+      "body": "Noto Sans SC, PingFang SC, Microsoft YaHei, sans-serif",
+      "heading": "LXGW WenKai, LXGW WenKai Mono TC, Songti SC, Georgia, serif"
+    },
+    "size": {
+      "title": "29px",
+      "heading": "17px",
+      "body": "14px",
+      "meta": "11px"
+    },
+    "lineHeight": {
+      "body": "1.85",
+      "heading": "1.6",
+      "compact": "1.5"
+    },
+    "alignment": {
+      "left": "left",
+      "center": "center",
+      "right": "right",
+      "justify": "justify"
+    },
+    "canvas": {
+      "background": "#fcfbf8",
+      "padding": "0 20px 96px"
+    },
+    "radius": "0px"
+  },
+  "rhythm": {
+    "modes": {
+      "dense": {
+        "close": 9,
+        "flow": 19,
+        "break": 28,
+        "turn": 37,
+        "section": 50,
+        "release": 62
+      },
+      "balanced": {
+        "close": 12,
+        "flow": 24,
+        "break": 36,
+        "turn": 48,
+        "section": 64,
+        "release": 80
+      },
+      "airy": {
+        "close": 15,
+        "flow": 31,
+        "break": 46,
+        "turn": 61,
+        "section": 82,
+        "release": 102
+      }
+    },
+    "relationMap": {
+      "default": "flow",
+      "same-group": "break",
+      "continuation": "flow",
+      "new-argument": "break",
+      "turning-point": "turn",
+      "before-strong-block": "turn",
+      "after-strong-block": "flow",
+      "new-section": "section",
+      "before-ending": "release"
+    }
+  },
+  "budgets": {
+    "maxStrongPerSection": 1,
+    "maxSurfaceRatio": 0.3,
+    "noAdjacentStrong": true
+  },
+  "componentPaths": [
+    "components/masthead/component.json",
+    "components/heading/component.json",
+    "components/subheading/component.json",
+    "components/minor/component.json",
+    "components/lead/component.json",
+    "components/prose/component.json",
+    "components/focus/component.json",
+    "components/list/component.json",
+    "components/quote/component.json",
+    "components/callout/component.json",
+    "components/cta/component.json",
+    "components/image/component.json",
+    "components/ending/component.json"
+  ]
+}

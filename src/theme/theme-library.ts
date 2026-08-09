@@ -5,6 +5,7 @@ import { BLOCK_RELATIONS, type Block, type BlockDocument } from "../contracts/bl
 import { ctaStructure, imageStructure, listStructure, quoteStructure, tableStructure } from "../layout/block-structure.js";
 import type {
   CandidateCatalog,
+  ComponentVariant,
   ComponentCandidate,
   ComponentDefinition,
   CandidateRule,
@@ -25,7 +26,7 @@ export async function loadThemeLibrary(
   repositoryRoot = process.cwd(),
 ): Promise<ThemeLibrary> {
   if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/u.test(themeId)) throw new Error(`Invalid theme id ${themeId}`);
-  const themeRoot = path.resolve(repositoryRoot, "themes", themeId);
+  const themeRoot = path.resolve(repositoryRoot, ".themes", themeId);
   const manifest = validateThemeManifest(await readJson(path.join(themeRoot, "theme.json")));
   if (manifest.id !== themeId) throw new Error(`Theme id mismatch: expected ${themeId}, got ${manifest.id}`);
   assertThemeManifest(manifest);
@@ -42,14 +43,41 @@ export async function loadThemeLibrary(
     components.push({ ...definition, templateHtml });
   }
 
+  applyEssayRhythmVariants(manifest, components);
+
   if (new Set(components.map((component) => component.id)).size !== components.length) {
     throw new Error(`Theme ${themeId} contains duplicate component ids`);
   }
   return { manifest, components };
 }
 
+function applyEssayRhythmVariants(
+  manifest: ThemeLibrary["manifest"],
+  components: LoadedComponent[],
+): void {
+  if (!manifest.essay) return;
+  const proseIndex = components.findIndex((component) => component.id === "prose");
+  if (proseIndex === -1) throw new Error(`Theme ${manifest.id} defines essay rhythm but has no prose component`);
+
+  const prose = components[proseIndex]!;
+  const variants: ComponentVariant[] = (["flow", "pause", "pivot", "release"] as const).map((gesture) => ({
+    id: `${gesture}-${manifest.id}`,
+    ...manifest.essay![gesture],
+    priority: gesture === "pivot" ? 96 : gesture === "pause" ? 92 : gesture === "release" ? 88 : 84,
+    accepts: {
+      blockTypes: ["paragraph"],
+      gestures: [gesture],
+      ...(gesture === "flow" ? { roles: ["body"] } : {}),
+    },
+  }));
+  const enhanced = { ...prose, variants: [...prose.variants, ...variants] };
+  assertComponentDefinition(enhanced);
+  assertComponentStyles(enhanced, enhanced.templateHtml, manifest.tokens);
+  components[proseIndex] = enhanced;
+}
+
 export async function loadThemeLibraries(repositoryRoot = process.cwd()): Promise<ThemeLibrary[]> {
-  const themesRoot = path.resolve(repositoryRoot, "themes");
+  const themesRoot = path.resolve(repositoryRoot, ".themes");
   const entries = await readdir(themesRoot, { withFileTypes: true });
   const themeIds = entries
     .filter((entry) => entry.isDirectory())

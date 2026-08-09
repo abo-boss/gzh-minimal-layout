@@ -1,0 +1,76 @@
+{
+  "specVersion": "1.0",
+  "id": "ending",
+  "template": "template.html",
+  "kind": "ending",
+  "accepts": {
+    "blockTypes": [
+      "ending"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "30px 0 0",
+      "padding-top": "32px"
+    },
+    "r1": {
+      "margin": "0 0 48px",
+      "text-align": "center"
+    },
+    "r2": {
+      "display": "block",
+      "margin-bottom": "16px",
+      "color": "#66635b",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "9px",
+      "letter-spacing": ".2em"
+    },
+    "r3": {
+      "margin": "0",
+      "color": "#262626",
+      "font-family": "Noto Serif SC, Songti SC, Georgia, serif",
+      "font-size": "16px",
+      "font-weight": "600",
+      "letter-spacing": ".05em"
+    },
+    "r4": {
+      "margin-top": "80px",
+      "padding-bottom": "16px",
+      "text-align": "center"
+    },
+    "r5": {
+      "display": "block",
+      "margin-bottom": "32px",
+      "color": "#262626",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "11px",
+      "letter-spacing": ".2em"
+    },
+    "r6": {
+      "display": "block",
+      "width": "4px",
+      "height": "4px",
+      "margin": "0 auto",
+      "border-radius": "50%"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO ending",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

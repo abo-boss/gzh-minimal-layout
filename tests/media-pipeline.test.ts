@@ -13,7 +13,7 @@ describe("AI image plan pipeline", () => {
   it("renders ready visual assets around an anchored block without changing content integrity", async () => {
     const document = validateBlockDocument(await readJson("fixtures/agent-workflow/literary-prose/block-document.json"));
     const reading = validateReadingPlan(createBaselineReadingPlan(document));
-    const library = await loadThemeLibrary("quiet-editorial");
+    const library = await loadThemeLibrary("tuo-whitespace-narrative");
     const layout = createLayoutPlan(document, reading, library);
     const imagePlan = validateImagePlan({
       specVersion: "1.0",

@@ -35,9 +35,9 @@ export function createLayoutPlan(
     const selection = requested.get(block.id);
     const chosen = selection
       ? candidates.find((candidate) => candidate.componentId === selection.componentId && candidate.variantId === selection.variantId)
-      : candidates[0];
+      : defaultCandidateForBlock(block, candidates, library);
     if (!chosen) throw new Error(`Agent selected an illegal component candidate for ${block.id}`);
-    const rhythmToken = resolveRhythmToken(block, index, library);
+    const rhythmToken = resolveRhythmToken(block, reading, index, library);
     return {
       id: `layout-${String(index + 1).padStart(3, "0")}`,
       sourceBlockIds: [block.id] as [string],
@@ -60,6 +60,39 @@ export function createLayoutPlan(
   };
   assertLayoutPlan(document, readingPlan, plan, library);
   return plan;
+}
+
+/**
+ * Resolve the theme's quiet baseline. Reading gestures own spacing, not visual
+ * decoration; an Agent must explicitly opt a block into a stronger treatment.
+ */
+export function defaultCandidateForBlock(
+  block: Block,
+  candidates: ComponentCandidate[],
+  library: ThemeLibrary,
+): ComponentCandidate {
+  const preferredComponents = block.type === "article-title" ? ["masthead"]
+    : block.type === "lead" ? ["lead", "prose"]
+      : block.type === "heading" ? block.level === 3 ? ["subheading", "heading"] : block.level && block.level >= 4 ? ["minor", "subheading", "heading"] : ["heading"]
+        : block.type === "paragraph" ? ["prose"]
+          : block.type === "quote" ? ["quote"]
+            : block.type === "list" || block.type === "step" ? ["list"]
+              : block.type === "callout" ? ["callout", "prose"]
+                : block.type === "image" ? ["image"]
+                  : block.type === "table" ? ["table", "list"]
+                    : block.type === "ending" ? ["ending", "prose"]
+                      : block.type === "cta" ? ["cta", "callout"]
+                        : ["prose"];
+
+  for (const componentId of preferredComponents) {
+    const component = library.components.find((entry) => entry.id === componentId);
+    if (!component) continue;
+    const fallback = candidates.find((candidate) => candidate.componentId === componentId && candidate.variantId === component.fallbackVariant);
+    if (fallback) return fallback;
+    const first = candidates.find((candidate) => candidate.componentId === componentId);
+    if (first) return first;
+  }
+  return candidates[0]!;
 }
 
 export function assertLayoutPlan(
@@ -89,7 +122,7 @@ export function assertLayoutPlan(
     if (item.readingGesture !== reading.gesture) {
       throw new Error(`LayoutPlan reading gesture for ${block.id} does not match ReadingPlan`);
     }
-    const expectedToken = resolveRhythmToken(block, index, library);
+    const expectedToken = resolveRhythmToken(block, reading, index, library);
     const expectedGap = index === 0 ? 0 : library.manifest.rhythm.modes[plan.density][expectedToken];
     if (item.rhythmToken !== expectedToken || item.gapBefore !== expectedGap) {
       throw new Error(`LayoutPlan rhythm for ${block.id} must be resolved by the selected theme`);
@@ -116,8 +149,17 @@ export function assertLayoutPlan(
   }
 }
 
-function resolveRhythmToken(block: Block, index: number, library: ThemeLibrary): RhythmToken {
+function resolveRhythmToken(
+  block: Block,
+  reading: ReadingPlan["items"][number],
+  index: number,
+  library: ThemeLibrary,
+): RhythmToken {
   if (index === 0) return "close";
+  if (block.type === "heading") return library.manifest.rhythm.relationMap["new-section"] ?? "section";
+  if (reading.gesture === "pause") return library.manifest.rhythm.relationMap["new-argument"] ?? "break";
+  if (reading.gesture === "pivot") return library.manifest.rhythm.relationMap["turning-point"] ?? "turn";
+  if (reading.gesture === "release") return library.manifest.rhythm.relationMap["before-ending"] ?? "release";
   return library.manifest.rhythm.relationMap[block.relationToPrevious ?? "default"] ?? "flow";
 }
 

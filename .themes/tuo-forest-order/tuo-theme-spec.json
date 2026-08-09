@@ -1,0 +1,480 @@
+{
+  "specVersion": "tuo-theme-export/1.0",
+  "sourceGitHead": "49b137217a4769a83bebd0e562d422025595030a",
+  "sourceThemeId": "forest-order",
+  "name": "森序长文",
+  "description": "深森林绿、香槟金与章节留白构成的正式编辑排版。",
+  "eyebrow": "FOREST ORDER",
+  "tokens": {
+    "background": "#f4f3ee",
+    "paper": "#fafaf7",
+    "color": "#333333",
+    "muted": "#555555",
+    "headingFont": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+    "bodyFont": "PingFang SC, Microsoft YaHei, sans-serif",
+    "accent": "#11413e",
+    "accentSoft": "#e3d9c6",
+    "radius": 4,
+    "paragraphGap": 20,
+    "blockGap": 28,
+    "sectionGap": 64,
+    "lineHeight": 1.85,
+    "alignment": "left",
+    "layout": {
+      "rhythm": {
+        "modes": {
+          "compact": {
+            "close": 8,
+            "flow": 16,
+            "break": 22,
+            "turn": 34,
+            "section": 50,
+            "release": 62
+          },
+          "balanced": {
+            "close": 10,
+            "flow": 20,
+            "break": 28,
+            "turn": 44,
+            "section": 64,
+            "release": 80
+          },
+          "spacious": {
+            "close": 13,
+            "flow": 26,
+            "break": 36,
+            "turn": 56,
+            "section": 82,
+            "release": 102
+          }
+        },
+        "relationMap": {
+          "continuation": "flow",
+          "sameGroup": "break",
+          "newArgument": "break",
+          "turningPoint": "turn",
+          "beforeStrong": "turn",
+          "afterStrong": "flow",
+          "newSection": "section",
+          "beforeEnding": "release"
+        }
+      },
+      "rails": {
+        "flow": {
+          "inset": 0,
+          "align": "justify"
+        },
+        "inset": {
+          "inset": 13,
+          "align": "left"
+        },
+        "focus": {
+          "inset": 0,
+          "maxWidth": "88%",
+          "align": "center"
+        },
+        "fullBleed": {
+          "inset": 0,
+          "align": "center"
+        }
+      },
+      "componentRhythm": {
+        "masthead": {
+          "bleedTop": 36,
+          "bleedInline": false,
+          "top": 76,
+          "horizontal": 28,
+          "bottom": 64,
+          "labelTop": 24,
+          "ornament": 180,
+          "ornamentLarge": 260
+        },
+        "heading": {
+          "markerSize": 42,
+          "ruleWidth": 64,
+          "ruleOffset": 14,
+          "titleTop": 13,
+          "subheadingInset": 13
+        },
+        "list": {
+          "orderedMarkerWidth": 32,
+          "unorderedMarkerWidth": 24,
+          "itemGap": 13
+        },
+        "quote": {
+          "verticalInset": 25,
+          "horizontalInset": 22,
+          "sourceTop": 12,
+          "watermarkSize": 88
+        },
+        "callout": {
+          "ctaBleed": 12,
+          "ctaVerticalInset": 36,
+          "ctaHorizontalInset": 36,
+          "labelBottom": 0,
+          "focusVerticalInset": 24
+        },
+        "ending": {
+          "topInset": 18,
+          "labelBottom": 18
+        },
+        "editorial": {
+          "headerBottom": 64,
+          "headerRuleWidth": 48,
+          "headerRuleBottom": 28,
+          "imageCaptionTop": 6,
+          "chapterGhostSize": 72,
+          "chapterGhostOffset": 40,
+          "headingRuleBottom": 16,
+          "listItemGap": 24,
+          "emphasisVertical": 40,
+          "emphasisInset": 24
+        }
+      }
+    }
+  },
+  "resolvedDefaultStyle": {
+    "background": "transparent",
+    "paper": "#fafaf7",
+    "color": "#333333",
+    "muted": "#555555",
+    "fontFamily": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+    "headingFont": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+    "headingSize": 17,
+    "accent": "#11413e",
+    "accentSoft": "#e3d9c6",
+    "calloutBackground": "#cbd5d2",
+    "radius": 4,
+    "maxWidth": 560,
+    "contentPadding": 11,
+    "fontScale": 0.9,
+    "lineHeight": 1.85,
+    "paragraphGap": 20,
+    "blockGap": 28,
+    "sectionGap": 64,
+    "rhythmPreset": "balanced",
+    "rhythm": {
+      "close": 10,
+      "flow": 20,
+      "break": 28,
+      "turn": 44,
+      "section": 64,
+      "release": 80
+    },
+    "layout": {
+      "rhythm": {
+        "modes": {
+          "compact": {
+            "close": 8,
+            "flow": 16,
+            "break": 22,
+            "turn": 34,
+            "section": 50,
+            "release": 62
+          },
+          "balanced": {
+            "close": 10,
+            "flow": 20,
+            "break": 28,
+            "turn": 44,
+            "section": 64,
+            "release": 80
+          },
+          "spacious": {
+            "close": 13,
+            "flow": 26,
+            "break": 36,
+            "turn": 56,
+            "section": 82,
+            "release": 102
+          }
+        },
+        "relationMap": {
+          "continuation": "flow",
+          "sameGroup": "break",
+          "newArgument": "break",
+          "turningPoint": "turn",
+          "beforeStrong": "turn",
+          "afterStrong": "flow",
+          "newSection": "section",
+          "beforeEnding": "release"
+        }
+      },
+      "rails": {
+        "flow": {
+          "inset": 0,
+          "align": "justify"
+        },
+        "inset": {
+          "inset": 13,
+          "align": "left"
+        },
+        "focus": {
+          "inset": 0,
+          "maxWidth": "88%",
+          "align": "center"
+        },
+        "fullBleed": {
+          "inset": 0,
+          "align": "center"
+        }
+      },
+      "componentRhythm": {
+        "masthead": {
+          "bleedTop": 36,
+          "bleedInline": false,
+          "top": 76,
+          "horizontal": 28,
+          "bottom": 64,
+          "labelTop": 24,
+          "ornament": 180,
+          "ornamentLarge": 260
+        },
+        "heading": {
+          "markerSize": 42,
+          "ruleWidth": 64,
+          "ruleOffset": 14,
+          "titleTop": 13,
+          "subheadingInset": 13
+        },
+        "list": {
+          "orderedMarkerWidth": 32,
+          "unorderedMarkerWidth": 24,
+          "itemGap": 13
+        },
+        "quote": {
+          "verticalInset": 25,
+          "horizontalInset": 22,
+          "sourceTop": 12,
+          "watermarkSize": 88
+        },
+        "callout": {
+          "ctaBleed": 12,
+          "ctaVerticalInset": 36,
+          "ctaHorizontalInset": 36,
+          "labelBottom": 0,
+          "focusVerticalInset": 24
+        },
+        "ending": {
+          "topInset": 18,
+          "labelBottom": 18
+        },
+        "editorial": {
+          "headerBottom": 64,
+          "headerRuleWidth": 48,
+          "headerRuleBottom": 28,
+          "imageCaptionTop": 6,
+          "chapterGhostSize": 72,
+          "chapterGhostOffset": 40,
+          "headingRuleBottom": 16,
+          "listItemGap": 24,
+          "emphasisVertical": 40,
+          "emphasisInset": 24
+        }
+      }
+    },
+    "rails": {
+      "flow": {
+        "inset": 0,
+        "align": "justify"
+      },
+      "inset": {
+        "inset": 13,
+        "align": "left"
+      },
+      "focus": {
+        "inset": 0,
+        "maxWidth": "88%",
+        "align": "center"
+      },
+      "fullBleed": {
+        "inset": 0,
+        "align": "center"
+      }
+    },
+    "componentRhythm": {
+      "masthead": {
+        "bleedTop": 36,
+        "bleedInline": false,
+        "top": 76,
+        "horizontal": 28,
+        "bottom": 64,
+        "labelTop": 24,
+        "ornament": 180,
+        "ornamentLarge": 260
+      },
+      "heading": {
+        "markerSize": 42,
+        "ruleWidth": 64,
+        "ruleOffset": 14,
+        "titleTop": 13,
+        "subheadingInset": 13
+      },
+      "list": {
+        "orderedMarkerWidth": 32,
+        "unorderedMarkerWidth": 24,
+        "itemGap": 13
+      },
+      "quote": {
+        "verticalInset": 25,
+        "horizontalInset": 22,
+        "sourceTop": 12,
+        "watermarkSize": 88
+      },
+      "callout": {
+        "ctaBleed": 12,
+        "ctaVerticalInset": 36,
+        "ctaHorizontalInset": 36,
+        "labelBottom": 0,
+        "focusVerticalInset": 24
+      },
+      "ending": {
+        "topInset": 18,
+        "labelBottom": 18
+      },
+      "editorial": {
+        "headerBottom": 64,
+        "headerRuleWidth": 48,
+        "headerRuleBottom": 28,
+        "imageCaptionTop": 6,
+        "chapterGhostSize": 72,
+        "chapterGhostOffset": 40,
+        "headingRuleBottom": 16,
+        "listItemGap": 24,
+        "emphasisVertical": 40,
+        "emphasisInset": 24
+      }
+    },
+    "imageWidth": "content",
+    "imageScale": 1,
+    "imageRadiusPreset": "none",
+    "imageRadius": 0
+  },
+  "variants": {
+    "articleHeader": {
+      "default": "forest-order-header",
+      "focus": "forest-order-header-focus"
+    },
+    "heading": {
+      "default": "forest-order-heading",
+      "focus": "forest-order-heading-focus",
+      "contrast": "forest-order-heading-contrast"
+    },
+    "prose": {
+      "default": "forest-order-prose",
+      "focus": "forest-order-prose-focus",
+      "contrast": "forest-order-prose-contrast",
+      "pause": "forest-order-prose-pause"
+    },
+    "list": {
+      "default": "forest-order-list",
+      "focus": "forest-order-list-focus"
+    },
+    "quote": {
+      "default": "forest-order-quote",
+      "contrast": "forest-order-quote-contrast",
+      "focus": "forest-order-quote-focus"
+    },
+    "media": {
+      "default": "forest-order-media",
+      "focus": "forest-order-media-focus"
+    },
+    "emphasis": {
+      "default": "forest-order-emphasis",
+      "focus": "forest-order-emphasis-focus",
+      "contrast": "forest-order-emphasis-contrast"
+    },
+    "divider": {
+      "default": "forest-order-divider",
+      "pause": "forest-order-divider-pause"
+    },
+    "ending": {
+      "default": "forest-order-ending",
+      "focus": "forest-order-ending-focus",
+      "pause": "forest-order-ending-pause"
+    }
+  },
+  "inlineEmphasis": {
+    "highlight": "underline",
+    "strong": "accent"
+  },
+  "heroImage": null,
+  "componentSamples": [
+    {
+      "slug": "01-masthead",
+      "label": "文章题头 / Masthead",
+      "file": "components/01-masthead.html"
+    },
+    {
+      "slug": "02-heading-h2",
+      "label": "二级章节 / H2",
+      "file": "components/02-heading-h2.html"
+    },
+    {
+      "slug": "03-subheading-h3",
+      "label": "三级标题 / H3",
+      "file": "components/03-subheading-h3.html"
+    },
+    {
+      "slug": "04-minor-heading-h4",
+      "label": "四级标题 / H4",
+      "file": "components/04-minor-heading-h4.html"
+    },
+    {
+      "slug": "05-lead",
+      "label": "开篇正文 / Lead",
+      "file": "components/05-lead.html"
+    },
+    {
+      "slug": "06-prose",
+      "label": "普通正文 / Prose",
+      "file": "components/06-prose.html"
+    },
+    {
+      "slug": "07-focus-prose",
+      "label": "重点正文 / Focus prose",
+      "file": "components/07-focus-prose.html"
+    },
+    {
+      "slug": "08-ordered-list",
+      "label": "有序列表 / Ordered list",
+      "file": "components/08-ordered-list.html"
+    },
+    {
+      "slug": "09-unordered-list",
+      "label": "无序列表 / Unordered list",
+      "file": "components/09-unordered-list.html"
+    },
+    {
+      "slug": "10-quote",
+      "label": "引用 / Quote",
+      "file": "components/10-quote.html"
+    },
+    {
+      "slug": "11-callout",
+      "label": "重点卡 / Callout",
+      "file": "components/11-callout.html"
+    },
+    {
+      "slug": "12-cta",
+      "label": "行动提示 / CTA",
+      "file": "components/12-cta.html"
+    },
+    {
+      "slug": "13-image",
+      "label": "图片与图注 / Image",
+      "file": "components/13-image.html"
+    },
+    {
+      "slug": "14-divider",
+      "label": "分隔 / Divider",
+      "file": "components/14-divider.html"
+    },
+    {
+      "slug": "15-ending",
+      "label": "收束 / Ending",
+      "file": "components/15-ending.html"
+    }
+  ],
+  "compositionNote": "Each component is rendered independently; full reading rhythm is shown in reference.wechat.html."
+}

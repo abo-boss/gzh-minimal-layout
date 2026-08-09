@@ -1,0 +1,485 @@
+{
+  "specVersion": "tuo-theme-export/1.0",
+  "sourceGitHead": "49b137217a4769a83bebd0e562d422025595030a",
+  "sourceThemeId": "digital-efficiency",
+  "name": "松石阶梯",
+  "description": "松石墨绿、金棕点缀与纸张卡片构成的效率方法论长文版式。",
+  "eyebrow": "SYSTEM / WORKFLOW",
+  "tokens": {
+    "background": "#fcfbf8",
+    "paper": "#f9f8f4",
+    "color": "#333333",
+    "muted": "#6f746f",
+    "headingFont": "LXGW WenKai, LXGW WenKai Mono TC, Songti SC, Georgia, serif",
+    "bodyFont": "Noto Sans SC, PingFang SC, Microsoft YaHei, sans-serif",
+    "accent": "#2c4c3b",
+    "accentSoft": "#ebe8df",
+    "radius": 0,
+    "paragraphGap": 24,
+    "blockGap": 36,
+    "sectionGap": 64,
+    "lineHeight": 1.85,
+    "alignment": "left",
+    "layout": {
+      "rhythm": {
+        "modes": {
+          "compact": {
+            "close": 9,
+            "flow": 19,
+            "break": 28,
+            "turn": 37,
+            "section": 50,
+            "release": 62
+          },
+          "balanced": {
+            "close": 12,
+            "flow": 24,
+            "break": 36,
+            "turn": 48,
+            "section": 64,
+            "release": 80
+          },
+          "spacious": {
+            "close": 15,
+            "flow": 31,
+            "break": 46,
+            "turn": 61,
+            "section": 82,
+            "release": 102
+          }
+        },
+        "relationMap": {
+          "continuation": "flow",
+          "sameGroup": "break",
+          "newArgument": "break",
+          "turningPoint": "turn",
+          "beforeStrong": "turn",
+          "afterStrong": "flow",
+          "newSection": "section",
+          "beforeEnding": "release"
+        }
+      },
+      "rails": {
+        "flow": {
+          "inset": 13,
+          "align": "justify"
+        },
+        "inset": {
+          "inset": 13,
+          "align": "left"
+        },
+        "focus": {
+          "inset": 13,
+          "maxWidth": "92%",
+          "align": "center"
+        },
+        "fullBleed": {
+          "inset": 0,
+          "align": "center"
+        }
+      },
+      "componentRhythm": {
+        "masthead": {
+          "bleedTop": 0,
+          "bleedInline": false,
+          "top": 40,
+          "horizontal": 32,
+          "bottom": 32,
+          "labelTop": 32,
+          "ornament": 0,
+          "ornamentLarge": 0
+        },
+        "heading": {
+          "markerSize": 56,
+          "ruleWidth": 0,
+          "ruleOffset": 0,
+          "titleTop": 0,
+          "subheadingInset": 8
+        },
+        "list": {
+          "orderedMarkerWidth": 64,
+          "unorderedMarkerWidth": 22,
+          "itemGap": 12
+        },
+        "quote": {
+          "verticalInset": 32,
+          "horizontalInset": 32,
+          "sourceTop": 12,
+          "watermarkSize": 40
+        },
+        "callout": {
+          "ctaBleed": 0,
+          "ctaVerticalInset": 24,
+          "ctaHorizontalInset": 20,
+          "labelBottom": 12,
+          "focusVerticalInset": 24
+        },
+        "ending": {
+          "topInset": 24,
+          "labelBottom": 16
+        },
+        "editorial": {
+          "headerBottom": 32,
+          "headerRuleWidth": 48,
+          "headerRuleBottom": 20,
+          "imageCaptionTop": 6,
+          "chapterGhostSize": 56,
+          "chapterGhostOffset": 0,
+          "headingRuleBottom": 12,
+          "listItemGap": 12,
+          "emphasisVertical": 24,
+          "emphasisInset": 20
+        }
+      }
+    }
+  },
+  "resolvedDefaultStyle": {
+    "background": "transparent",
+    "paper": "#f9f8f4",
+    "color": "#333333",
+    "muted": "#6f746f",
+    "fontFamily": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+    "headingFont": "LXGW WenKai, LXGW WenKai Mono TC, Songti SC, Georgia, serif",
+    "headingSize": 17,
+    "accent": "#2c4c3b",
+    "accentSoft": "#ebe8df",
+    "calloutBackground": "#d0d6cf",
+    "radius": 0,
+    "maxWidth": 560,
+    "contentPadding": 11,
+    "fontScale": 0.9,
+    "lineHeight": 1.85,
+    "paragraphGap": 24,
+    "blockGap": 36,
+    "sectionGap": 64,
+    "rhythmPreset": "balanced",
+    "rhythm": {
+      "close": 12,
+      "flow": 24,
+      "break": 36,
+      "turn": 48,
+      "section": 64,
+      "release": 80
+    },
+    "layout": {
+      "rhythm": {
+        "modes": {
+          "compact": {
+            "close": 9,
+            "flow": 19,
+            "break": 28,
+            "turn": 37,
+            "section": 50,
+            "release": 62
+          },
+          "balanced": {
+            "close": 12,
+            "flow": 24,
+            "break": 36,
+            "turn": 48,
+            "section": 64,
+            "release": 80
+          },
+          "spacious": {
+            "close": 15,
+            "flow": 31,
+            "break": 46,
+            "turn": 61,
+            "section": 82,
+            "release": 102
+          }
+        },
+        "relationMap": {
+          "continuation": "flow",
+          "sameGroup": "break",
+          "newArgument": "break",
+          "turningPoint": "turn",
+          "beforeStrong": "turn",
+          "afterStrong": "flow",
+          "newSection": "section",
+          "beforeEnding": "release"
+        }
+      },
+      "rails": {
+        "flow": {
+          "inset": 13,
+          "align": "justify"
+        },
+        "inset": {
+          "inset": 13,
+          "align": "left"
+        },
+        "focus": {
+          "inset": 13,
+          "maxWidth": "92%",
+          "align": "center"
+        },
+        "fullBleed": {
+          "inset": 0,
+          "align": "center"
+        }
+      },
+      "componentRhythm": {
+        "masthead": {
+          "bleedTop": 0,
+          "bleedInline": false,
+          "top": 40,
+          "horizontal": 32,
+          "bottom": 32,
+          "labelTop": 32,
+          "ornament": 0,
+          "ornamentLarge": 0
+        },
+        "heading": {
+          "markerSize": 56,
+          "ruleWidth": 0,
+          "ruleOffset": 0,
+          "titleTop": 0,
+          "subheadingInset": 8
+        },
+        "list": {
+          "orderedMarkerWidth": 64,
+          "unorderedMarkerWidth": 22,
+          "itemGap": 12
+        },
+        "quote": {
+          "verticalInset": 32,
+          "horizontalInset": 32,
+          "sourceTop": 12,
+          "watermarkSize": 40
+        },
+        "callout": {
+          "ctaBleed": 0,
+          "ctaVerticalInset": 24,
+          "ctaHorizontalInset": 20,
+          "labelBottom": 12,
+          "focusVerticalInset": 24
+        },
+        "ending": {
+          "topInset": 24,
+          "labelBottom": 16
+        },
+        "editorial": {
+          "headerBottom": 32,
+          "headerRuleWidth": 48,
+          "headerRuleBottom": 20,
+          "imageCaptionTop": 6,
+          "chapterGhostSize": 56,
+          "chapterGhostOffset": 0,
+          "headingRuleBottom": 12,
+          "listItemGap": 12,
+          "emphasisVertical": 24,
+          "emphasisInset": 20
+        }
+      }
+    },
+    "rails": {
+      "flow": {
+        "inset": 13,
+        "align": "justify"
+      },
+      "inset": {
+        "inset": 13,
+        "align": "left"
+      },
+      "focus": {
+        "inset": 13,
+        "maxWidth": "92%",
+        "align": "center"
+      },
+      "fullBleed": {
+        "inset": 0,
+        "align": "center"
+      }
+    },
+    "componentRhythm": {
+      "masthead": {
+        "bleedTop": 0,
+        "bleedInline": false,
+        "top": 40,
+        "horizontal": 32,
+        "bottom": 32,
+        "labelTop": 32,
+        "ornament": 0,
+        "ornamentLarge": 0
+      },
+      "heading": {
+        "markerSize": 56,
+        "ruleWidth": 0,
+        "ruleOffset": 0,
+        "titleTop": 0,
+        "subheadingInset": 8
+      },
+      "list": {
+        "orderedMarkerWidth": 64,
+        "unorderedMarkerWidth": 22,
+        "itemGap": 12
+      },
+      "quote": {
+        "verticalInset": 32,
+        "horizontalInset": 32,
+        "sourceTop": 12,
+        "watermarkSize": 40
+      },
+      "callout": {
+        "ctaBleed": 0,
+        "ctaVerticalInset": 24,
+        "ctaHorizontalInset": 20,
+        "labelBottom": 12,
+        "focusVerticalInset": 24
+      },
+      "ending": {
+        "topInset": 24,
+        "labelBottom": 16
+      },
+      "editorial": {
+        "headerBottom": 32,
+        "headerRuleWidth": 48,
+        "headerRuleBottom": 20,
+        "imageCaptionTop": 6,
+        "chapterGhostSize": 56,
+        "chapterGhostOffset": 0,
+        "headingRuleBottom": 12,
+        "listItemGap": 12,
+        "emphasisVertical": 24,
+        "emphasisInset": 20
+      }
+    },
+    "imageWidth": "content",
+    "imageScale": 1,
+    "imageRadiusPreset": "none",
+    "imageRadius": 0
+  },
+  "variants": {
+    "articleHeader": {
+      "default": "digital-efficiency-hero",
+      "focus": "digital-efficiency-hero"
+    },
+    "heading": {
+      "default": "digital-efficiency-chapter",
+      "focus": "digital-efficiency-chapter",
+      "contrast": "digital-efficiency-subheading"
+    },
+    "prose": {
+      "default": "digital-efficiency-prose",
+      "focus": "digital-efficiency-intro",
+      "contrast": "digital-efficiency-prose",
+      "pause": "digital-efficiency-prose"
+    },
+    "list": {
+      "default": "digital-efficiency-list-card",
+      "focus": "digital-efficiency-list-card"
+    },
+    "quote": {
+      "default": "digital-efficiency-quote",
+      "contrast": "digital-efficiency-quote",
+      "focus": "digital-efficiency-quote"
+    },
+    "media": {
+      "default": "digital-efficiency-media",
+      "focus": "digital-efficiency-media"
+    },
+    "emphasis": {
+      "default": "digital-efficiency-inline-note",
+      "focus": "digital-efficiency-daily-quote",
+      "contrast": "digital-efficiency-inline-note"
+    },
+    "divider": {
+      "default": "digital-efficiency-dot-rule",
+      "pause": "digital-efficiency-dot-rule"
+    },
+    "ending": {
+      "default": "digital-efficiency-ending",
+      "focus": "digital-efficiency-ending",
+      "pause": "digital-efficiency-ending"
+    }
+  },
+  "inlineEmphasis": {
+    "highlight": "underline",
+    "strong": "accent"
+  },
+  "heroImage": {
+    "src": "/default-heroes/whitespace-narrative-light-shadow.jpg",
+    "alt": "雨夜城市街景",
+    "caption": "SYSTEM / WORKFLOW",
+    "crop": "landscape"
+  },
+  "componentSamples": [
+    {
+      "slug": "01-masthead",
+      "label": "文章题头 / Masthead",
+      "file": "components/01-masthead.html"
+    },
+    {
+      "slug": "02-heading-h2",
+      "label": "二级章节 / H2",
+      "file": "components/02-heading-h2.html"
+    },
+    {
+      "slug": "03-subheading-h3",
+      "label": "三级标题 / H3",
+      "file": "components/03-subheading-h3.html"
+    },
+    {
+      "slug": "04-minor-heading-h4",
+      "label": "四级标题 / H4",
+      "file": "components/04-minor-heading-h4.html"
+    },
+    {
+      "slug": "05-lead",
+      "label": "开篇正文 / Lead",
+      "file": "components/05-lead.html"
+    },
+    {
+      "slug": "06-prose",
+      "label": "普通正文 / Prose",
+      "file": "components/06-prose.html"
+    },
+    {
+      "slug": "07-focus-prose",
+      "label": "重点正文 / Focus prose",
+      "file": "components/07-focus-prose.html"
+    },
+    {
+      "slug": "08-ordered-list",
+      "label": "有序列表 / Ordered list",
+      "file": "components/08-ordered-list.html"
+    },
+    {
+      "slug": "09-unordered-list",
+      "label": "无序列表 / Unordered list",
+      "file": "components/09-unordered-list.html"
+    },
+    {
+      "slug": "10-quote",
+      "label": "引用 / Quote",
+      "file": "components/10-quote.html"
+    },
+    {
+      "slug": "11-callout",
+      "label": "重点卡 / Callout",
+      "file": "components/11-callout.html"
+    },
+    {
+      "slug": "12-cta",
+      "label": "行动提示 / CTA",
+      "file": "components/12-cta.html"
+    },
+    {
+      "slug": "13-image",
+      "label": "图片与图注 / Image",
+      "file": "components/13-image.html"
+    },
+    {
+      "slug": "14-divider",
+      "label": "分隔 / Divider",
+      "file": "components/14-divider.html"
+    },
+    {
+      "slug": "15-ending",
+      "label": "收束 / Ending",
+      "file": "components/15-ending.html"
+    }
+  ],
+  "compositionNote": "Each component is rendered independently; full reading rhythm is shown in reference.wechat.html."
+}

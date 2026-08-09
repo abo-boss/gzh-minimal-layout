@@ -1,25 +1,38 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:gzh-minimal-layout:schema:layout-decision:2.0",
-  "title": "LayoutDecision v2.0",
-  "description": "Agent 对文章的一次性完整决策：文章画像 + 语义分块 + 阅读节奏 + 组件选择，合并为单一合约。",
+  "$id": "urn:gzh-minimal-layout:schema:layout-decision:3.0",
+  "title": "LayoutDecision v3.0",
+  "description": "Host Agent 输出的源文保真语义计划。普通块由渲染器确定性选组件，只有少量特殊块允许显式选择组件。",
   "type": "object",
   "additionalProperties": false,
-  "required": ["specVersion", "articleType", "theme", "density", "blocks"],
+  "required": [
+    "specVersion", "sourceHash", "articleType", "structurePattern",
+    "theme", "themeReason", "recipe", "density", "blocks"
+  ],
   "properties": {
     "$schema": { "type": "string", "format": "uri-reference" },
-    "specVersion": { "const": "2.0" },
+    "specVersion": { "const": "3.0" },
+    "sourceHash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
     "articleType": {
       "enum": ["personal-essay", "opinion-knowledge", "literary-prose", "tutorial", "list-driven", "other"]
     },
-    "themeReason": { "type": "string", "minLength": 1 },
     "tone": {
       "type": "array",
       "maxItems": 3,
       "uniqueItems": true,
       "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }
     },
+    "structurePattern": {
+      "enum": [
+        "experience-reflection-conclusion", "argument-evidence-conclusion",
+        "narrative-reflection", "fragmented-prose", "list-driven", "other"
+      ]
+    },
     "theme": { "$ref": "#/$defs/id" },
+    "themeReason": { "type": "string", "minLength": 8 },
+    "recipe": {
+      "enum": ["essay-reflection", "opinion-analysis", "literary-narrative", "tutorial-steps", "list-guide", "universal"]
+    },
     "density": { "enum": ["dense", "balanced", "airy"] },
     "blocks": {
       "type": "array",
@@ -36,57 +49,56 @@
       "enum": [
         "article-title", "article-subtitle", "metadata", "lead",
         "heading", "paragraph", "quote", "list", "image",
-        "divider", "callout", "step", "table", "code",
-        "ending", "cta"
+        "divider", "callout", "step", "table", "code", "ending", "cta"
       ]
-    },
-    "block": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "type", "content", "component", "variant"],
-      "properties": {
-        "id": { "$ref": "#/$defs/id" },
-        "type": { "$ref": "#/$defs/blockType" },
-        "content": { "type": "string", "minLength": 1 },
-        "component": { "$ref": "#/$defs/id" },
-        "variant": { "$ref": "#/$defs/id" },
-        "level": { "type": "integer", "minimum": 1, "maximum": 6 },
-        "phase": { "enum": ["entry", "body", "exit"] },
-        "gesture": { "enum": ["flow", "pause", "pivot", "anchor", "release"] },
-        "emphasis": { "enum": ["quiet", "medium", "strong"] },
-        "structure": { "$ref": "#/$defs/structure" },
-        "marks": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/mark" }
-        },
-        "reason": { "type": "string" }
-      }
     },
     "mark": {
       "type": "object",
       "additionalProperties": false,
       "required": ["type", "start", "end"],
       "properties": {
-        "type": { "enum": ["emphasis", "strong", "keyword"] },
+        "type": { "enum": ["emphasis", "strong", "quote", "keyword"] },
         "start": { "type": "integer", "minimum": 0 },
         "end": { "type": "integer", "minimum": 1 }
       }
     },
     "structure": {
       "type": "object",
-      "additionalProperties": true,
+      "additionalProperties": true
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "role", "content", "phase", "gesture", "emphasis"],
       "properties": {
-        "ordered": { "type": "boolean" },
-        "items": { "type": "array" },
-        "hasMarker": { "type": "boolean" },
-        "marker": { "type": "string" },
-        "src": { "type": "string" },
-        "alt": { "type": "string" },
-        "attribution": { "type": "string" },
-        "headers": { "type": "array" },
-        "rows": { "type": "array" },
-        "prompt": { "type": "string" }
-      }
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "$ref": "#/$defs/blockType" },
+        "role": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "content": { "type": "string", "minLength": 1 },
+        "phase": { "enum": ["entry", "body", "exit"] },
+        "gesture": { "enum": ["flow", "pause", "pivot", "anchor", "release"] },
+        "emphasis": { "enum": ["quiet", "medium", "strong"] },
+        "level": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "structure": { "$ref": "#/$defs/structure" },
+        "marks": { "type": "array", "items": { "$ref": "#/$defs/mark" } },
+        "component": { "$ref": "#/$defs/id" },
+        "variant": { "$ref": "#/$defs/id" },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "anyOf": [{ "required": ["component"] }, { "required": ["variant"] }] },
+          "then": { "required": ["component", "variant", "reason"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "heading" } }, "required": ["type"] },
+          "then": { "required": ["level"] }
+        },
+        {
+          "if": { "properties": { "type": { "enum": ["list", "image", "table", "cta"] } }, "required": ["type"] },
+          "then": { "required": ["structure"] }
+        }
+      ]
     }
   }
 }

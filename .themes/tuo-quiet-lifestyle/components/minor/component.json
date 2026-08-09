@@ -1,0 +1,46 @@
+{
+  "specVersion": "1.0",
+  "id": "minor",
+  "template": "template.html",
+  "kind": "heading",
+  "accepts": {
+    "blockTypes": [
+      "heading"
+    ],
+    "levels": [
+      4
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "heading-title",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "42px 0 0",
+      "padding-left": "16px",
+      "border-left": "2px solid #e8e4d9",
+      "color": "#5a6a5a",
+      "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+      "font-size": "15px",
+      "font-weight": "700",
+      "line-height": "1.7",
+      "letter-spacing": "0.06em"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO minor",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

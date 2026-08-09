@@ -1,0 +1,118 @@
+{
+  "specVersion": "1.0",
+  "id": "list",
+  "template": "template.html",
+  "kind": "list",
+  "accepts": {
+    "blockTypes": [
+      "list"
+    ]
+  },
+  "slots": [
+    {
+      "name": "items",
+      "source": "list-items",
+      "required": true,
+      "format": "two-digit-arabic"
+    }
+  ],
+  "fallbackVariant": "ordered",
+  "baseStyles": {
+    "root": {
+      "margin": "0",
+      "padding": "0"
+    },
+    "list": {
+      "color": "{color.ink}",
+      "margin": "40px 0 40px",
+      "padding": "0 0 0 32px",
+      "list-style": "none"
+    },
+    "item": {
+      "display": "flex",
+      "align-items": "flex-start",
+      "margin": "0 0 24px",
+      "color": "#3A3732",
+      "font-family": "-apple-system,BlinkMacSystemFont,PingFang SC,Helvetica Neue,STHeiti,sans-serif",
+      "font-size": "14.5px",
+      "line-height": "1.6",
+      "letter-spacing": ".02em"
+    },
+    "itemMarker": {
+      "display": "flex",
+      "width": "26px",
+      "align-items": "center",
+      "justify-content": "center",
+      "height": "24px",
+      "border-radius": "5px",
+      "color": "#B08A52",
+      "opacity": ".9",
+      "font-family": "SFMono-Regular,Consolas,Liberation Mono,monospace",
+      "font-size": "13px",
+      "font-weight": "700",
+      "line-height": "1"
+    },
+    "itemContent": {
+      "display": "inline-block",
+      "width": "calc(100% - 2em)"
+    }
+  },
+  "variants": [
+    {
+      "id": "ordered",
+      "label": "TUO list",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    },
+    {
+      "id": "unordered",
+      "label": "TUO unordered list",
+      "priority": 70,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 0,
+      "accepts": {
+        "blockTypes": [
+          "list"
+        ]
+      },
+      "styles": {
+        "root": {
+          "margin": "0",
+          "padding": "0"
+        },
+        "list": {
+          "color": "{color.ink}",
+          "margin": "40px 0 40px",
+          "padding": "32px",
+          "list-style": "none",
+          "border-radius": "24px"
+        },
+        "item": {
+          "display": "flex",
+          "align-items": "flex-start",
+          "gap": "12px",
+          "margin": "0 0 14px",
+          "color": "#3A3732",
+          "font-family": "-apple-system,BlinkMacSystemFont,PingFang SC,Helvetica Neue,STHeiti,sans-serif",
+          "font-size": "15px",
+          "line-height": "1.8"
+        },
+        "itemMarker": {
+          "display": "inline-block",
+          "width": "6px",
+          "height": "6px",
+          "margin-top": "11px",
+          "border-radius": "50%"
+        },
+        "itemContent": {
+          "display": "inline-block",
+          "width": "calc(100% - 2em)"
+        }
+      }
+    }
+  ]
+}

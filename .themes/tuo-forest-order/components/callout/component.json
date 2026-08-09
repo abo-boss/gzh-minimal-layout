@@ -1,0 +1,48 @@
+{
+  "specVersion": "1.0",
+  "id": "callout",
+  "template": "template.html",
+  "kind": "prose",
+  "accepts": {
+    "blockTypes": [
+      "callout"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "28px auto 0",
+      "max-width": "88%",
+      "padding": "24px 0",
+      "text-align": "center"
+    },
+    "r1": {
+      "margin": "0",
+      "color": "#11413e",
+      "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+      "font-size": "18px",
+      "font-weight": "700",
+      "line-height": "2",
+      "letter-spacing": "0.1em",
+      "text-align": "center"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO callout",
+      "priority": 60,
+      "visualWeight": "strong",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

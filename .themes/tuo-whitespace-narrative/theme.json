@@ -1,0 +1,164 @@
+{
+  "specVersion": "1.0",
+  "id": "tuo-whitespace-narrative",
+  "version": "1.0.0",
+  "name": "石墨文书",
+  "description": "米灰纸张、石墨文字与展签式细节，让内容在安静的节奏中自然展开。",
+  "recommendation": {
+    "summary": "THE ART OF WHITESPACE",
+    "articleTypes": [
+      "literary-prose",
+      "personal-essay"
+    ],
+    "tones": [
+      "quiet",
+      "reflective",
+      "minimal"
+    ],
+    "structurePatterns": [
+      "narrative-reflection",
+      "fragmented-prose"
+    ]
+  },
+  "defaultDensity": "balanced",
+  "essay": {
+    "flow": {
+      "label": "正文流动",
+      "visualWeight": "quiet",
+      "surface": "open",
+      "emphasisCost": 0,
+      "styles": {}
+    },
+    "pause": {
+      "label": "短句停顿",
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {
+        "r0": {
+          "border-left": "2px solid {color.accent}",
+          "padding-left": "14px"
+        }
+      }
+    },
+    "pivot": {
+      "label": "论述转场",
+      "visualWeight": "medium",
+      "surface": "panel",
+      "emphasisCost": 1,
+      "styles": {
+        "r0": {
+          "background-color": "{color.soft}",
+          "padding": "18px",
+          "border-radius": "{radius}"
+        }
+      }
+    },
+    "release": {
+      "label": "结尾余韵",
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {
+        "r0": {
+          "color": "{color.accent}",
+          "text-align": "center"
+        }
+      }
+    }
+  },
+  "tokens": {
+    "color": {
+      "paper": "#f9f8f6",
+      "ink": "#1a1c1a",
+      "muted": "#7a7a78",
+      "accent": "#948777",
+      "soft": "#efece6"
+    },
+    "type": {
+      "body": "Inter, PingFang SC, Helvetica Neue, sans-serif",
+      "heading": "Noto Serif SC, Songti SC, STSong, Georgia, serif"
+    },
+    "size": {
+      "title": "29px",
+      "heading": "17px",
+      "body": "14px",
+      "meta": "11px"
+    },
+    "lineHeight": {
+      "body": "1.85",
+      "heading": "1.6",
+      "compact": "1.5"
+    },
+    "alignment": {
+      "left": "left",
+      "center": "center",
+      "right": "right",
+      "justify": "justify"
+    },
+    "canvas": {
+      "background": "#e5e5e5",
+      "padding": "0 20px 96px"
+    },
+    "radius": "0px"
+  },
+  "rhythm": {
+    "modes": {
+      "dense": {
+        "close": 8,
+        "flow": 20,
+        "break": 28,
+        "turn": 44,
+        "section": 62,
+        "release": 75
+      },
+      "balanced": {
+        "close": 10,
+        "flow": 25,
+        "break": 36,
+        "turn": 56,
+        "section": 80,
+        "release": 96
+      },
+      "airy": {
+        "close": 13,
+        "flow": 32,
+        "break": 46,
+        "turn": 72,
+        "section": 102,
+        "release": 123
+      }
+    },
+    "relationMap": {
+      "default": "flow",
+      "same-group": "break",
+      "continuation": "flow",
+      "new-argument": "break",
+      "turning-point": "turn",
+      "before-strong-block": "turn",
+      "after-strong-block": "flow",
+      "new-section": "section",
+      "before-ending": "release"
+    }
+  },
+  "budgets": {
+    "maxStrongPerSection": 1,
+    "maxSurfaceRatio": 0.3,
+    "noAdjacentStrong": true
+  },
+  "componentPaths": [
+    "components/masthead/component.json",
+    "components/heading/component.json",
+    "components/subheading/component.json",
+    "components/minor/component.json",
+    "components/lead/component.json",
+    "components/prose/component.json",
+    "components/focus/component.json",
+    "components/list/component.json",
+    "components/quote/component.json",
+    "components/callout/component.json",
+    "components/cta/component.json",
+    "components/image/component.json",
+    "components/ending/component.json"
+  ]
+}

@@ -44,6 +44,7 @@ export function renderComponentArticle(
     const styles = mergeStyleMaps(component.baseStyles, variant.styles);
     let compiled = bindComponentSlots(component, block, styles, library.manifest.tokens);
     compiled = applyStyleRoles(compiled, styles, library.manifest.tokens);
+    compiled = normalizeComponentRootSpacing(compiled, component.id, block.type);
     compiled = compiled.replace(
       "data-component-root",
       `data-component-root data-component-id="${escapeAttribute(component.id)}" data-variant-id="${escapeAttribute(variant.id)}"`,
@@ -79,6 +80,16 @@ export function renderComponentArticle(
     cleanPreviewHtml: renderCleanPreview(document, wechatHtml),
     contentIntegrity,
   };
+}
+
+function normalizeComponentRootSpacing(html: string, componentId: string, blockType: Block["type"]): string {
+  const proseRail = componentId === "prose" && blockType === "paragraph"
+    ? ";padding-left:0;padding-right:0"
+    : "";
+  return html.replace(
+    /^(\s*<[a-z][a-z0-9-]*\b[^>]*\sstyle=")([^"]*)(")/iu,
+    (_match, start: string, style: string, end: string) => `${start}${style};margin-top:0;margin-bottom:0${proseRail}${end}`,
+  );
 }
 
 function resolveRenderMedia(
@@ -142,9 +153,20 @@ function renderThemeCanvas(content: string, tokens: Record<string, unknown>): st
   const background = typeof canvas.background === "string"
     ? canvas.background
     : typeof color.paper === "string" ? color.paper : "#FFFFFF";
-  const padding = typeof canvas.padding === "string" ? canvas.padding : "0 20px 64px";
+  const padding = forceCanvasHorizontalPadding(
+    typeof canvas.padding === "string" ? canvas.padding : "0 20px 64px",
+    "20px",
+  );
   const style = compileInlineStyle({ "background-color": background, "box-sizing": "border-box", "min-height": "100%", "padding": padding }, tokens);
   return `<section data-theme-canvas style="${escapeAttribute(style)}">${content}</section>`;
+}
+
+function forceCanvasHorizontalPadding(value: string, horizontal: string): string {
+  const parts = value.trim().split(/\s+/u);
+  if (parts.length === 1) return `${parts[0]} ${horizontal}`;
+  if (parts.length === 2) return `${parts[0]} ${horizontal}`;
+  if (parts.length === 3) return `${parts[0]} ${horizontal} ${parts[2]}`;
+  return `${parts[0]} ${horizontal} ${parts[2]} ${horizontal}`;
 }
 
 function applyStyleRoles(
@@ -174,10 +196,11 @@ function bindComponentSlots(
   tokens: Record<string, unknown>,
 ): string {
   let template = selectListContainer(component.templateHtml, block);
+  const quoteAttributionHasOwnSlot = component.slots.some((entry) => entry.source === "quote-attribution");
   for (const slot of component.slots) {
     const rawValue = rawSlotValue(slot, block);
     template = bindAttributeSlot(template, slot.name, rawValue);
-    const value = slotHtml(slot, block, styles, tokens);
+    const value = slotHtml(slot, block, styles, tokens, quoteAttributionHasOwnSlot);
     if (value === undefined && slot.required) {
       throw new Error(`Component ${component.id} requires unavailable slot ${slot.name} for ${block.id}`);
     }
@@ -239,6 +262,7 @@ function slotHtml(
   block: Block,
   styles: StyleMap,
   tokens: Record<string, unknown>,
+  quoteAttributionHasOwnSlot: boolean,
 ): string | undefined {
   const raw = rawSlotValue(slot, block);
   if (raw !== undefined) return escapedText(raw);
@@ -272,7 +296,14 @@ function slotHtml(
     }).join("");
   }
   const quote = quoteStructure(block);
-  if (slot.source === "quote-content") return quote ? escapedText(displayMarkdownText(quote.content)) : undefined;
+  if (slot.source === "quote-content") {
+    if (!quote) return undefined;
+    const content = displayMarkdownText(quote.content);
+    const value = quote.hasAttribution && !quoteAttributionHasOwnSlot
+      ? `${content}\n${displayMarkdownText(quote.attribution!)}`
+      : content;
+    return escapedText(value);
+  }
   if (slot.source === "quote-attribution") return quote?.hasAttribution ? escapedText(displayMarkdownText(quote.attribution!)) : undefined;
   const table = tableStructure(block);
   if (slot.source === "table-headers" && table) {

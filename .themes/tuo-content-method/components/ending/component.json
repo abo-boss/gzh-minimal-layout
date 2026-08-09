@@ -1,0 +1,42 @@
+{
+  "specVersion": "1.0",
+  "id": "ending",
+  "template": "template.html",
+  "kind": "ending",
+  "accepts": {
+    "blockTypes": [
+      "ending"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "40px 0 0",
+      "padding": "40px 24px 0",
+      "border-top": "1px solid #EDE4D3",
+      "color": "#7C7468",
+      "font-family": "-apple-system,BlinkMacSystemFont,PingFang SC,Helvetica Neue,STHeiti,sans-serif",
+      "font-size": "13px",
+      "line-height": "1.85",
+      "text-align": "center"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO ending",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

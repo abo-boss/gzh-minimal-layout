@@ -1,0 +1,53 @@
+{
+  "specVersion": "1.0",
+  "id": "ending",
+  "template": "template.html",
+  "kind": "ending",
+  "accepts": {
+    "blockTypes": [
+      "ending"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "42px 0 0",
+      "padding-top": "48px",
+      "border-top": "1px solid #e8e4d9",
+      "color": "#a3a3a3",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "14px",
+      "letter-spacing": ".05em",
+      "line-height": "1.9",
+      "text-align": "center"
+    },
+    "r1": {
+      "margin": "0"
+    },
+    "r2": {
+      "display": "block",
+      "margin-top": "12px",
+      "color": "#c4c4c4",
+      "font-size": "10px",
+      "letter-spacing": ".1em"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO ending",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

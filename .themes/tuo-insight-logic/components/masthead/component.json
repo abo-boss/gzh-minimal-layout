@@ -1,0 +1,65 @@
+{
+  "specVersion": "1.0",
+  "id": "masthead",
+  "template": "template.html",
+  "kind": "masthead",
+  "accepts": {
+    "blockTypes": [
+      "article-title"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "box-sizing": "border-box",
+      "margin": "-36px 24px 36px",
+      "overflow": "hidden",
+      "color": "#fff"
+    },
+    "r1": {
+      "display": "block",
+      "width": "100%",
+      "height": "auto"
+    },
+    "r2": {
+      "box-sizing": "border-box",
+      "padding": "22px 24px 24px",
+      "text-align": "left"
+    },
+    "r3": {
+      "display": "inline-block",
+      "margin": "0 0 12px",
+      "color": "rgba(255,255,255,.9)",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "11px",
+      "letter-spacing": "3px"
+    },
+    "r4": {
+      "margin": "0",
+      "color": "#fff",
+      "font-family": "Noto Serif SC, Songti SC, SimSun, Times New Roman, Georgia, serif",
+      "font-size": "22px",
+      "font-weight": "700",
+      "line-height": "1.5",
+      "letter-spacing": "1.5px"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO masthead",
+      "priority": 60,
+      "visualWeight": "strong",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

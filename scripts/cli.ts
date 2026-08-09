@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import type { BlockDocument } from "../src/contracts/block-document.js";
+import type { LayoutDecision, LayoutDecisionBlock } from "../src/contracts/layout-decision.js";
 import type { AssetManifest, ImagePlan } from "../src/contracts/media.js";
 import {
   THEME_RECOMMENDATION_ARTICLE_TYPES,
@@ -14,15 +15,22 @@ import {
 import { createLayoutPlan, assertLayoutPlan } from "../src/presentation/layout-plan.js";
 import { renderComponentArticle } from "../src/presentation/component-renderer.js";
 import { resolveImagePlan } from "../src/media/image-plan.js";
+import { analyzeArticle } from "../src/agent/analyze-article.js";
+import { displayMarkdownText } from "../src/agent/inline-markdown.js";
+import { ARTICLE_RECIPES, recipesForArticleType } from "../src/reading/article-recipes.js";
 import { createBaselineReadingPlan, assertReadingPlan } from "../src/reading/reading-plan.js";
 import type { SourceFormat } from "../src/source/source-manifest.js";
+import { sha256 } from "../src/source/inspect-source.js";
 import { loadThemeLibraries, loadThemeLibrary } from "../src/theme/theme-library.js";
 import { recommendThemes } from "../src/theme/theme-recommendation.js";
 import {
   validateBlockDocument,
+  validateLayoutDecision,
   validateImagePlan,
   validateAssetManifest,
 } from "../src/validation/schema-validator.js";
+import { validateDecisionSource } from "../src/validation/layout-decision-source.js";
+import { validateDecisionSemantics } from "../src/validation/layout-decision-validator.js";
 
 const [command, ...args] = process.argv.slice(2);
 const options = parseOptions(args);
@@ -30,6 +38,8 @@ const options = parseOptions(args);
 try {
   if (command === "render") {
     await handleRender();
+  } else if (command === "inspect") {
+    await handleInspect();
   } else if (command === "themes") {
     await handleThemes();
   } else if (command === "recommend") {
@@ -49,29 +59,23 @@ async function handleRender(): Promise<void> {
   const input = required("input");
   const decisionPath = required("decision");
   const source = await readFile(path.resolve(input), "utf8");
-  const decision = await readJson(decisionPath) as LayoutDecision;
+  const decision = validateLayoutDecision(await readJson(decisionPath));
 
   const format = (options.format ?? (input.endsWith(".md") ? "markdown" : "plain-text")) as SourceFormat;
-  const sourceId = options["source-id"] ?? safeId(path.basename(input, path.extname(input)));
+  const sourceIntegrity = validateDecisionSource(decision, source);
+  if (!sourceIntegrity.valid) throw new Error(formatSourceIntegrityError(sourceIntegrity));
 
   const blockDocument = decisionToBlockDocument(decision);
-  // v2 模式不传 sourceManifest：跳过 sourceRefs/sourceSpans 验证
-  // 内容正确性由渲染后的 contentIntegrity 校验保证
   const validated = validateBlockDocument(blockDocument);
 
   const readingPlan = decisionToReadingPlan(decision);
   assertReadingPlan(validated, readingPlan);
 
   const library = await loadThemeLibrary(decision.theme);
+  const decisionErrors = validateDecisionSemantics(decision, validated, readingPlan, library);
+  if (decisionErrors.length > 0) throw new Error(`LayoutDecision semantic validation failed\n${decisionErrors.map((error) => `- ${error}`).join("\n")}`);
 
-  const selections: AgentLayoutSelection[] = decision.blocks
-    .filter((b) => b.component && b.variant)
-    .map((b) => ({
-      blockId: b.id,
-      componentId: b.component,
-      variantId: b.variant,
-      reason: b.reason ?? "agent decision",
-    }));
+  const selections = selectionsFromDecision(decision);
 
   const layout = createLayoutPlan(validated, readingPlan, library, {
     density: decision.density as RhythmDensity,
@@ -95,19 +99,70 @@ async function handleRender(): Promise<void> {
     theme: decision.theme,
     density: decision.density,
     blockCount: decision.blocks.length,
+    sourceIntegrity,
     contentIntegrity: result.contentIntegrity,
   }, null, 2) + "\n");
 }
 
+// === inspect: 为 Host Agent 提供源文事实、基线结构与合法选择 ===
+async function handleInspect(): Promise<void> {
+  const input = required("input");
+  const source = await readFile(path.resolve(input), "utf8");
+  const format = (options.format ?? (input.endsWith(".md") ? "markdown" : "plain-text")) as SourceFormat;
+  const sourceId = options["source-id"] ?? safeId(path.basename(input, path.extname(input)));
+  const analysis = analyzeArticle(source, { sourceId, format });
+  const libraries = await loadThemeLibraries();
+  const recommendations = recommendThemes(libraries, {
+    articleType: analysis.articleProfile.articleType,
+    tones: analysis.articleProfile.tone,
+    structurePattern: analysis.articleProfile.structurePattern,
+  });
+  const payload = {
+    specVersion: "1.0",
+    source: {
+      id: sourceId,
+      hash: sha256(source),
+      format,
+      segmentation: analysis.sourceManifest.segmentation,
+      segments: analysis.sourceManifest.segments.map((segment) => ({
+        id: segment.id,
+        order: segment.sourceOrder,
+        kindHint: segment.kindHint,
+        content: segment.content,
+      })),
+    },
+    agentContract: {
+      sourceIsReadOnly: true,
+      preserveEveryCharacterExceptWhitespace: true,
+      ordinaryBlocksUseThemeBaseline: true,
+      explicitComponentSelectionsAreSparse: true,
+    },
+    baseline: {
+      advisoryOnly: true,
+      articleProfile: analysis.articleProfile,
+      blocks: analysis.blockDocument.blocks.map((block) => ({
+        id: block.id,
+        type: block.type,
+        role: block.role,
+        content: block.content,
+      })),
+    },
+    recipes: ARTICLE_RECIPES,
+    suggestedRecipes: recipesForArticleType(analysis.articleProfile.articleType),
+    recommendations,
+    themes: libraries.map(themeDiscovery),
+  };
+  if (options.output) {
+    const output = await writeOutput(options.output, JSON.stringify(payload, null, 2) + "\n");
+    process.stdout.write(JSON.stringify({ success: true, output, sourceHash: payload.source.hash }, null, 2) + "\n");
+    return;
+  }
+  process.stdout.write(JSON.stringify({ success: true, data: payload }, null, 2) + "\n");
+}
+
 // === themes: 列出所有可用主题 ===
 async function handleThemes(): Promise<void> {
-  const themes = (await loadThemeLibraries()).map((library) => ({
-    id: library.manifest.id,
-    name: library.manifest.name,
-    description: library.manifest.description,
-    recommendation: library.manifest.recommendation,
-    components: library.components.map((component) => component.id),
-  }));
+  const themes = (await loadThemeLibraries()).map(themeDiscovery);
   process.stdout.write(JSON.stringify({ success: true, themes }, null, 2) + "\n");
 }
 
@@ -145,90 +200,69 @@ async function handleRecommend(): Promise<void> {
 
 // === validate: 校验 LayoutDecision 合法性 ===
 async function handleValidate(): Promise<void> {
+  const input = required("input");
   const decisionPath = required("decision");
-  const decision = await readJson(decisionPath) as LayoutDecision;
+  const source = await readFile(path.resolve(input), "utf8");
   const errors: string[] = [];
+  let decision: LayoutDecision | undefined;
+  try {
+    decision = validateLayoutDecision(await readJson(decisionPath));
+  } catch (error) {
+    errors.push(error instanceof Error ? error.message : String(error));
+  }
 
-  if (!decision.specVersion || decision.specVersion !== "2.0") {
-    errors.push("specVersion must be '2.0'");
-  }
-  if (!decision.theme) {
-    errors.push("theme is required");
-  }
-  if (!decision.blocks || decision.blocks.length === 0) {
-    errors.push("blocks array must not be empty");
-  }
+  if (!decision) return finishValidation(errors);
+
+  const sourceIntegrity = validateDecisionSource(decision, source);
+  if (!sourceIntegrity.valid) errors.push(formatSourceIntegrityError(sourceIntegrity));
 
   const library = await loadThemeLibrary(decision.theme).catch(() => null);
   if (!library) {
     errors.push(`theme '${decision.theme}' not found`);
   } else {
-    const componentIds = new Set(library.components.map((c) => c.id));
-    for (const block of decision.blocks) {
-      if (!componentIds.has(block.component)) {
-        errors.push(`block ${block.id}: component '${block.component}' not found in theme '${decision.theme}'`);
-        continue;
+    try {
+      const document = validateBlockDocument(decisionToBlockDocument(decision));
+      const readingPlan = decisionToReadingPlan(decision);
+      assertReadingPlan(document, readingPlan);
+      errors.push(...validateDecisionSemantics(decision, document, readingPlan, library));
+      if (errors.length === 0) {
+        const selections = selectionsFromDecision(decision);
+        createLayoutPlan(document, readingPlan, library, {
+          density: decision.density,
+          ...(selections.length > 0 ? { selections } : {}),
+        });
       }
-      const comp = library.components.find((c) => c.id === block.component)!;
-      const variantIds = new Set(comp.variants.map((v) => v.id));
-      if (!variantIds.has(block.variant)) {
-        errors.push(`block ${block.id}: variant '${block.variant}' not found in component '${block.component}'`);
-      }
+    } catch (error) {
+      errors.push(error instanceof Error ? error.message : String(error));
     }
   }
-
-  if (errors.length > 0) {
-    process.stdout.write(JSON.stringify({ success: false, errors }, null, 2) + "\n");
-    process.exitCode = 1;
-  } else {
-    process.stdout.write(JSON.stringify({ success: true, message: "LayoutDecision is valid" }, null, 2) + "\n");
-  }
-}
-
-// === LayoutDecision 转换为旧格式（内部桥接） ===
-interface LayoutDecision {
-  specVersion: string;
-  articleType: string;
-  themeReason?: string;
-  tone?: string[];
-  theme: string;
-  density: string;
-  blocks: LayoutDecisionBlock[];
-}
-
-interface LayoutDecisionBlock {
-  id: string;
-  type: string;
-  content: string;
-  component: string;
-  variant: string;
-  level?: number;
-  phase?: string;
-  gesture?: string;
-  emphasis?: string;
-  structure?: Record<string, unknown>;
-  marks?: Array<{ type: string; start: number; end: number }>;
-  reason?: string;
+  finishValidation(errors, sourceIntegrity);
 }
 
 function decisionToBlockDocument(decision: LayoutDecision): BlockDocument {
+  let sectionId = "entry";
   return {
     specVersion: "1.0",
     id: "agent-decision",
     articleType: decision.articleType,
-    moods: decision.tone,
-    blocks: decision.blocks.map((b, i) => ({
-      id: b.id,
-      type: b.type as any,
-      role: b.type,
-      content: b.content,
-      importance: b.emphasis === "strong" ? 0.9 : b.emphasis === "medium" ? 0.6 : 0.3,
-      sourceOrder: i,
-      ...(b.level ? { level: b.level } : {}),
-      ...(b.structure ? { structure: b.structure as any } : {}),
-      ...(b.marks ? { marks: b.marks as any } : {}),
-    })),
-  } as any;
+    ...(decision.tone ? { moods: decision.tone } : {}),
+    blocks: decision.blocks.map((block, index) => {
+      if (block.type === "heading") sectionId = block.id;
+      return {
+        id: block.id,
+        type: block.type,
+        role: block.role,
+        content: block.content,
+        importance: block.emphasis === "strong" ? 0.9 : block.emphasis === "medium" ? 0.6 : 0.3,
+        sourceOrder: index,
+        sectionId,
+        relationToPrevious: relationForDecisionBlock(block, index),
+        ...(block.level ? { level: block.level } : {}),
+        ...(decisionStructure(block) ? { structure: decisionStructure(block)! } : {}),
+        ...(block.marks ? { marks: block.marks } : {}),
+      };
+    }),
+  };
 }
 
 function decisionToReadingPlan(decision: LayoutDecision) {
@@ -239,13 +273,96 @@ function decisionToReadingPlan(decision: LayoutDecision) {
     items: decision.blocks.map((b) => ({
       blockId: b.id,
       compositionGroupId: b.phase === "entry" ? "opening" : b.phase === "exit" ? "closing" : "main",
-      phase: b.phase ?? "body",
-      gesture: b.gesture ?? "flow",
+      phase: b.phase,
+      gesture: b.gesture,
       emphasisFunction: b.emphasis === "strong" ? "cognitive" : b.emphasis === "medium" ? "structural" : "none",
-      strength: b.emphasis ?? "quiet",
+      strength: b.emphasis,
       reason: b.reason ?? "agent decision",
     })),
   } as any;
+}
+
+function selectionsFromDecision(decision: LayoutDecision): AgentLayoutSelection[] {
+  return decision.blocks.flatMap((block) => block.component && block.variant ? [{
+    blockId: block.id,
+    componentId: block.component,
+    variantId: block.variant,
+    reason: block.reason ?? "host-agent sparse enhancement",
+  }] : []);
+}
+
+function decisionStructure(block: LayoutDecisionBlock) {
+  if (block.structure) return block.structure;
+  if (block.type === "heading") {
+    const title = displayMarkdownText(block.content.replace(/^#{1,6}[\t ]+/u, "")).trim();
+    return { hasMarker: false, title };
+  }
+  if (block.type === "quote") {
+    const content = block.content.split(/\r?\n/u).map((line) => line.replace(/^>[\t ]?/u, "")).join("\n");
+    return { content, hasAttribution: false };
+  }
+  return undefined;
+}
+
+function relationForDecisionBlock(
+  block: LayoutDecisionBlock,
+  index: number,
+): NonNullable<BlockDocument["blocks"][number]["relationToPrevious"]> {
+  if (index === 0) return "default";
+  if (block.type === "heading") return "new-section";
+  if (block.phase === "exit" || block.gesture === "release") return "before-ending";
+  if (block.gesture === "pivot") return "turning-point";
+  if (block.gesture === "pause" || block.emphasis === "strong") return "before-strong-block";
+  if (block.type === "list" || block.type === "quote") return "same-group";
+  return "continuation";
+}
+
+function themeDiscovery(library: Awaited<ReturnType<typeof loadThemeLibraries>>[number]) {
+  return {
+    id: library.manifest.id,
+    name: library.manifest.name,
+    description: library.manifest.description,
+    recommendation: library.manifest.recommendation,
+    defaultDensity: library.manifest.defaultDensity,
+    budgets: library.manifest.budgets,
+    components: library.components.map((component) => ({
+      id: component.id,
+      kind: component.kind,
+      accepts: component.accepts,
+      fallbackVariant: component.fallbackVariant,
+      variants: component.variants.map((variant) => ({
+        id: variant.id,
+        label: variant.label,
+        visualWeight: variant.visualWeight,
+        surface: variant.surface,
+        accepts: variant.accepts,
+      })),
+    })),
+  };
+}
+
+function formatSourceIntegrityError(integrity: ReturnType<typeof validateDecisionSource>): string {
+  const reasons = [
+    ...(!integrity.hashMatches ? [`sourceHash mismatch: expected ${integrity.sourceHash}, got ${integrity.decisionHash}`] : []),
+    ...(!integrity.contentMatches ? [`decision blocks do not preserve the complete source in order near offset ${integrity.firstMismatch?.offset}: source='${integrity.firstMismatch?.source}' decision='${integrity.firstMismatch?.decision}'`] : []),
+  ];
+  return `Source integrity validation failed\n${reasons.map((reason) => `- ${reason}`).join("\n")}`;
+}
+
+function finishValidation(
+  errors: string[],
+  sourceIntegrity?: ReturnType<typeof validateDecisionSource>,
+): void {
+  if (errors.length > 0) {
+    process.stdout.write(JSON.stringify({ success: false, errors, ...(sourceIntegrity ? { sourceIntegrity } : {}) }, null, 2) + "\n");
+    process.exitCode = 1;
+    return;
+  }
+  process.stdout.write(JSON.stringify({
+    success: true,
+    message: "LayoutDecision is valid",
+    ...(sourceIntegrity ? { sourceIntegrity } : {}),
+  }, null, 2) + "\n");
 }
 
 // === 工具函数 ===
@@ -328,9 +445,10 @@ function usage(): string {
     "gzh-minimal-layout CLI",
     "",
     "Commands:",
+    "  inspect   --input <article.md> [--output <analysis-input.json>]  Emit source facts for the Host Agent",
     "  render    --input <article.md> --decision <layout-decision.json> --output <html> [--preview <html>]",
     "  themes    List all available themes with components and recommendation profiles",
     "  recommend --article-type <type> [--tone <a,b>] [--structure <pattern>]  Rank the top 3 themes",
-    "  validate  --decision <layout-decision.json>  Validate a LayoutDecision",
+    "  validate  --input <article.md> --decision <layout-decision.json>  Validate schema, source fidelity, recipe budgets, and theme legality",
   ].join("\n");
 }

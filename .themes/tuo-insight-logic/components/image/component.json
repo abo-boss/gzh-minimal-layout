@@ -1,0 +1,66 @@
+{
+  "specVersion": "1.0",
+  "id": "image",
+  "template": "template.html",
+  "kind": "image",
+  "accepts": {
+    "blockTypes": [
+      "image"
+    ]
+  },
+  "slots": [
+    {
+      "name": "src",
+      "source": "image-src",
+      "required": true
+    },
+    {
+      "name": "alt",
+      "source": "image-alt",
+      "required": true
+    },
+    {
+      "name": "caption",
+      "source": "image-caption",
+      "required": false
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "44px 24px 0",
+      "padding": "0"
+    },
+    "r1": {
+      "aspect-ratio": "16 / 10",
+      "overflow": "hidden",
+      "border-radius": "0px"
+    },
+    "r2": {
+      "display": "block",
+      "width": "100%",
+      "height": "100%",
+      "object-fit": "cover",
+      "border-radius": "0px"
+    },
+    "r3": {
+      "margin-top": "6px",
+      "color": "#848991",
+      "font-size": "10px",
+      "letter-spacing": ".16em",
+      "text-align": "center",
+      "font-style": "italic"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO image",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

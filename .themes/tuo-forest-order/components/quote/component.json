@@ -1,0 +1,61 @@
+{
+  "specVersion": "1.0",
+  "id": "quote",
+  "template": "template.html",
+  "kind": "quote",
+  "accepts": {
+    "blockTypes": [
+      "quote"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "quote-content",
+      "required": true
+    },
+    {
+      "name": "attribution",
+      "source": "quote-attribution",
+      "required": false
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "28px 0 0",
+      "padding": "25px 22px",
+      "background-color": "#e9e7e1",
+      "border-radius": "12px"
+    },
+    "r1": {
+      "margin": "0",
+      "color": "#11413e",
+      "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+      "font-size": "15px",
+      "font-style": "italic",
+      "line-height": "2.05",
+      "letter-spacing": "0.035em"
+    },
+    "r2": {
+      "display": "block",
+      "margin-top": "12px",
+      "color": "#555555",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "11px",
+      "font-style": "normal",
+      "text-align": "right"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO quote",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "panel",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

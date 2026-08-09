@@ -1,0 +1,42 @@
+{
+  "specVersion": "1.0",
+  "id": "prose",
+  "template": "template.html",
+  "kind": "prose",
+  "accepts": {
+    "blockTypes": [
+      "paragraph"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "30px 0 0",
+      "color": "#66635b",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "13px",
+      "font-weight": "300",
+      "line-height": "1.9",
+      "letter-spacing": ".03em",
+      "text-align": "justify"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO prose",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 0,
+      "styles": {}
+    }
+  ]
+}

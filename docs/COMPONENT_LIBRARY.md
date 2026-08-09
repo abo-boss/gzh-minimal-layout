@@ -11,7 +11,7 @@ Use JSON for decisions and HTML for structure:
 ## Theme package
 
 ```text
-themes/<theme-id>/
+.themes/<theme-id>/
 ├── theme.json
 └── components/
     └── <component-id>/
@@ -64,7 +64,7 @@ A component declares its accepted Block types, automatic slots and variants. Nar
 }
 ```
 
-Higher-priority legal variants become the deterministic baseline. The Agent may select another legal candidate by supplying a reason.
+Each component's declared fallback variant becomes the deterministic baseline. The Agent may sparsely select another legal candidate by supplying a reason; candidate priority never turns every reading gesture into a decoration.
 
 ## Template rules
 
@@ -113,8 +113,6 @@ Before registering a new component, verify it on complete articles rather than i
 
 Add specialized primitives only when the semantic structure needs a distinct reading behavior. A new visual appearance alone is not enough reason to add a component.
 
-## Reference-to-theme translation
+## TUO theme packages
 
-`forest-order` is the first formal theme. It translates a supplied editorial reference into WeChat-safe primitives: a 14px long-reading body, decorative forest-green mastheads, source-owned numbered section headings, champagne side-line subheadings, watermark quotations, custom list markers, inline marked text, serif key insights, two-column comparisons, CTA panels, and relation-aware whitespace. It does not copy the article's HTML or content.
-
-Decorations use real safe template nodes instead of pseudo-elements, so the browser preview closely matches the reference while the WeChat fragment remains inline-only. Source content is still protected: chapter numbers, comparison cells, marks, and CTA text render only from declared Block facts. External web fonts and animation remain intentionally excluded because they cannot be carried reliably into a pasted article.
+The active `tuo-*` packages keep their source-specific masthead, section, list, quote and CTA treatments inside their own component folders. Decorations use safe template nodes rather than pseudo-elements, while all source text remains renderer-owned.

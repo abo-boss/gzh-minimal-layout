@@ -1,4 +1,7 @@
 interface:
   display_name: "公众号智能排版"
-  short_description: "Agent 主导文章语义分析、主题选择与公众号完整排版"
-  default_prompt: "Use $gzh-minimal-layout to analyze this article, choose a suitable theme, and generate paste-safe WeChat HTML with a 375px preview."
+  short_description: "全文语义决策、主题匹配与微信内联 HTML 排版"
+  default_prompt: "Use $gzh-minimal-layout to analyze the full article, preserve every source character, choose a coherent theme recipe, and generate paste-safe WeChat HTML with a 375px preview."
+
+policy:
+  allow_implicit_invocation: true

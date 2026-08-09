@@ -1,0 +1,55 @@
+{
+  "specVersion": "1.0",
+  "id": "cta",
+  "template": "template.html",
+  "kind": "cta",
+  "accepts": {
+    "blockTypes": [
+      "cta"
+    ]
+  },
+  "slots": [
+    {
+      "name": "prompt",
+      "source": "cta-prompt",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "42px 0 0",
+      "padding": "48px 0 0",
+      "text-align": "center"
+    },
+    "r1": {
+      "display": "block",
+      "width": "56px",
+      "height": "56px",
+      "margin": "0 auto 16px",
+      "border-radius": "50%",
+      "color": "#8c9b8b",
+      "font-size": "22px",
+      "line-height": "56px"
+    },
+    "r2": {
+      "margin": "0",
+      "color": "#7a7a7a",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "14px",
+      "letter-spacing": ".05em",
+      "line-height": "1.8"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO cta",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "panel",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "specVersion": "1.0",
+  "id": "quote",
+  "template": "template.html",
+  "kind": "quote",
+  "accepts": {
+    "blockTypes": [
+      "quote"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "quote-content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "position": "relative",
+      "box-sizing": "border-box",
+      "margin": "36px 13px 0",
+      "padding": "18px 28px",
+      "overflow": "hidden",
+      "border-radius": "48px 0 48px 0",
+      "color": "#fff",
+      "text-align": "center"
+    },
+    "r1": {
+      "position": "absolute",
+      "color": "rgba(196,154,108,.58)",
+      "font-family": "Georgia,serif",
+      "font-size": "30px",
+      "line-height": "0.72",
+      "font-weight": "700",
+      "top": "22px",
+      "left": "12px"
+    },
+    "r2": {
+      "position": "relative",
+      "z-index": "1",
+      "margin": "0",
+      "color": "rgba(255,255,255,.95)",
+      "font-family": "LXGW WenKai, LXGW WenKai Mono TC, Songti SC, Georgia, serif",
+      "font-size": "14.5px",
+      "font-style": "italic",
+      "line-height": "1.9",
+      "letter-spacing": ".04em",
+      "text-align": "center"
+    },
+    "r3": {
+      "position": "absolute",
+      "color": "rgba(196,154,108,.58)",
+      "font-family": "Georgia,serif",
+      "font-size": "30px",
+      "line-height": "0.72",
+      "font-weight": "700",
+      "right": "12px",
+      "bottom": "4px"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO quote",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "panel",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

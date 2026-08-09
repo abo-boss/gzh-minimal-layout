@@ -1,0 +1,41 @@
+{
+  "specVersion": "1.0",
+  "id": "cta",
+  "template": "template.html",
+  "kind": "cta",
+  "accepts": {
+    "blockTypes": [
+      "cta"
+    ]
+  },
+  "slots": [
+    {
+      "name": "prompt",
+      "source": "cta-prompt",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "40px 0 40px",
+      "padding": "32px",
+      "border-radius": "24px",
+      "color": "#3A3732",
+      "font-family": "-apple-system,BlinkMacSystemFont,PingFang SC,Helvetica Neue,STHeiti,sans-serif",
+      "font-size": "16px",
+      "line-height": "1.85"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO cta",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "panel",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

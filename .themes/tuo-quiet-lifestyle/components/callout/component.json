@@ -1,0 +1,54 @@
+{
+  "specVersion": "1.0",
+  "id": "callout",
+  "template": "template.html",
+  "kind": "prose",
+  "accepts": {
+    "blockTypes": [
+      "callout"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "42px 0 0",
+      "padding": "48px 32px",
+      "color": "#fafaf7",
+      "text-align": "center"
+    },
+    "r1": {
+      "display": "block",
+      "margin": "0 0 24px",
+      "color": "#a6b2a6",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "10px",
+      "letter-spacing": ".3em"
+    },
+    "r2": {
+      "margin": "0",
+      "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+      "font-size": "23px",
+      "font-weight": "600",
+      "line-height": "2",
+      "letter-spacing": ".1em"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO callout",
+      "priority": 60,
+      "visualWeight": "strong",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

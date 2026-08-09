@@ -1,0 +1,118 @@
+{
+  "specVersion": "1.0",
+  "id": "list",
+  "template": "template.html",
+  "kind": "list",
+  "accepts": {
+    "blockTypes": [
+      "list"
+    ]
+  },
+  "slots": [
+    {
+      "name": "items",
+      "source": "list-items",
+      "required": true,
+      "format": "two-digit-arabic"
+    }
+  ],
+  "fallbackVariant": "ordered",
+  "baseStyles": {
+    "root": {
+      "margin": "0",
+      "padding": "0"
+    },
+    "list": {
+      "color": "#555555",
+      "margin": "0",
+      "padding": "0",
+      "list-style": "none",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "13px",
+      "line-height": "1.85"
+    },
+    "item": {
+      "display": "block",
+      "margin": "0",
+      "padding": "0"
+    },
+    "itemMarker": {
+      "display": "inline-block",
+      "width": "32px",
+      "color": "#11413e",
+      "opacity": "0.78",
+      "font-family": "Georgia,serif",
+      "font-style": "italic",
+      "font-weight": "700",
+      "letter-spacing": "0",
+      "vertical-align": "top"
+    },
+    "itemContent": {
+      "display": "inline-block",
+      "width": "calc(100% - 32px)",
+      "color": "#555555",
+      "letter-spacing": "0.035em",
+      "vertical-align": "top"
+    }
+  },
+  "variants": [
+    {
+      "id": "ordered",
+      "label": "TUO list",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    },
+    {
+      "id": "unordered",
+      "label": "TUO unordered list",
+      "priority": 70,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 0,
+      "accepts": {
+        "blockTypes": [
+          "list"
+        ]
+      },
+      "styles": {
+        "root": {
+          "margin": "0",
+          "padding": "0"
+        },
+        "list": {
+          "color": "#555555",
+          "margin": "0",
+          "padding": "0",
+          "list-style": "none",
+          "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+          "font-size": "13px",
+          "line-height": "1.85"
+        },
+        "item": {
+          "display": "block",
+          "margin": "0",
+          "padding": "0"
+        },
+        "itemMarker": {
+          "display": "inline-block",
+          "width": "24px",
+          "color": "#c0ac92",
+          "font-family": "Georgia,serif",
+          "font-weight": "700",
+          "letter-spacing": "0",
+          "vertical-align": "top"
+        },
+        "itemContent": {
+          "display": "inline-block",
+          "width": "calc(100% - 24px)",
+          "color": "#555555",
+          "letter-spacing": "0.035em",
+          "vertical-align": "top"
+        }
+      }
+    }
+  ]
+}

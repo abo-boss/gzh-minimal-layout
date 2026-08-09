@@ -1,0 +1,61 @@
+{
+  "specVersion": "1.0",
+  "id": "quote",
+  "template": "template.html",
+  "kind": "quote",
+  "accepts": {
+    "blockTypes": [
+      "quote"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "quote-content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "44px 24px 0",
+      "padding": "0",
+      "border": "0",
+      "border-left": "none",
+      "text-align": "left"
+    },
+    "r1": {
+      "display": "inline-block",
+      "margin": "0 0 18px",
+      "padding": "5px 14px",
+      "border-radius": "999px",
+      "color": "#162a45",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "11px",
+      "font-weight": "700",
+      "line-height": "1.2",
+      "letter-spacing": ".16em"
+    },
+    "r2": {
+      "margin": "0",
+      "color": "#242830",
+      "font-family": "Noto Serif SC, Songti SC, SimSun, Times New Roman, Georgia, serif",
+      "font-size": "15px",
+      "font-style": "italic",
+      "line-height": "1.9",
+      "letter-spacing": ".04em",
+      "text-align": "left"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO quote",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "panel",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

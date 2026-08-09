@@ -1,63 +1,37 @@
 # 组件映射参考
 
-Agent 为每个 block 选择组件和变体时，必须遵循此文件的映射规则。
+组件映射是渲染器的职责，不是 Agent 的逐段设计清单。
 
-## 映射规则
+## 默认映射
 
-每个 block 根据 `type` 字段匹配到一个组件，再根据语义角色选择变体。
+未填写 `component` / `variant` 时，渲染器按语义块选取所选主题的 fallback 变体：
 
-### 通用映射表（适用于大部分主题）
+| `block.type` | 默认组件 |
+| --- | --- |
+| `article-title` | `masthead` |
+| `heading`（level 1–2） | `heading` |
+| `heading`（level 3–6） | `subheading`，不可用时退回 `heading` |
+| `lead` / `paragraph` | `prose` |
+| `quote` | `quote` |
+| `list` | `list` |
+| `callout` | `callout`，不可用时退回 `prose` |
+| `image` | `image` |
+| `ending` | `ending` |
+| `cta` | `cta` |
 
-| block.type | 组件 | 变体选择逻辑 |
-|-----------|------|-------------|
-| article-title | masthead | editorial=正式/品牌感, minimal/quiet=克制简洁 |
-| heading | heading | numbered/marker=有编号/标记章节, plain/subtle=无编号 |
-| heading (h3+) | subheading | inset/side-line=缩进小标题 |
-| lead | lead 或 prose/lead | drop-cap=首字下沉, 无lead组件时用prose/lead |
-| paragraph | prose | body=正文流, focus/golden=金句停顿, inset=细节强调, muted=轻信息 |
-| quote | quote | pull/inset=侧线引用, quiet=轻引用 |
-| list | list | editorial/rail=编辑列表, compact=紧凑列表 |
-| image | lead-image | gallery=头图/插图 |
-| ending | ending | release/ritual/conclusion=收束, quiet=轻收尾 |
-| cta | cta 或 ending | action/question=行动提示, quiet=轻互动 |
-| article-subtitle | prose | muted=轻信息 |
-| metadata | prose | muted=轻信息 |
-| divider | prose | muted=轻信息 |
-| callout | prose | inset=缩进解释 |
-| table | comparison(仅forest-order) 或 prose | contrast/balanced=对比表, body=正文内嵌表 |
+阅读手势 `flow / pause / pivot / anchor / release` 默认只控制块间节奏，不会自动把普通段落变成左线、卡片或强调框。
 
-## 变体选择指南
+## 显式选择
 
-### emphasis=quiet 时
-优先选择：body, plain, quiet, compact, muted
+只有以下条件全部满足时，Agent 才填写 `component`、`variant` 和 `reason`：
 
-### emphasis=medium 时
-优先选择：lead, inset, editorial, numbered, marker
+1. `inspect` 输出证明该组合是此主题、此块和此结构的合法候选；
+2. 它表达全文中的真实重点，而不是为了让页面显得“丰富”；
+3. 它不同于主题默认映射；
+4. 全文未超过 recipe 预算，且强重点不相邻。
 
-### emphasis=strong 时
-优先选择：focus, golden, pull, drop-cap, ritual, cover, editorial(masthead)
+不允许自行发明组件或变体 ID，也不允许逐段套用 `flow-*`、`pause-*`、`pivot-*` 等装饰变体。
 
-## 各主题特殊能力
+列表、引用、图片、表格和 CTA 的内容来自 `structure`，由渲染器绑定到组件槽位。组件没有独立引用署名槽时，渲染器会把署名并入引用正文，仍保证原文完整。
 
-### quiet-editorial（6组件，最精简）
-- 无 subheading、lead、lead-image、cta 独立组件
-- h3+ 标题用 heading/plain
-- lead 内容用 prose/lead
-- cta 内容用 ending
-
-### forest-order（独有 comparison 组件）
-- table 块可选 comparison/contrast 或 comparison/balanced
-- masthead 有 cover 变体（深色封面）
-- prose 有 golden 变体（留白金句）
-- ending 有 ritual 变体（仪式收束）
-
-### 其他主题（标准10组件）
-- 都有 lead/drop-cap、lead-image/gallery、subheading/inset
-- prose 有 focus 变体（窄幅居中金句）
-- quote 有 pull 变体（中轴停顿金句）
-
-## 强调预算规则
-
-- 每个 section 最多 1 个 strong 强调
-- strong 类变体（focus, pull, golden, drop-cap, cover, ritual）不能相邻
-- surface 含色面的变体总占比不超过 20%
+外部垂直间距由 LayoutPlan 单独管理，组件根节点的外边距会归零，避免主题原始 margin 与文章节奏重复叠加。

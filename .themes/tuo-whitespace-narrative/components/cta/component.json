@@ -1,0 +1,44 @@
+{
+  "specVersion": "1.0",
+  "id": "cta",
+  "template": "template.html",
+  "kind": "cta",
+  "accepts": {
+    "blockTypes": [
+      "cta"
+    ]
+  },
+  "slots": [
+    {
+      "name": "prompt",
+      "source": "cta-prompt",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "36px auto 0",
+      "max-width": "92%",
+      "padding": "40px 0",
+      "color": "#948777",
+      "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+      "font-size": "18px",
+      "font-weight": "300",
+      "line-height": "1.8",
+      "letter-spacing": "0.11em",
+      "text-align": "center"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO cta",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "panel",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

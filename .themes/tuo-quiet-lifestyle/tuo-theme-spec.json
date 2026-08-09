@@ -1,0 +1,485 @@
+{
+  "specVersion": "tuo-theme-export/1.0",
+  "sourceGitHead": "49b137217a4769a83bebd0e562d422025595030a",
+  "sourceThemeId": "quiet-lifestyle",
+  "name": "燕麦糙绿",
+  "description": "燕麦白纸张、鼠尾草绿与宋体章节牌，适合生活观察和舒缓叙事。",
+  "eyebrow": "LIFESTYLE OBSERVATION",
+  "tokens": {
+    "background": "#f4f4f4",
+    "paper": "#fafaf7",
+    "color": "#3f3f3f",
+    "muted": "#a3a3a3",
+    "headingFont": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+    "bodyFont": "-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif",
+    "accent": "#5a6a5a",
+    "accentSoft": "#e8e4d9",
+    "radius": 4,
+    "paragraphGap": 29,
+    "blockGap": 42,
+    "sectionGap": 80,
+    "lineHeight": 1.85,
+    "alignment": "left",
+    "layout": {
+      "rhythm": {
+        "modes": {
+          "compact": {
+            "close": 9,
+            "flow": 23,
+            "break": 33,
+            "turn": 50,
+            "section": 62,
+            "release": 75
+          },
+          "balanced": {
+            "close": 12,
+            "flow": 29,
+            "break": 42,
+            "turn": 64,
+            "section": 80,
+            "release": 96
+          },
+          "spacious": {
+            "close": 15,
+            "flow": 37,
+            "break": 54,
+            "turn": 82,
+            "section": 102,
+            "release": 123
+          }
+        },
+        "relationMap": {
+          "continuation": "flow",
+          "sameGroup": "break",
+          "newArgument": "break",
+          "turningPoint": "turn",
+          "beforeStrong": "turn",
+          "afterStrong": "flow",
+          "newSection": "section",
+          "beforeEnding": "release"
+        }
+      },
+      "rails": {
+        "flow": {
+          "inset": 0,
+          "align": "justify"
+        },
+        "inset": {
+          "inset": 16,
+          "align": "left"
+        },
+        "focus": {
+          "inset": 0,
+          "maxWidth": "92%",
+          "align": "center"
+        },
+        "fullBleed": {
+          "inset": 0,
+          "align": "center"
+        }
+      },
+      "componentRhythm": {
+        "masthead": {
+          "bleedTop": 36,
+          "bleedInline": true,
+          "top": 40,
+          "horizontal": 24,
+          "bottom": 80,
+          "labelTop": 12,
+          "ornament": 0,
+          "ornamentLarge": 0
+        },
+        "heading": {
+          "markerSize": 11,
+          "ruleWidth": 48,
+          "ruleOffset": 12,
+          "titleTop": 12,
+          "subheadingInset": 16
+        },
+        "list": {
+          "orderedMarkerWidth": 52,
+          "unorderedMarkerWidth": 22,
+          "itemGap": 32
+        },
+        "quote": {
+          "verticalInset": 14,
+          "horizontalInset": 20,
+          "sourceTop": 12,
+          "watermarkSize": 32
+        },
+        "callout": {
+          "ctaBleed": 0,
+          "ctaVerticalInset": 48,
+          "ctaHorizontalInset": 32,
+          "labelBottom": 16,
+          "focusVerticalInset": 48
+        },
+        "ending": {
+          "topInset": 48,
+          "labelBottom": 12
+        },
+        "editorial": {
+          "headerBottom": 80,
+          "headerRuleWidth": 48,
+          "headerRuleBottom": 12,
+          "imageCaptionTop": 6,
+          "chapterGhostSize": 11,
+          "chapterGhostOffset": 0,
+          "headingRuleBottom": 12,
+          "listItemGap": 32,
+          "emphasisVertical": 48,
+          "emphasisInset": 16
+        }
+      }
+    }
+  },
+  "resolvedDefaultStyle": {
+    "background": "transparent",
+    "paper": "#fafaf7",
+    "color": "#3f3f3f",
+    "muted": "#a3a3a3",
+    "fontFamily": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+    "headingFont": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+    "headingSize": 17,
+    "accent": "#5a6a5a",
+    "accentSoft": "#e8e4d9",
+    "calloutBackground": "#daddd8",
+    "radius": 4,
+    "maxWidth": 560,
+    "contentPadding": 11,
+    "fontScale": 0.9,
+    "lineHeight": 1.85,
+    "paragraphGap": 29,
+    "blockGap": 42,
+    "sectionGap": 80,
+    "rhythmPreset": "balanced",
+    "rhythm": {
+      "close": 15,
+      "flow": 29,
+      "break": 42,
+      "turn": 64,
+      "section": 80,
+      "release": 96
+    },
+    "layout": {
+      "rhythm": {
+        "modes": {
+          "compact": {
+            "close": 9,
+            "flow": 23,
+            "break": 33,
+            "turn": 50,
+            "section": 62,
+            "release": 75
+          },
+          "balanced": {
+            "close": 12,
+            "flow": 29,
+            "break": 42,
+            "turn": 64,
+            "section": 80,
+            "release": 96
+          },
+          "spacious": {
+            "close": 15,
+            "flow": 37,
+            "break": 54,
+            "turn": 82,
+            "section": 102,
+            "release": 123
+          }
+        },
+        "relationMap": {
+          "continuation": "flow",
+          "sameGroup": "break",
+          "newArgument": "break",
+          "turningPoint": "turn",
+          "beforeStrong": "turn",
+          "afterStrong": "flow",
+          "newSection": "section",
+          "beforeEnding": "release"
+        }
+      },
+      "rails": {
+        "flow": {
+          "inset": 0,
+          "align": "justify"
+        },
+        "inset": {
+          "inset": 16,
+          "align": "left"
+        },
+        "focus": {
+          "inset": 0,
+          "maxWidth": "92%",
+          "align": "center"
+        },
+        "fullBleed": {
+          "inset": 0,
+          "align": "center"
+        }
+      },
+      "componentRhythm": {
+        "masthead": {
+          "bleedTop": 36,
+          "bleedInline": true,
+          "top": 40,
+          "horizontal": 24,
+          "bottom": 80,
+          "labelTop": 12,
+          "ornament": 0,
+          "ornamentLarge": 0
+        },
+        "heading": {
+          "markerSize": 11,
+          "ruleWidth": 48,
+          "ruleOffset": 12,
+          "titleTop": 12,
+          "subheadingInset": 16
+        },
+        "list": {
+          "orderedMarkerWidth": 52,
+          "unorderedMarkerWidth": 22,
+          "itemGap": 32
+        },
+        "quote": {
+          "verticalInset": 14,
+          "horizontalInset": 20,
+          "sourceTop": 12,
+          "watermarkSize": 32
+        },
+        "callout": {
+          "ctaBleed": 0,
+          "ctaVerticalInset": 48,
+          "ctaHorizontalInset": 32,
+          "labelBottom": 16,
+          "focusVerticalInset": 48
+        },
+        "ending": {
+          "topInset": 48,
+          "labelBottom": 12
+        },
+        "editorial": {
+          "headerBottom": 80,
+          "headerRuleWidth": 48,
+          "headerRuleBottom": 12,
+          "imageCaptionTop": 6,
+          "chapterGhostSize": 11,
+          "chapterGhostOffset": 0,
+          "headingRuleBottom": 12,
+          "listItemGap": 32,
+          "emphasisVertical": 48,
+          "emphasisInset": 16
+        }
+      }
+    },
+    "rails": {
+      "flow": {
+        "inset": 0,
+        "align": "justify"
+      },
+      "inset": {
+        "inset": 16,
+        "align": "left"
+      },
+      "focus": {
+        "inset": 0,
+        "maxWidth": "92%",
+        "align": "center"
+      },
+      "fullBleed": {
+        "inset": 0,
+        "align": "center"
+      }
+    },
+    "componentRhythm": {
+      "masthead": {
+        "bleedTop": 36,
+        "bleedInline": true,
+        "top": 40,
+        "horizontal": 24,
+        "bottom": 80,
+        "labelTop": 12,
+        "ornament": 0,
+        "ornamentLarge": 0
+      },
+      "heading": {
+        "markerSize": 11,
+        "ruleWidth": 48,
+        "ruleOffset": 12,
+        "titleTop": 12,
+        "subheadingInset": 16
+      },
+      "list": {
+        "orderedMarkerWidth": 52,
+        "unorderedMarkerWidth": 22,
+        "itemGap": 32
+      },
+      "quote": {
+        "verticalInset": 14,
+        "horizontalInset": 20,
+        "sourceTop": 12,
+        "watermarkSize": 32
+      },
+      "callout": {
+        "ctaBleed": 0,
+        "ctaVerticalInset": 48,
+        "ctaHorizontalInset": 32,
+        "labelBottom": 16,
+        "focusVerticalInset": 48
+      },
+      "ending": {
+        "topInset": 48,
+        "labelBottom": 12
+      },
+      "editorial": {
+        "headerBottom": 80,
+        "headerRuleWidth": 48,
+        "headerRuleBottom": 12,
+        "imageCaptionTop": 6,
+        "chapterGhostSize": 11,
+        "chapterGhostOffset": 0,
+        "headingRuleBottom": 12,
+        "listItemGap": 32,
+        "emphasisVertical": 48,
+        "emphasisInset": 16
+      }
+    },
+    "imageWidth": "content",
+    "imageScale": 1,
+    "imageRadiusPreset": "none",
+    "imageRadius": 0
+  },
+  "variants": {
+    "articleHeader": {
+      "default": "quiet-lifestyle-cover-title",
+      "focus": "quiet-lifestyle-cover-title"
+    },
+    "heading": {
+      "default": "quiet-lifestyle-part-heading",
+      "focus": "quiet-lifestyle-part-heading",
+      "contrast": "quiet-lifestyle-minor-heading"
+    },
+    "prose": {
+      "default": "quiet-lifestyle-prose",
+      "focus": "quiet-lifestyle-prose",
+      "contrast": "quiet-lifestyle-prose",
+      "pause": "quiet-lifestyle-prose"
+    },
+    "list": {
+      "default": "quiet-lifestyle-list",
+      "focus": "quiet-lifestyle-list"
+    },
+    "quote": {
+      "default": "quiet-lifestyle-quote-card",
+      "contrast": "quiet-lifestyle-quote-card",
+      "focus": "quiet-lifestyle-quote-card"
+    },
+    "media": {
+      "default": "quiet-lifestyle-photo",
+      "focus": "quiet-lifestyle-photo"
+    },
+    "emphasis": {
+      "default": "quiet-lifestyle-daily-quote",
+      "focus": "quiet-lifestyle-daily-quote",
+      "contrast": "quiet-lifestyle-daily-quote"
+    },
+    "divider": {
+      "default": "quiet-lifestyle-double-dot-rule",
+      "pause": "quiet-lifestyle-double-dot-rule"
+    },
+    "ending": {
+      "default": "quiet-lifestyle-closing-note",
+      "focus": "quiet-lifestyle-closing-note",
+      "pause": "quiet-lifestyle-closing-note"
+    }
+  },
+  "inlineEmphasis": {
+    "highlight": "underline",
+    "strong": "accent"
+  },
+  "heroImage": {
+    "src": "/default-heroes/whitespace-narrative-light-shadow.jpg",
+    "alt": "河岸树影油画",
+    "caption": "SLOW LIVING",
+    "crop": "landscape"
+  },
+  "componentSamples": [
+    {
+      "slug": "01-masthead",
+      "label": "文章题头 / Masthead",
+      "file": "components/01-masthead.html"
+    },
+    {
+      "slug": "02-heading-h2",
+      "label": "二级章节 / H2",
+      "file": "components/02-heading-h2.html"
+    },
+    {
+      "slug": "03-subheading-h3",
+      "label": "三级标题 / H3",
+      "file": "components/03-subheading-h3.html"
+    },
+    {
+      "slug": "04-minor-heading-h4",
+      "label": "四级标题 / H4",
+      "file": "components/04-minor-heading-h4.html"
+    },
+    {
+      "slug": "05-lead",
+      "label": "开篇正文 / Lead",
+      "file": "components/05-lead.html"
+    },
+    {
+      "slug": "06-prose",
+      "label": "普通正文 / Prose",
+      "file": "components/06-prose.html"
+    },
+    {
+      "slug": "07-focus-prose",
+      "label": "重点正文 / Focus prose",
+      "file": "components/07-focus-prose.html"
+    },
+    {
+      "slug": "08-ordered-list",
+      "label": "有序列表 / Ordered list",
+      "file": "components/08-ordered-list.html"
+    },
+    {
+      "slug": "09-unordered-list",
+      "label": "无序列表 / Unordered list",
+      "file": "components/09-unordered-list.html"
+    },
+    {
+      "slug": "10-quote",
+      "label": "引用 / Quote",
+      "file": "components/10-quote.html"
+    },
+    {
+      "slug": "11-callout",
+      "label": "重点卡 / Callout",
+      "file": "components/11-callout.html"
+    },
+    {
+      "slug": "12-cta",
+      "label": "行动提示 / CTA",
+      "file": "components/12-cta.html"
+    },
+    {
+      "slug": "13-image",
+      "label": "图片与图注 / Image",
+      "file": "components/13-image.html"
+    },
+    {
+      "slug": "14-divider",
+      "label": "分隔 / Divider",
+      "file": "components/14-divider.html"
+    },
+    {
+      "slug": "15-ending",
+      "label": "收束 / Ending",
+      "file": "components/15-ending.html"
+    }
+  ],
+  "compositionNote": "Each component is rendered independently; full reading rhythm is shown in reference.wechat.html."
+}

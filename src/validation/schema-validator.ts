@@ -5,6 +5,7 @@ import { Ajv2020, type ErrorObject, type ValidateFunction } from "ajv/dist/2020.
 import addFormatsImport from "ajv-formats";
 
 import type { BlockDocument } from "../contracts/block-document.js";
+import type { LayoutDecision } from "../contracts/layout-decision.js";
 import type { ArticleProfile } from "../contracts/article-profile.js";
 import type {
   CandidateCatalog,
@@ -46,6 +47,7 @@ const componentDefinitionValidator = compileSchema("../../schemas/component-defi
 const candidateCatalogValidator = compileSchema("../../schemas/candidate-catalog.schema.json");
 const imagePlanValidator = compileSchema("../../schemas/image-plan.schema.json");
 const assetManifestValidator = compileSchema("../../schemas/asset-manifest.schema.json");
+const layoutDecisionValidator = compileSchema("../../schemas/layout-decision.schema.json");
 
 function compileSchema(relativePath: string): ValidateFunction {
   const path = fileURLToPath(new URL(relativePath, import.meta.url));
@@ -156,6 +158,10 @@ export function validateImagePlan(input: unknown): ImagePlan {
 
 export function validateAssetManifest(input: unknown): AssetManifest {
   return validatePresentationContract(input, assetManifestValidator, "AssetManifest") as AssetManifest;
+}
+
+export function validateLayoutDecision(input: unknown): LayoutDecision {
+  return validatePresentationContract(input, layoutDecisionValidator, "LayoutDecision") as LayoutDecision;
 }
 
 function validatePresentationContract(

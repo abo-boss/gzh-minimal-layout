@@ -1,0 +1,485 @@
+{
+  "specVersion": "tuo-theme-export/1.0",
+  "sourceGitHead": "49b137217a4769a83bebd0e562d422025595030a",
+  "sourceThemeId": "insight-logic",
+  "name": "冷峻蓝冰",
+  "description": "冷白纸张、普鲁士墨蓝与重叠编号，适合观点、决策和理性思考类长文。",
+  "eyebrow": "INSIGHT & LOGIC",
+  "tokens": {
+    "background": "#fcfcfd",
+    "paper": "#ffffff",
+    "color": "#242830",
+    "muted": "#848991",
+    "headingFont": "Noto Serif SC, Songti SC, SimSun, Times New Roman, Georgia, serif",
+    "bodyFont": "-apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue, Microsoft YaHei, sans-serif",
+    "accent": "#162a45",
+    "accentSoft": "#eef3f8",
+    "radius": 8,
+    "paragraphGap": 28,
+    "blockGap": 44,
+    "sectionGap": 72,
+    "lineHeight": 2.25,
+    "alignment": "left",
+    "layout": {
+      "rhythm": {
+        "modes": {
+          "compact": {
+            "close": 11,
+            "flow": 22,
+            "break": 34,
+            "turn": 44,
+            "section": 56,
+            "release": 69
+          },
+          "balanced": {
+            "close": 14,
+            "flow": 28,
+            "break": 44,
+            "turn": 56,
+            "section": 72,
+            "release": 88
+          },
+          "spacious": {
+            "close": 18,
+            "flow": 36,
+            "break": 56,
+            "turn": 72,
+            "section": 92,
+            "release": 113
+          }
+        },
+        "relationMap": {
+          "continuation": "flow",
+          "sameGroup": "break",
+          "newArgument": "break",
+          "turningPoint": "turn",
+          "beforeStrong": "turn",
+          "afterStrong": "flow",
+          "newSection": "section",
+          "beforeEnding": "release"
+        }
+      },
+      "rails": {
+        "flow": {
+          "inset": 24,
+          "align": "justify"
+        },
+        "inset": {
+          "inset": 24,
+          "align": "left"
+        },
+        "focus": {
+          "inset": 24,
+          "maxWidth": "92%",
+          "align": "center"
+        },
+        "fullBleed": {
+          "inset": 0,
+          "align": "left"
+        }
+      },
+      "componentRhythm": {
+        "masthead": {
+          "bleedTop": 0,
+          "bleedInline": false,
+          "top": 44,
+          "horizontal": 24,
+          "bottom": 44,
+          "labelTop": 12,
+          "ornament": 0,
+          "ornamentLarge": 0
+        },
+        "heading": {
+          "markerSize": 56,
+          "ruleWidth": 0,
+          "ruleOffset": 0,
+          "titleTop": 0,
+          "subheadingInset": 14
+        },
+        "list": {
+          "orderedMarkerWidth": 64,
+          "unorderedMarkerWidth": 24,
+          "itemGap": 32
+        },
+        "quote": {
+          "verticalInset": 40,
+          "horizontalInset": 24,
+          "sourceTop": 12,
+          "watermarkSize": 36
+        },
+        "callout": {
+          "ctaBleed": 0,
+          "ctaVerticalInset": 36,
+          "ctaHorizontalInset": 24,
+          "labelBottom": 14,
+          "focusVerticalInset": 48
+        },
+        "ending": {
+          "topInset": 56,
+          "labelBottom": 0
+        },
+        "editorial": {
+          "headerBottom": 36,
+          "headerRuleWidth": 80,
+          "headerRuleBottom": 20,
+          "imageCaptionTop": 6,
+          "chapterGhostSize": 56,
+          "chapterGhostOffset": 28,
+          "headingRuleBottom": 32,
+          "listItemGap": 32,
+          "emphasisVertical": 56,
+          "emphasisInset": 24
+        }
+      }
+    }
+  },
+  "resolvedDefaultStyle": {
+    "background": "transparent",
+    "paper": "#ffffff",
+    "color": "#242830",
+    "muted": "#848991",
+    "fontFamily": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+    "headingFont": "Noto Serif SC, Songti SC, SimSun, Times New Roman, Georgia, serif",
+    "headingSize": 15,
+    "accent": "#162a45",
+    "accentSoft": "#eef3f8",
+    "calloutBackground": "#d0d4da",
+    "radius": 8,
+    "maxWidth": 560,
+    "contentPadding": 11,
+    "fontScale": 0.9,
+    "lineHeight": 2.25,
+    "paragraphGap": 28,
+    "blockGap": 44,
+    "sectionGap": 72,
+    "rhythmPreset": "balanced",
+    "rhythm": {
+      "close": 14,
+      "flow": 28,
+      "break": 44,
+      "turn": 56,
+      "section": 72,
+      "release": 88
+    },
+    "layout": {
+      "rhythm": {
+        "modes": {
+          "compact": {
+            "close": 11,
+            "flow": 22,
+            "break": 34,
+            "turn": 44,
+            "section": 56,
+            "release": 69
+          },
+          "balanced": {
+            "close": 14,
+            "flow": 28,
+            "break": 44,
+            "turn": 56,
+            "section": 72,
+            "release": 88
+          },
+          "spacious": {
+            "close": 18,
+            "flow": 36,
+            "break": 56,
+            "turn": 72,
+            "section": 92,
+            "release": 113
+          }
+        },
+        "relationMap": {
+          "continuation": "flow",
+          "sameGroup": "break",
+          "newArgument": "break",
+          "turningPoint": "turn",
+          "beforeStrong": "turn",
+          "afterStrong": "flow",
+          "newSection": "section",
+          "beforeEnding": "release"
+        }
+      },
+      "rails": {
+        "flow": {
+          "inset": 24,
+          "align": "justify"
+        },
+        "inset": {
+          "inset": 24,
+          "align": "left"
+        },
+        "focus": {
+          "inset": 24,
+          "maxWidth": "92%",
+          "align": "center"
+        },
+        "fullBleed": {
+          "inset": 0,
+          "align": "left"
+        }
+      },
+      "componentRhythm": {
+        "masthead": {
+          "bleedTop": 0,
+          "bleedInline": false,
+          "top": 44,
+          "horizontal": 24,
+          "bottom": 44,
+          "labelTop": 12,
+          "ornament": 0,
+          "ornamentLarge": 0
+        },
+        "heading": {
+          "markerSize": 56,
+          "ruleWidth": 0,
+          "ruleOffset": 0,
+          "titleTop": 0,
+          "subheadingInset": 14
+        },
+        "list": {
+          "orderedMarkerWidth": 64,
+          "unorderedMarkerWidth": 24,
+          "itemGap": 32
+        },
+        "quote": {
+          "verticalInset": 40,
+          "horizontalInset": 24,
+          "sourceTop": 12,
+          "watermarkSize": 36
+        },
+        "callout": {
+          "ctaBleed": 0,
+          "ctaVerticalInset": 36,
+          "ctaHorizontalInset": 24,
+          "labelBottom": 14,
+          "focusVerticalInset": 48
+        },
+        "ending": {
+          "topInset": 56,
+          "labelBottom": 0
+        },
+        "editorial": {
+          "headerBottom": 36,
+          "headerRuleWidth": 80,
+          "headerRuleBottom": 20,
+          "imageCaptionTop": 6,
+          "chapterGhostSize": 56,
+          "chapterGhostOffset": 28,
+          "headingRuleBottom": 32,
+          "listItemGap": 32,
+          "emphasisVertical": 56,
+          "emphasisInset": 24
+        }
+      }
+    },
+    "rails": {
+      "flow": {
+        "inset": 24,
+        "align": "justify"
+      },
+      "inset": {
+        "inset": 24,
+        "align": "left"
+      },
+      "focus": {
+        "inset": 24,
+        "maxWidth": "92%",
+        "align": "center"
+      },
+      "fullBleed": {
+        "inset": 0,
+        "align": "left"
+      }
+    },
+    "componentRhythm": {
+      "masthead": {
+        "bleedTop": 0,
+        "bleedInline": false,
+        "top": 44,
+        "horizontal": 24,
+        "bottom": 44,
+        "labelTop": 12,
+        "ornament": 0,
+        "ornamentLarge": 0
+      },
+      "heading": {
+        "markerSize": 56,
+        "ruleWidth": 0,
+        "ruleOffset": 0,
+        "titleTop": 0,
+        "subheadingInset": 14
+      },
+      "list": {
+        "orderedMarkerWidth": 64,
+        "unorderedMarkerWidth": 24,
+        "itemGap": 32
+      },
+      "quote": {
+        "verticalInset": 40,
+        "horizontalInset": 24,
+        "sourceTop": 12,
+        "watermarkSize": 36
+      },
+      "callout": {
+        "ctaBleed": 0,
+        "ctaVerticalInset": 36,
+        "ctaHorizontalInset": 24,
+        "labelBottom": 14,
+        "focusVerticalInset": 48
+      },
+      "ending": {
+        "topInset": 56,
+        "labelBottom": 0
+      },
+      "editorial": {
+        "headerBottom": 36,
+        "headerRuleWidth": 80,
+        "headerRuleBottom": 20,
+        "imageCaptionTop": 6,
+        "chapterGhostSize": 56,
+        "chapterGhostOffset": 28,
+        "headingRuleBottom": 32,
+        "listItemGap": 32,
+        "emphasisVertical": 56,
+        "emphasisInset": 24
+      }
+    },
+    "imageWidth": "content",
+    "imageScale": 1,
+    "imageRadiusPreset": "none",
+    "imageRadius": 0
+  },
+  "variants": {
+    "articleHeader": {
+      "default": "insight-logic-cover",
+      "focus": "insight-logic-cover"
+    },
+    "heading": {
+      "default": "insight-logic-section",
+      "focus": "insight-logic-section",
+      "contrast": "insight-logic-subheading"
+    },
+    "prose": {
+      "default": "insight-logic-prose",
+      "focus": "insight-logic-prose",
+      "contrast": "insight-logic-prose",
+      "pause": "insight-logic-prose"
+    },
+    "list": {
+      "default": "insight-logic-pill-list",
+      "focus": "insight-logic-pill-list"
+    },
+    "quote": {
+      "default": "insight-logic-pull-quote",
+      "contrast": "insight-logic-pull-quote",
+      "focus": "insight-logic-pull-quote"
+    },
+    "media": {
+      "default": "insight-logic-media",
+      "focus": "insight-logic-media"
+    },
+    "emphasis": {
+      "default": "insight-logic-question-card",
+      "focus": "insight-logic-question-card",
+      "contrast": "insight-logic-question-card"
+    },
+    "divider": {
+      "default": "insight-logic-star-divider",
+      "pause": "insight-logic-star-divider"
+    },
+    "ending": {
+      "default": "insight-logic-conclusion",
+      "focus": "insight-logic-conclusion",
+      "pause": "insight-logic-conclusion"
+    }
+  },
+  "inlineEmphasis": {
+    "highlight": "underline",
+    "strong": "accent"
+  },
+  "heroImage": {
+    "src": "/default-heroes/whitespace-narrative-light-shadow.jpg",
+    "alt": "河流与草地油画",
+    "caption": "INSIGHT & LOGIC",
+    "crop": "portrait"
+  },
+  "componentSamples": [
+    {
+      "slug": "01-masthead",
+      "label": "文章题头 / Masthead",
+      "file": "components/01-masthead.html"
+    },
+    {
+      "slug": "02-heading-h2",
+      "label": "二级章节 / H2",
+      "file": "components/02-heading-h2.html"
+    },
+    {
+      "slug": "03-subheading-h3",
+      "label": "三级标题 / H3",
+      "file": "components/03-subheading-h3.html"
+    },
+    {
+      "slug": "04-minor-heading-h4",
+      "label": "四级标题 / H4",
+      "file": "components/04-minor-heading-h4.html"
+    },
+    {
+      "slug": "05-lead",
+      "label": "开篇正文 / Lead",
+      "file": "components/05-lead.html"
+    },
+    {
+      "slug": "06-prose",
+      "label": "普通正文 / Prose",
+      "file": "components/06-prose.html"
+    },
+    {
+      "slug": "07-focus-prose",
+      "label": "重点正文 / Focus prose",
+      "file": "components/07-focus-prose.html"
+    },
+    {
+      "slug": "08-ordered-list",
+      "label": "有序列表 / Ordered list",
+      "file": "components/08-ordered-list.html"
+    },
+    {
+      "slug": "09-unordered-list",
+      "label": "无序列表 / Unordered list",
+      "file": "components/09-unordered-list.html"
+    },
+    {
+      "slug": "10-quote",
+      "label": "引用 / Quote",
+      "file": "components/10-quote.html"
+    },
+    {
+      "slug": "11-callout",
+      "label": "重点卡 / Callout",
+      "file": "components/11-callout.html"
+    },
+    {
+      "slug": "12-cta",
+      "label": "行动提示 / CTA",
+      "file": "components/12-cta.html"
+    },
+    {
+      "slug": "13-image",
+      "label": "图片与图注 / Image",
+      "file": "components/13-image.html"
+    },
+    {
+      "slug": "14-divider",
+      "label": "分隔 / Divider",
+      "file": "components/14-divider.html"
+    },
+    {
+      "slug": "15-ending",
+      "label": "收束 / Ending",
+      "file": "components/15-ending.html"
+    }
+  ],
+  "compositionNote": "Each component is rendered independently; full reading rhythm is shown in reference.wechat.html."
+}

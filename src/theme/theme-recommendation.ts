@@ -44,6 +44,7 @@ export function recommendThemes(
   const tones = uniqueNormalized(input.tones ?? []);
 
   return libraries
+    .filter((library) => library.manifest.recommendation.articleTypes.includes(input.articleType))
     .map((library) => scoreTheme(library, input, tones))
     .sort((left, right) => right.score - left.score || left.themeId.localeCompare(right.themeId))
     .slice(0, limit);

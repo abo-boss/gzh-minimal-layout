@@ -1,0 +1,117 @@
+{
+  "specVersion": "1.0",
+  "id": "list",
+  "template": "template.html",
+  "kind": "list",
+  "accepts": {
+    "blockTypes": [
+      "list"
+    ]
+  },
+  "slots": [
+    {
+      "name": "items",
+      "source": "list-items",
+      "required": true,
+      "format": "two-digit-arabic"
+    }
+  ],
+  "fallbackVariant": "ordered",
+  "baseStyles": {
+    "root": {
+      "margin": "0",
+      "padding": "0"
+    },
+    "list": {
+      "color": "{color.ink}",
+      "margin": "42px 16px 0",
+      "padding": "0"
+    },
+    "item": {
+      "display": "block",
+      "list-style": "none",
+      "margin": "0",
+      "padding": "0",
+      "color": "#4a4a4a",
+      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+      "font-size": "14px",
+      "line-height": "1.85"
+    },
+    "itemMarker": {
+      "display": "inline-block",
+      "width": "52px",
+      "color": "#5a6a5a",
+      "opacity": "0.78",
+      "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+      "font-size": "15px",
+      "font-weight": "700",
+      "letter-spacing": "0.08em",
+      "vertical-align": "top"
+    },
+    "itemContent": {
+      "display": "inline-block",
+      "width": "calc(100% - 52px)",
+      "vertical-align": "top"
+    }
+  },
+  "variants": [
+    {
+      "id": "ordered",
+      "label": "TUO list",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    },
+    {
+      "id": "unordered",
+      "label": "TUO unordered list",
+      "priority": 70,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 0,
+      "accepts": {
+        "blockTypes": [
+          "list"
+        ]
+      },
+      "styles": {
+        "root": {
+          "margin": "0",
+          "padding": "0"
+        },
+        "list": {
+          "color": "{color.ink}",
+          "margin": "42px 16px 0",
+          "padding": "0"
+        },
+        "item": {
+          "display": "block",
+          "list-style": "none",
+          "margin": "0",
+          "padding": "0",
+          "color": "#4a4a4a",
+          "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+          "font-size": "14px",
+          "line-height": "1.85"
+        },
+        "itemMarker": {
+          "display": "inline-block",
+          "width": "22px",
+          "color": "#8c9b8b",
+          "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
+          "font-size": "9px",
+          "font-weight": "700",
+          "letter-spacing": "0",
+          "vertical-align": "top"
+        },
+        "itemContent": {
+          "display": "inline-block",
+          "width": "calc(100% - 22px)",
+          "vertical-align": "top"
+        }
+      }
+    }
+  ]
+}

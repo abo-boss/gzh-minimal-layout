@@ -1,142 +1,110 @@
 ---
 name: gzh-minimal-layout
-description: 分析公众号文章结构与语义，一步生成可直接粘贴到微信公众号后台的内联样式 HTML。适用于用户提供文章或要求公众号排版。
+description: 分析 Markdown 或纯文本公众号文章的结构、语义与阅读节奏，选择已注册主题，并生成可直接粘贴到微信公众号编辑器的内联 HTML。用户提出公众号排版、微信文章排版、文章主题预览、文章结构拆分合并或 375px 微信排版时使用。
 ---
 
 # 公众号智能排版
 
-## 核心原则
+把宿主 Agent 当作语义规划器，把本 Skill 的 CLI 当作唯一渲染器。不要让 Agent 手写 HTML/CSS，也不要让脚本假装完成 Agent 的内容判断。
 
-- 保留全部原文，不得改写、补写、遗漏或重复。
-- Agent 负责一次性决策：文章类型 + 分块 + 组件选择 + 阅读节奏。
-- 渲染器负责确定性执行和内容完整性校验。
+## 不可破坏的边界
 
-## 用户交付
+- 原始文章只读。不得改写、补写、删减、重复或重排正文。
+- Agent 只决定文章画像、相邻内容的拆分/合并、语义角色、文章级配方、主题和少量重点组件。
+- 普通标题、正文、列表、引用和结尾由主题配方确定性映射；不要逐段选择组件。
+- CLI 必须同时校验 `sourceHash` 和全部块内容覆盖；决策文件不能自证原文完整。
+- 阅读手势只控制间距。`pause`、`pivot`、`release` 不得自动给每个段落加竖线、底色或卡片。
+- 所有 375px 输出的外层左右内容轨固定为 20px。组件内部可有语义需要的局部收窄，但普通正文不得额外整体缩进。
+- 不上传、不发布、不创建草稿，除非用户另行明确要求且当前项目提供相应能力。
 
-唯一必交文件：`<slug>.wechat.html`（可粘贴进微信编辑器的内联 HTML 片段）。
+## 可移植执行约定
 
-可选文件（按需提供）：
-- `<slug>.preview.html`：375px 预览页
-- `layout-decision.json`：Agent 决策记录
+`SKILL_ROOT` 表示本文件所在目录。所有 CLI 命令在该目录运行；文章和中间文件写入 `/tmp/gzh-layout/<slug>/`，不要写回用户原文。只有 `node_modules` 不存在时才运行 `npm install`。
 
-## 意图路由
+宿主可以是 Codex、Claude Code、OpenCode 或其它能读取 Skill 并执行本地命令的 Agent。本项目不内置特定模型或 Provider；当前正在执行本 Skill 的宿主 Agent 就是排版 Agent。
 
-根据文章复杂度选择模式：
+## 标准工作流
 
-| 模式 | 适用场景 | 步骤数 |
-|------|---------|--------|
-| 快速 | 短文(<1500字)、结构简单 | 3步 |
-| 标准 | 长文、复杂结构、多章节 | 4步 |
+### 1. 读取事实
 
-## 工作流（标准模式）
-
-```text
-Source → Agent 读主题参考 → Agent 输出 LayoutDecision → CLI render → WeChat HTML
-```
-
-### Step 1: 准备
-
-在本 Skill 根目录工作。仅 `node_modules` 不存在时运行 `npm install`。
-
-用户给出文件时直接读取；粘贴文章时保存为 `/tmp/gzh-layout/<slug>/source.md`。
-
-### Step 2: 推荐后再决策
-
-先通读原文，判断 `articleType`、1–3 个英文 `tone` 标签和 `structure`。必须运行主题推荐命令，再从返回的 Top 3 中选择主题；不得因示例、主题索引的排列顺序或“通用”标签直接固定选择某个主题。
+把粘贴文章原样保存为 `$WORK/source.md`，然后运行：
 
 ```bash
-npm run --silent cli -- recommend \
-  --article-type literary-prose \
-  --tone cool,reflective,minimal \
-  --structure fragmented-prose
+npm run --silent cli -- inspect \
+  --input "$WORK/source.md" \
+  --output "$WORK/analysis-input.json"
 ```
 
-散文必须先区分气质：冷调极简优先比较 `cobalt-essay`，温暖叙事优先比较 `whitespace-journal`，文艺手工感优先比较 `brick-literary`，实验/自然意象优先比较 `moss-staircase`。Top 1 不是强制选择；若候选得分接近，按文章的真实视觉气质选择，并写明 `themeReason`。
+完整读取原文和 `analysis-input.json`。其中 source hash、源段和主题目录是事实；`baseline.advisoryOnly=true` 表示基线分析仅供参考，Agent 必须根据全文修正错误的文章类型和分块。
 
-读取 [references/theme-index.md](references/theme-index.md) 和 [references/component-mapping.md](references/component-mapping.md)，然后为文章写出一份 `layout-decision.json`：
+### 2. 做文章级决策
 
-```json
-{
-  "specVersion": "2.0",
-  "articleType": "literary-prose",
-  "tone": ["cool", "reflective", "minimal"],
-  "theme": "<theme-id-from-recommend>",
-  "themeReason": "<why this candidate fits the source better than the other two>",
-  "density": "balanced",
-  "blocks": [
-    {
-      "id": "title-1",
-      "type": "article-title",
-      "content": "标题原文",
-      "component": "masthead",
-      "variant": "editorial",
-      "phase": "entry",
-      "gesture": "anchor",
-      "emphasis": "strong"
-    },
-    {
-      "id": "p-1",
-      "type": "paragraph",
-      "content": "段落原文...",
-      "component": "prose",
-      "variant": "body",
-      "phase": "body",
-      "gesture": "flow",
-      "emphasis": "quiet"
-    }
-  ]
-}
+从 `analysis-input.json` 选择：
+
+- 一个主导 `articleType`、最多 3 个英文 `tone` 和一个 `structurePattern`；
+- 一个与文章类型相容的 `recipe`；
+- 一个已发现主题，并用 `themeReason` 说明它为何比其它候选更适合全文气质；
+- `density`：教程/清单可 `dense`，通常用 `balanced`，随笔/散文可 `airy`。
+
+先定全文配方，再处理块。不要逐段随机挑组件。
+
+### 3. 生成语义块
+
+写 `$WORK/layout-decision.json`，Schema 为 [schemas/layout-decision.schema.json](schemas/layout-decision.schema.json)。详细示例与分块规则见 [references/agent-workflow.md](references/agent-workflow.md)。
+
+分块时遵守：
+
+- 块内容必须逐字取自原文；允许改变块边界和块之间的空白，不允许改变任何非空白字符。
+- 只合并相邻内容；不得跨标题章节合并。
+- 同一连续编号/项目列表合并成一个 `list`，不要把每项排成独立正文块。
+- 标题、列表、引用、图片保持结构容器，不与普通正文混合。
+- 正文块以一个完整信息单元为准：观点文通常是“论点 + 紧随解释”，随笔通常是 1–3 个语义连续句子。
+- 开场、转折、收束和 CTA 可以短；普通正文不要留下大量孤立单句。
+- `phase` 只能按 `entry → body → exit` 前进；`strong` 不相邻，并服从配方预算。
+
+普通块不要填写 `component`/`variant`。只有确实需要区别于主题基线的极少数块才填写，并提供 `reason`。不确定时省略。
+
+### 4. 强制校验
+
+```bash
+npm run --silent cli -- validate \
+  --input "$WORK/source.md" \
+  --decision "$WORK/layout-decision.json"
 ```
 
-决策要求：
-- `content` 必须是原文原样，不改写
-- `theme` 必须来自本次 `recommend` 的 Top 3；`themeReason` 要说明文章气质或结构为何匹配该候选
-- `component` 和 `variant` 必须是所选主题的合法组件（参考 component-mapping.md）
-- 每个 section 最多 1 个 emphasis=strong
-- strong 块不能相邻
+必须修到 `success: true`。校验覆盖：Schema、源文 hash、全文完整顺序、文章配方预算、阶段顺序、强重点间距、主题组件合法性和冗余显式选择。
 
-### Step 3: 渲染
+### 5. 确定性渲染
 
 ```bash
 npm run --silent cli -- render \
-  --input /tmp/gzh-layout/<slug>/source.md \
-  --decision /tmp/gzh-layout/<slug>/layout-decision.json \
-  --output /tmp/gzh-layout/<slug>/<slug>.wechat.html \
-  --preview /tmp/gzh-layout/<slug>/<slug>.preview.html
+  --input "$WORK/source.md" \
+  --decision "$WORK/layout-decision.json" \
+  --output "$WORK/<slug>.wechat.html" \
+  --preview "$WORK/<slug>.preview.html"
 ```
 
-结果必须报告 `contentIntegrity.valid: true`。
+只接受同时满足以下条件的结果：
 
-### Step 4: 验收
+- `sourceIntegrity.valid: true`
+- `contentIntegrity.valid: true`
+- 预览宽 375px，外层左右轨各 20px
+- 普通正文没有被批量变成竖线、卡片或引用
+- 标题、列表、核心判断和结尾的层级符合所选配方
 
-检查预览中的层级、节奏和结尾。若不满意，调整 `layout-decision.json` 中的组件/变体选择后重跑 Step 3。
+### 6. 视觉验收
 
-## 快速模式
+打开 preview 检查全文，不只看首屏：
 
-短文或结构简单时，可以跳过详细分块分析，但仍必须运行一次 `recommend`；不得直接按某个默认主题生成：
+- 是否把连续编号原因合并成列表；
+- 是否存在大量单句孤块或错误跨章合并；
+- 强组件是否稀疏且真正对应关键判断；
+- 章节前后留白是否形成清晰节奏；
+- 结尾 CTA 是否与正文收束分开；
+- 普通正文左边界是否落在 20px 内容轨。
 
-```bash
-npm run --silent cli -- render \
-  --input source.md \
-  --decision layout-decision.json \
-  --output output.wechat.html
-```
+若失败，优先修 `layout-decision.json` 的分块、角色或少量增强选择；不要修改主题 HTML 来掩盖错误的语义决策。
 
-## CLI 命令参考
+## 交付
 
-| 命令 | 用途 |
-|------|------|
-| `npm run cli -- render --input <md> --decision <json> --output <html>` | 渲染 |
-| `npm run cli -- themes` | 列出所有可用主题 |
-| `npm run cli -- validate --decision <json>` | 校验决策合法性 |
-
-## 输出规范
-
-- `.wechat.html`：无 DOCTYPE/html/head/body，只含内联样式的 HTML 片段
-- 不含外部样式表、脚本、class、ID 或调试属性
-- 所有样式内联，可直接粘贴到微信编辑器
-
-## AI 配图（可选）
-
-需要配图时，在 render 命令中追加 `--image-plan` 和 `--asset-manifest`。
-详见 [docs/IMAGE_PLAN.md](docs/IMAGE_PLAN.md)。
+必交 `<slug>.wechat.html`。建议同时交 `<slug>.preview.html`；用户要求可审计时再交 `layout-decision.json`。说明所选主题、文章配方、做了哪些合并/拆分，以及两项完整性校验结果。

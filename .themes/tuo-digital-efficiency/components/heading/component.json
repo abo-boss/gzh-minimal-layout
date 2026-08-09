@@ -1,0 +1,65 @@
+{
+  "specVersion": "1.0",
+  "id": "heading",
+  "template": "template.html",
+  "kind": "heading",
+  "accepts": {
+    "blockTypes": [
+      "heading"
+    ],
+    "levels": [
+      2
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "36px 0 64px",
+      "padding-left": "13px",
+      "padding-right": "13px",
+      "position": "relative"
+    },
+    "r1": {
+      "display": "flex",
+      "align-items": "center",
+      "gap": "6px",
+      "margin": "0 0 14px",
+      "color": "#2c4c3b",
+      "font-family": "LXGW WenKai, LXGW WenKai Mono TC, Songti SC, Georgia, serif",
+      "font-size": "15px",
+      "font-style": "italic",
+      "font-weight": "700",
+      "line-height": "1.1"
+    },
+    "r2": {
+      "height": "1px"
+    },
+    "r3": {
+      "margin": "0",
+      "color": "#333333",
+      "font-family": "LXGW WenKai, LXGW WenKai Mono TC, Songti SC, Georgia, serif",
+      "font-size": "17px",
+      "font-weight": "700",
+      "line-height": "1.5",
+      "letter-spacing": ".04em"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO heading",
+      "priority": 60,
+      "visualWeight": "medium",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

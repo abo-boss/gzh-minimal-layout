@@ -17,23 +17,17 @@
 ## 校验
 
 ```bash
-npm run --silent cli -- media validate \
-  --blocks agent/block-document.json \
-  --plan agent/image-plan.json \
-  --asset-manifest agent/asset-manifest.json
+npm run --silent cli -- validate --input $WORK/source.md --decision $WORK/layout-decision.json
 ```
 
 ## 渲染
 
 ```bash
-npm run --silent cli -- workflow run \
+npm run --silent cli -- render \
   --input article.md \
-  --agent-profile agent/article-profile.json \
-  --agent-blocks agent/block-document.json \
-  --agent-reading agent/reading-plan.json \
+  --decision layout-decision.json \
   --image-plan agent/image-plan.json \
   --asset-manifest agent/asset-manifest.json \
-  --theme quiet-editorial \
   --output /tmp/article.wechat.html
 ```
 

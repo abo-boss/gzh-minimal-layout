@@ -1,0 +1,58 @@
+{
+  "specVersion": "1.0",
+  "id": "masthead",
+  "template": "template.html",
+  "kind": "masthead",
+  "accepts": {
+    "blockTypes": [
+      "article-title"
+    ]
+  },
+  "slots": [
+    {
+      "name": "content",
+      "source": "content",
+      "required": true
+    }
+  ],
+  "fallbackVariant": "source",
+  "baseStyles": {
+    "r0": {
+      "margin": "32px 0",
+      "padding": "40px 32px",
+      "background-color": "#262421",
+      "position": "relative",
+      "font-family": "'Noto Serif SC',Georgia,serif",
+      "overflow": "hidden"
+    },
+    "r1": {
+      "margin-bottom": "20px"
+    },
+    "r2": {
+      "font-family": "Georgia,serif",
+      "font-size": "11px",
+      "color": "#B08A52",
+      "font-style": "italic",
+      "letter-spacing": ".15em"
+    },
+    "r3": {
+      "font-size": "23px",
+      "font-weight": "400",
+      "color": "#FCFAF5",
+      "line-height": "1.6",
+      "letter-spacing": ".12em",
+      "margin": "0"
+    }
+  },
+  "variants": [
+    {
+      "id": "source",
+      "label": "TUO masthead",
+      "priority": 60,
+      "visualWeight": "strong",
+      "surface": "open",
+      "emphasisCost": 1,
+      "styles": {}
+    }
+  ]
+}

@@ -23,7 +23,6 @@ export function inspectSource(
   const lineSpans = nonBlankLineSpans(sourceText);
   const useLineFallback =
     requested === "auto" &&
-    options.format === "plain-text" &&
     blankLineSpans.length === 1 &&
     lineSpans.length > 1;
   const resolved = requested === "lines" || useLineFallback ? "lines" : "blank-lines";

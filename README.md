@@ -42,6 +42,8 @@ npm run --silent cli -- render \
   --preview /tmp/gzh-sample/article.preview.html
 ```
 
+渲染会同时生成可直接粘贴的 `.wechat.html`，以及带“一键复制到公众号”按钮的预览页。未传 `--preview` 时，会在输出文件旁自动生成 `<输出名>.preview.html`；复制操作只选取文章富文本，不会把预览控件带入公众号。
+
 `layout-decision.json` 使用 v3 合约，核心是原文哈希、文章配方和语义块。`component` / `variant` 为可选字段，只允许用于少量需要偏离主题基线的重点块：
 
 ```json

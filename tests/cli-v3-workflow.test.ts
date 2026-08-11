@@ -64,6 +64,33 @@ describe("portable Host-Agent workflow v3", () => {
       expect(html).toContain("padding:0 20px 96px");
       const preview = await readFile(previewPath, "utf8");
       expect(preview).toContain("width:375px");
+      expect(preview).toContain("一键复制到公众号");
+      expect(preview).toContain('id="wechat-copy-source"');
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  }, 20_000);
+
+  it("writes a copy-ready preview beside the WeChat fragment when --preview is omitted", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "gzh-v3-default-preview-"));
+    const source = "# 标题\n\n正文。";
+    const sourcePath = path.join(directory, "source.md");
+    const decisionPath = path.join(directory, "decision.json");
+    const outputPath = path.join(directory, "article.wechat.html");
+    const decision = {
+      specVersion: "3.0", sourceHash: sha256(source), articleType: "literary-prose", tone: ["quiet"],
+      structurePattern: "narrative-reflection", theme: "tuo-whitespace-narrative", themeReason: "安静短文适合留白阅读节奏", recipe: "literary-narrative", density: "airy",
+      blocks: [
+        { id: "title", type: "article-title", role: "title", content: "# 标题", phase: "entry", gesture: "anchor", emphasis: "strong" },
+        { id: "body", type: "paragraph", role: "body", content: "正文。", phase: "body", gesture: "flow", emphasis: "quiet" },
+      ],
+    };
+    try {
+      await Promise.all([writeFile(sourcePath, source), writeFile(decisionPath, JSON.stringify(decision))]);
+      const { stdout } = await runCli(["render", "--input", sourcePath, "--decision", decisionPath, "--output", outputPath]);
+      const result = JSON.parse(stdout) as { preview: string };
+      expect(result.preview).toBe(path.join(directory, "article.wechat.preview.html"));
+      expect(await readFile(result.preview, "utf8")).toContain("一键复制到公众号");
     } finally {
       await rm(directory, { recursive: true, force: true });
     }

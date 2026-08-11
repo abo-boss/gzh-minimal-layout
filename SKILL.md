@@ -107,4 +107,4 @@ npm run --silent cli -- render \
 
 ## 交付
 
-必交 `<slug>.wechat.html`。建议同时交 `<slug>.preview.html`；用户要求可审计时再交 `layout-decision.json`。说明所选主题、文章配方、做了哪些合并/拆分，以及两项完整性校验结果。
+必交 `<slug>.wechat.html` 与带“一键复制到公众号”按钮的 `<slug>.preview.html`；用户要求可审计时再交 `layout-decision.json`。预览页只复制文章富文本，不把按钮或脚本带进公众号。说明所选主题、文章配方、做了哪些合并/拆分，以及两项完整性校验结果。

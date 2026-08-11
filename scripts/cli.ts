@@ -90,12 +90,12 @@ async function handleRender(): Promise<void> {
   } : undefined);
 
   const output = await writeOutput(required("output"), result.wechatHtml);
-  const preview = options.preview ? await writeOutput(options.preview, result.cleanPreviewHtml) : undefined;
+  const preview = await writeOutput(options.preview ?? defaultPreviewPath(output), result.cleanPreviewHtml);
 
   process.stdout.write(JSON.stringify({
     success: true,
     output,
-    ...(preview ? { preview } : {}),
+    preview,
     theme: decision.theme,
     density: decision.density,
     blockCount: decision.blocks.length,
@@ -446,9 +446,14 @@ function usage(): string {
     "",
     "Commands:",
     "  inspect   --input <article.md> [--output <analysis-input.json>]  Emit source facts for the Host Agent",
-    "  render    --input <article.md> --decision <layout-decision.json> --output <html> [--preview <html>]",
+    "  render    --input <article.md> --decision <layout-decision.json> --output <html> [--preview <html>]  Also writes a copy-ready preview by default",
     "  themes    List all available themes with components and recommendation profiles",
     "  recommend --article-type <type> [--tone <a,b>] [--structure <pattern>]  Rank the top 3 themes",
     "  validate  --input <article.md> --decision <layout-decision.json>  Validate schema, source fidelity, recipe budgets, and theme legality",
   ].join("\n");
+}
+
+function defaultPreviewPath(output: string): string {
+  const parsed = path.parse(output);
+  return path.join(parsed.dir, `${parsed.name}.preview${parsed.ext || ".html"}`);
 }

@@ -18,23 +18,17 @@
   "fallbackVariant": "source",
   "baseStyles": {
     "r0": {
-      "position": "relative",
       "margin": "44px 24px",
       "padding": "36px 24px 28px",
       "border-radius": "12px"
     },
     "r1": {
       "display": "block",
-      "position": "absolute",
-      "top": "-15px",
-      "left": "24px",
-      "width": "32px",
-      "height": "32px",
-      "border-radius": "50%",
-      "color": "#fff",
+      "margin": "0 0 12px",
+      "color": "#162a45",
       "font-family": "Georgia,serif",
       "font-size": "36px",
-      "line-height": "48px",
+      "line-height": "1",
       "text-align": "center"
     },
     "r2": {

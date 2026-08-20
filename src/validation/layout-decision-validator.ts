@@ -16,6 +16,12 @@ export function validateDecisionSemantics(
   if (!recipe.articleTypes.includes(decision.articleType)) {
     errors.push(`recipe '${decision.recipe}' is not compatible with articleType '${decision.articleType}'`);
   }
+  const themeRecipe = library.manifest.composition.recipes.find((entry) => entry.id === decision.recipe);
+  if (!themeRecipe) {
+    errors.push(`theme '${library.manifest.id}' does not define a composition recipe for '${decision.recipe}'`);
+  } else if (!themeRecipe.articleTypes.includes(decision.articleType)) {
+    errors.push(`theme '${library.manifest.id}' recipe '${decision.recipe}' is not compatible with articleType '${decision.articleType}'`);
+  }
 
   const ids = new Set<string>();
   let explicitSelections = 0;
@@ -50,7 +56,7 @@ export function validateDecisionSemantics(
       errors.push(`block ${block.id}: illegal selection '${block.component}:${block.variant}' for ${block.type}`);
       continue;
     }
-    const baseline = defaultCandidateForBlock(semanticBlock, candidates, library);
+    const baseline = defaultCandidateForBlock(semanticBlock, candidates, library, decision.recipe);
     if (selected.id === baseline.id) {
       errors.push(`block ${block.id}: explicit selection '${selected.id}' is redundant; omit component and variant to use the theme recipe baseline`);
     }

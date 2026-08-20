@@ -1,29 +1,31 @@
-# Agent 工作流参考（v3）
+# 内部渲染与验证契约（v3）
 
-本文件定义任意宿主 Agent 都能执行的排版协议。所有命令在 Skill 根目录运行；`$WORK` 建议使用 `/tmp/gzh-layout/<slug>/`。
+这是给 Skill 维护者和执行排版的 Agent 的技术契约，不是终端用户的工作流。用户只提供文章并获得 HTML/预览；`LayoutDecision`、源文 hash 与以下命令是 Agent 的内部工作文件。面向文章的判断顺序见 [SKILL.md](../SKILL.md)。
+
+所有命令在 Skill 根目录运行；`$WORK` 建议使用 `/tmp/gzh-layout/<slug>/`。首次使用前须 `npm install && npm run build` 产出 `dist/`，之后命令直跑预编译产物（避免 tsx + npm wrapper 双重启动税）。
 
 ## 职责边界
 
-宿主 Agent 负责理解文章：通读全文、判断文章类型、选择文章配方、决定段落合并/拆分、标注语义角色、推荐主题，并在确有必要时选择少量重点组件。
+宿主 Agent 负责理解文章：通读全文、判断文章类型、选择文章配方、决定段落合并/拆分、标注语义角色、推荐主题，并在确有必要时选择少量重点组件。它把这些判断保存在内部渲染计划中，不要求用户编写或审阅 JSON（除非用户明确要审计）。
 
-CLI 负责事实和执行：读取原文、计算哈希、公开合法主题与组件、校验决策、确定普通组件、生成内联 HTML、验证渲染内容完整性。
+CLI 负责事实和执行：读取原文、计算哈希、公开合法主题与组件、校验决策、确定普通组件、生成内联 HTML、验证渲染内容完整性。`composition.chrome` 可在此后生成引言摘句、目录、章节英文标签、END、作者占位和 CTA；它们是主题声明的派生外壳，不进入原文 source span 或内容完整性 trace。带序号的标题只将标题文字放入正文槽位，原始序号由主题章节标记/英文标签表达，避免 `03 03 标题` 这种重复。
 
 禁止两种越界：Agent 手写 HTML/CSS；脚本用规则结果冒充已经完成的 Agent 排版决策。
 
-## 完整流程
+## 内部执行流程
 
-### 1. 检查原文和能力目录
+### 1. 建立源文事实与主题能力目录
 
 ```bash
 mkdir -p "$WORK"
-npm run --silent cli -- inspect \
+node dist/scripts/cli.js inspect \
   --input "$WORK/source.md" \
   --output "$WORK/analysis-input.json"
 ```
 
 必须读取整个 `source.md` 和 `analysis-input.json`。后者的 `source`、`recipes`、`themes` 是机器事实；`baseline.advisoryOnly=true` 的分析只是参考，不能覆盖 Agent 对全文的判断。
 
-### 2. 先做文章级决策
+### 2. 落实文章级判断
 
 按顺序回答：
 
@@ -36,23 +38,27 @@ npm run --silent cli -- inspect \
 可先调用推荐器缩小主题范围：
 
 ```bash
-npm run --silent cli -- recommend \
+node dist/scripts/cli.js recommend \
   --article-type personal-essay \
   --tone warm,reflective,narrative \
   --structure experience-reflection-conclusion
 ```
 
-### 3. 生成语义块
+### 3. 投影为语义块
 
 - 标题、章节标题、连续正文、结构化列表、引用、结尾和 CTA 分工明确。
 - 连续表达同一观点的短段可以合并；转折、跨章节和语义角色变化处不能合并。
 - 连续编号或项目符号必须合并成一个 `list`，在 `structure.items` 中保留每项。
 - “1. 某观点”后跟多段展开时，它是小标题，不是列表项目。
+- 纯文本的“第一、第二、第三……”行动小主题应成为 level 3 heading；它们保留原句，不生成 H2 章节标签。
+- `key-insight` 只能用于完整、自洽的核心判断，全文最多 3 个；它由主题的 `focus` 候选表达，不能伪造作者行内加粗/高亮。
 - 引用与署名放在同一个 `quote` 结构中。
+- 保留原文已有的 inline marks：`**`、`*`、`==`、`<u>`/`++`、`~~` 和反引号分别映射为 `strong`、`emphasis`、`highlight`、`underline`、`strike`、`code`。在 `composition.inlineMarkBudget` 内，分析器可为有明确语义依据的正文补充 `strong`（主题色加粗概念词）和 `highlight`（关键数据/时长）；它们只增加显示 mark，不改写 block.content、source span 或作者原有 mark。
+- 围栏代码、Markdown 图片、表格和分隔线必须各自保持为 `code`、`image`、`table`、`divider`；表格须在 `structure.headers/rows` 保留单元格，图片保留 src/alt/caption。
 - 结论和行动引导分开，避免把 CTA 伪装成正文。
 - 所有 `blocks[].content` 按源顺序拼接后，除空白外必须与原文完全相同。
 
-### 4. 生成 LayoutDecision v3
+### 4. 写入内部 LayoutDecision v3
 
 Schema：`schemas/layout-decision.schema.json`。
 
@@ -112,26 +118,26 @@ Schema：`schemas/layout-decision.schema.json`。
 ### 5. 在真实原文上校验
 
 ```bash
-npm run --silent cli -- validate \
+node dist/scripts/cli.js validate \
   --input "$WORK/source.md" \
   --decision "$WORK/layout-decision.json"
 ```
 
 必须修复全部错误后再渲染。尤其不能忽略 source hash 不匹配、漏字/重字/乱序、配方不兼容、阶段倒退、强重点相邻、组件选择非法或冗余。
 
-### 6. 渲染
+### 6. 渲染与产物校验
 
 ```bash
-npm run --silent cli -- render \
+node dist/scripts/cli.js render \
   --input "$WORK/source.md" \
   --decision "$WORK/layout-decision.json" \
   --output "$WORK/article.wechat.html" \
   --preview "$WORK/article.preview.html"
 ```
 
-成功结果中 `sourceIntegrity.valid` 和 `contentIntegrity.valid` 都必须为 `true`。
+成功结果中 `sourceIntegrity.valid` 和 `contentIntegrity.valid` 都必须为 `true`，并检查 `derivedChrome` 是否符合主题声明（例如引言、目录、END 和签名是否实际生成）。也可用 `commit` 一步完成第 5、6 步（校验 + 渲染，推荐）：`node dist/scripts/cli.js commit --input ... --decision ... --output ... --preview ...`，失败时返回结构化错误供 Agent 修正后重跑。
 
-### 7. 视觉检查
+### 7. 视觉检查后只交付最终产物
 
 在 375px 预览中至少检查：
 
@@ -143,7 +149,7 @@ npm run --silent cli -- render \
 - 长句、英文、数字和标点是否溢出；
 - 原文是否全部可见，引用署名与列表序号是否保留。
 
-发现视觉问题时先修语义分块、角色、手势或稀疏选择。只有多个正确决策都暴露同一个主题缺陷时，才修改主题组件。
+发现视觉问题时先修语义分块、角色、手势或稀疏选择。只有多个正确决策都暴露同一个主题缺陷时，才修改主题组件。默认交付 `.wechat.html` 与 `.preview.html`；内部决策 JSON 只在用户要求审计、复现或排错时附上。
 
 ## 配方预算
 

@@ -126,22 +126,129 @@ describe("portable Host-Agent workflow v3", () => {
     }
   }, 10_000);
 
-  it("exposes source facts, recipes, themes, and advisory baseline through inspect", async () => {
+  it("exposes source facts, suggestedRecipes, top-3 themes, and a decisionTemplate through inspect", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "gzh-v3-inspect-"));
     const sourcePath = path.join(directory, "source.md");
     try {
       await writeFile(sourcePath, "# 标题\n\n正文。", "utf8");
       const { stdout } = await runCli(["inspect", "--input", sourcePath]);
-      const payload = JSON.parse(stdout) as { success: boolean; data: { source: { hash: string }; recipes: unknown[]; themes: unknown[]; baseline: { advisoryOnly: boolean } } };
+      const payload = JSON.parse(stdout) as { success: boolean; data: { source: { hash: string }; suggestedRecipes: unknown[]; themes: unknown[]; baseline: { advisoryOnly: boolean }; decisionTemplate: { specVersion: string; blocks: unknown[] } } };
       expect(payload.success).toBe(true);
       expect(payload.data.source.hash).toMatch(/^sha256:/);
-      expect(payload.data.recipes.length).toBeGreaterThan(1);
-      expect(payload.data.themes).toHaveLength(7);
+      expect(payload.data.suggestedRecipes.length).toBeGreaterThan(0);
+      expect(payload.data.themes.length).toBeLessThanOrEqual(3);
+      expect(payload.data.themes.length).toBeGreaterThan(0);
       expect(payload.data.baseline.advisoryOnly).toBe(true);
+      expect(payload.data.decisionTemplate.specVersion).toBe("3.0");
+      expect(payload.data.decisionTemplate.blocks.length).toBeGreaterThan(0);
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
   }, 10_000);
+
+  it("inspect --full returns the complete theme catalog and recipes for backward compatibility", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "gzh-v3-inspect-full-"));
+    const sourcePath = path.join(directory, "source.md");
+    try {
+      await writeFile(sourcePath, "# 标题\n\n正文。", "utf8");
+      const { stdout } = await runCli(["inspect", "--input", sourcePath, "--full"]);
+      const payload = JSON.parse(stdout) as { success: boolean; data: { recipes: unknown[]; themes: unknown[] } };
+      expect(payload.success).toBe(true);
+      expect(payload.data.recipes.length).toBeGreaterThan(1);
+      expect(payload.data.themes).toHaveLength(7);
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  }, 10_000);
+
+  it("commit validates and renders in one step, failing fast on illegal decisions", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "gzh-v3-commit-"));
+    const sourcePath = path.join(directory, "source.md");
+    const decisionPath = path.join(directory, "decision.json");
+    const outputPath = path.join(directory, "out.html");
+    const source = "# 标题\n\n正文。";
+    const decision = {
+      specVersion: "3.0", sourceHash: sha256(source), articleType: "literary-prose", tone: ["quiet"],
+      structurePattern: "narrative-reflection", theme: "tuo-whitespace-narrative", themeReason: "安静短文适合留白", recipe: "literary-narrative", density: "airy",
+      blocks: [
+        { id: "title", type: "article-title", role: "title", content: "# 标题", phase: "entry", gesture: "anchor", emphasis: "strong" },
+        { id: "body", type: "paragraph", role: "body", content: "正文。", phase: "body", gesture: "flow", emphasis: "quiet" },
+      ],
+    };
+    try {
+      await Promise.all([writeFile(sourcePath, source), writeFile(decisionPath, JSON.stringify(decision))]);
+      const { stdout } = await runCli(["commit", "--input", sourcePath, "--decision", decisionPath, "--output", outputPath]);
+      const result = JSON.parse(stdout) as { success: boolean; sourceIntegrity: { valid: boolean }; contentIntegrity: { valid: boolean } };
+      expect(result.success).toBe(true);
+      expect(result.sourceIntegrity.valid).toBe(true);
+      expect(result.contentIntegrity.valid).toBe(true);
+      expect(await readFile(outputPath, "utf8")).toContain("标题");
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  }, 20_000);
+
+  it("creates a reviewable automatic baseline for plain text and verifies its final fragment", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "gzh-v3-compose-"));
+    const sourcePath = path.join(directory, "source.txt");
+    const decisionPath = path.join(directory, "decision.json");
+    const outputPath = path.join(directory, "article.wechat.html");
+    try {
+      await writeFile(sourcePath, "标题\n\n第一段。\n\n一、章节\n\n第二段。", "utf8");
+      const composed = JSON.parse((await runCli(["compose", "--input", sourcePath, "--output", decisionPath])).stdout) as {
+        success: boolean; mode: string; theme: string; recipe: string;
+      };
+      expect(composed).toMatchObject({ success: true, mode: "automatic-baseline" });
+      const committed = JSON.parse((await runCli(["commit", "--input", sourcePath, "--decision", decisionPath, "--output", outputPath])).stdout) as {
+        success: boolean; wechatValidation: { valid: boolean };
+      };
+      expect(committed).toMatchObject({ success: true, wechatValidation: { valid: true } });
+      const verified = JSON.parse((await runCli(["verify-output", "--input", outputPath])).stdout) as { success: boolean; leafCount: number };
+      expect(verified.success).toBe(true);
+      expect(verified.leafCount).toBeGreaterThan(0);
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  }, 30_000);
+
+  it("normalizes HTML into a reviewable Markdown draft before entering the source-fidelity pipeline", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "gzh-v3-normalize-"));
+    const inputPath = path.join(directory, "article.html");
+    const outputPath = path.join(directory, "draft.md");
+    try {
+      await writeFile(inputPath, "<h1>标题</h1><p>正文 <strong>重点</strong></p><blockquote>引用</blockquote>", "utf8");
+      const result = JSON.parse((await runCli(["normalize", "--input", inputPath, "--output", outputPath])).stdout) as {
+        success: boolean; format: string; inputHash: string; normalizedHash: string; warnings: string[];
+      };
+      expect(result).toMatchObject({ success: true, format: "html" });
+      expect(result.inputHash).toMatch(/^sha256:/);
+      expect(result.normalizedHash).toMatch(/^sha256:/);
+      expect(result.warnings).toHaveLength(1);
+      expect(await readFile(outputPath, "utf8")).toContain("正文 **重点**");
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  }, 10_000);
+
+  it("carries author inline marks through compose into theme-owned inline styles", async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), "gzh-v3-inline-marks-"));
+    const sourcePath = path.join(directory, "source.md");
+    const decisionPath = path.join(directory, "decision.json");
+    const outputPath = path.join(directory, "article.wechat.html");
+    try {
+      await writeFile(sourcePath, "# 标题\n\n正文有 **重点**、==高亮== 和 `code`。", "utf8");
+      await runCli(["compose", "--input", sourcePath, "--output", decisionPath, "--theme", "tuo-content-method"]);
+      const decision = JSON.parse(await readFile(decisionPath, "utf8")) as { blocks: Array<{ marks?: Array<{ type: string }> }> };
+      expect(decision.blocks[1]?.marks?.map((mark) => mark.type)).toEqual(["strong", "highlight", "code"]);
+      await runCli(["commit", "--input", sourcePath, "--decision", decisionPath, "--output", outputPath]);
+      const output = await readFile(outputPath, "utf8");
+      expect(output).toContain("background-color:#EDE4D3");
+      expect(output).toContain("font-family:monospace");
+      expect(output).not.toContain("==高亮==");
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  }, 20_000);
 });
 
 function runCli(args: string[]) {

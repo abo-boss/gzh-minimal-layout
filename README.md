@@ -1,6 +1,6 @@
 # gzh-minimal-layout
 
-可安装到 Codex、Claude Code、OpenCode 等宿主 Agent 的微信公众号排版 Skill。宿主 Agent 阅读全文、完成语义分块和文章级设计决策；本项目的确定性 CLI 校验原文、匹配主题组件，并输出可直接粘贴到公众号编辑器的内联样式 HTML。
+可安装到 Codex、Claude Code、OpenCode 等宿主 Agent 的微信公众号排版 Skill。宿主 Agent 阅读全文、完成语义分块和文章级设计判断；本项目的主题包与内部渲染内核把这些判断稳定地落实为可直接粘贴到公众号编辑器的内联 HTML。
 
 ![gzh-minimal-layout editorial layout system](assets/promo/gzh-minimal-layout-hero.png)
 
@@ -8,24 +8,26 @@
 
 ```text
 原文（只读）
-  → inspect：提取 source hash、源段、文章配方、7 个主题及合法组件
-  → 宿主 Agent：判断文章类型、合并/拆分语义块、选择主题与少量重点
-  → validate：校验原文零丢失、配方预算、组件合法性
-  → render：确定性匹配普通组件并输出 WeChat HTML + 375px 预览
+  → 排版 Agent：通读全文、识别标记与结构、选择主题和阅读节奏
+  → 主题配方：按语义映射普通标题、正文、列表、引用、代码与结尾
+  → 内部渲染与校验：绑定源文、检查完整性与微信兼容性
+  → WeChat HTML + 375px 预览
 ```
 
-关键边界：Agent 不写 HTML/CSS，CLI 不冒充 Agent 理解文章；普通段落不逐段选组件，默认落到所选主题的安静正文组件。
+关键边界：Agent 不写 HTML/CSS，渲染内核不冒充理解文章；普通段落不逐段选组件，默认落到所选主题的安静正文组件。主题还可按已经识别的 lead/标题派生引言、目录、英文章节标签、END、作者占位和 CTA；这层外壳与原文 source span 分离，绝不改写正文。
 
 ## 作为 Skill 使用
 
-让宿主 Agent 读取 [SKILL.md](SKILL.md)，并提供文章文件或正文。Skill 会指导 Agent 在临时工作目录中完成全部步骤，不修改原文，也不会自动发布公众号草稿。
+让宿主 Agent 读取 [SKILL.md](SKILL.md)，并提供文章文件或正文。Skill 会指导 Agent 在临时工作目录中完成全部步骤，不修改原文，也不会自动发布公众号草稿。用户不需要知道或操作 `LayoutDecision`、`inspect`、`commit` 等内部执行接口。
 
 所有 375px 预览与主题画布的外层左右内容轨固定为 20px。
 
-## CLI 快速体验
+## 维护者：内部执行接口
+
+CLI 保留为 Agent/维护者的确定性执行层：用于归一化、生成内部渲染计划、校验、渲染和排错；它不是使用这个 Skill 的前置条件。正常使用请从 [SKILL.md](SKILL.md) 的文章工作流开始。
 
 ```bash
-npm install
+npm install && npm run build
 
 npm run --silent cli -- inspect \
   --input examples/sample-article.md \
@@ -70,7 +72,7 @@ npm run --silent cli -- render \
 }
 ```
 
-完整协议见 [Agent 工作流](references/agent-workflow.md)，主题定位见 [主题索引](references/theme-index.md)，稀疏组件规则见 [组件映射](references/component-mapping.md)。
+内部协议见 [内部渲染与验证契约](references/agent-workflow.md)，主题定位见 [主题索引](references/theme-index.md)，稀疏组件规则见 [组件映射](references/component-mapping.md)。主题资产的文件链路、生成文档和验收闭环见 [主题工作流](references/theme-workflow.md)；Markdown/纯文本与自动基线见 [输入工作流](references/input-workflow.md)。
 
 ## 7 个主题
 
@@ -92,7 +94,7 @@ npm run preview:themes
 
 打开 `previews/theme-gallery/index.html` 横向比较。该目录可随时重建，不进入 Git。
 
-## CLI 命令
+## 内部命令速查
 
 | 命令 | 用途 |
 | --- | --- |
@@ -100,16 +102,22 @@ npm run preview:themes
 | `npm run cli -- recommend` | 根据 Agent 判断的文章画像返回最多 3 个主题候选 |
 | `npm run cli -- validate` | 对照真实原文校验 LayoutDecision |
 | `npm run cli -- render` | 渲染 WeChat HTML 与可选 375px 预览 |
+| `npm run cli -- compose` | 为 Markdown/纯文本生成可审阅的自动基线决策 |
+| `npm run cli -- normalize` | 将 DOCX、HTML 或纯文本转换为需审阅的 Markdown 草稿 |
+| `npm run cli -- verify-output` | 校验已有公众号粘贴片段的兼容性与 leaf 包裹 |
 | `npm run cli -- themes` | 列出 7 个主题及其组件 |
+| `npm run lint:themes` | 校验主题源头、配方引用、映射与微信兼容边界 |
+| `npm run docs:themes` | 从真实主题包生成完整组件库说明 |
 
 ## 项目结构
 
 ```text
-SKILL.md                   可移植的宿主 Agent 工作流
+SKILL.md                   面向文章的宿主 Agent 工作流
 agents/openai.yaml         Codex/OpenAI Skill 展示配置
-references/                工作流、主题与组件规则
+references/                文章规则、主题规则与内部执行契约
+references/themes/         从主题包生成的完整组件、骨架、配方和映射说明
 schemas/                   LayoutDecision v3 等 JSON Schema
-scripts/cli.ts             inspect/recommend/validate/render/themes
+scripts/cli.ts             inspect/compose/recommend/validate/render/verify-output/themes
 src/                       语义投影、合法映射、渲染和完整性校验
 .themes/                   7 个隐藏的 TUO 复刻主题包
 examples/                  可执行的原文与决策示例

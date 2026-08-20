@@ -2,6 +2,8 @@ export const ARTICLE_TYPES = [
   "personal-essay",
   "opinion-knowledge",
   "literary-prose",
+  "tutorial",
+  "list-driven",
   "other",
 ] as const;
 

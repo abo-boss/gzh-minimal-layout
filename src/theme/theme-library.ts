@@ -48,6 +48,7 @@ export async function loadThemeLibrary(
   if (new Set(components.map((component) => component.id)).size !== components.length) {
     throw new Error(`Theme ${themeId} contains duplicate component ids`);
   }
+  assertThemeComposition(manifest, components);
   return { manifest, components };
 }
 
@@ -107,6 +108,61 @@ function assertThemeManifest(manifest: ThemeLibrary["manifest"]): void {
   }
   for (const relation of BLOCK_RELATIONS) {
     if (!manifest.rhythm.relationMap[relation]) throw new Error(`Theme rhythm is missing relation ${relation}`);
+  }
+  for (const [mark, styles] of Object.entries(manifest.inlineMarks)) {
+    compileInlineStyle(styles, manifest.tokens);
+    if (!styles || Object.keys(styles).length === 0) throw new Error(`Theme ${manifest.id} inline mark ${mark} must define styles`);
+  }
+}
+
+function assertThemeComposition(
+  manifest: ThemeLibrary["manifest"],
+  components: LoadedComponent[],
+): void {
+  assertChromeStyles(manifest);
+  const componentIds = new Set(components.map((component) => component.id));
+  const recipeIds = new Set<string>();
+  for (const recipe of manifest.composition.recipes) {
+    if (recipeIds.has(recipe.id)) throw new Error(`Theme ${manifest.id} has duplicate composition recipe ${recipe.id}`);
+    recipeIds.add(recipe.id);
+    for (const componentId of [...recipe.coreComponents, ...recipe.accentComponents]) {
+      if (!componentIds.has(componentId)) {
+        throw new Error(`Theme ${manifest.id} composition recipe ${recipe.id} references missing component ${componentId}`);
+      }
+    }
+    if (recipe.accentComponents.length < recipe.maxAccentKinds) {
+      throw new Error(`Theme ${manifest.id} composition recipe ${recipe.id} exceeds its declared accent catalog`);
+    }
+  }
+  for (const mapping of manifest.composition.mappings) {
+    const component = components.find((entry) => entry.id === mapping.componentId);
+    if (!component) throw new Error(`Theme ${manifest.id} mapping references missing component ${mapping.componentId}`);
+    if (!mapping.blockTypes.every((type) => component.accepts.blockTypes.includes(type))) {
+      throw new Error(`Theme ${manifest.id} mapping ${mapping.componentId} does not accept every mapped block type`);
+    }
+    if (mapping.levels && !mapping.levels.every((level) => component.accepts.levels?.includes(level))) {
+      throw new Error(`Theme ${manifest.id} mapping ${mapping.componentId} does not accept every mapped heading level`);
+    }
+  }
+}
+
+function assertChromeStyles(manifest: ThemeLibrary["manifest"]): void {
+  const requiredRoles: Record<keyof ThemeLibrary["manifest"]["composition"]["chrome"], string[]> = {
+    intro: ["root", "text"],
+    directory: ["root", "label", "list", "item", "itemNumber", "itemTitle"],
+    chapter: ["root", "label"],
+    end: ["root", "line", "label"],
+    signature: ["root", "author", "cta"],
+  };
+  for (const [section, roles] of Object.entries(requiredRoles) as [keyof typeof requiredRoles, string[]][]) {
+    const definition = manifest.composition.chrome[section];
+    for (const role of roles) {
+      const styles = definition.styles[role];
+      if (!styles || Object.keys(styles).length === 0) {
+        throw new Error(`Theme ${manifest.id} derived chrome ${section} has no styles for role ${role}`);
+      }
+      compileInlineStyle(styles, manifest.tokens);
+    }
   }
 }
 

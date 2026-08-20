@@ -55,6 +55,7 @@ export function validateSourceSpans(
 
     let previousEnd = -1;
     const extracted: string[] = [];
+    let previousSpan: SourceSpan | undefined;
     for (const [spanIndex, span] of spans.entries()) {
       const segment = segments.get(span.sourceRef);
       const path = `/blocks/${blockIndex}/sourceSpans/${spanIndex}`;
@@ -78,10 +79,17 @@ export function validateSourceSpans(
       }
       previousEnd = span.endOffset;
       previousGlobalStart = Math.max(previousGlobalStart, span.startOffset);
+      if (previousSpan?.sourceRef === span.sourceRef && previousSpan.endOffset < span.startOffset) {
+        extracted.push(segment.content.slice(
+          previousSpan.endOffset - segment.startOffset,
+          span.startOffset - segment.startOffset,
+        ));
+      }
       extracted.push(segment.content.slice(
         span.startOffset - segment.startOffset,
         span.endOffset - segment.startOffset,
       ));
+      previousSpan = span;
       const entries = bySource.get(span.sourceRef) ?? [];
       entries.push({ ...span, blockId: block.id, blockIndex, spanIndex });
       bySource.set(span.sourceRef, entries);
@@ -104,7 +112,11 @@ export function validateSourceSpans(
     let cursor = segment.startOffset;
     for (const entry of entries) {
       if (entry.startOffset > cursor) {
-        gaps.push({ startOffset: cursor, endOffset: entry.startOffset });
+        // Plain-text semantic groups may deliberately split adjacent authored
+        // lines. The newline belongs to neither reading group; it is layout
+        // whitespace, not omitted source content.
+        const gapText = segment.content.slice(cursor - segment.startOffset, entry.startOffset - segment.startOffset);
+        if (gapText.trim().length > 0) gaps.push({ startOffset: cursor, endOffset: entry.startOffset });
       }
       if (entry.startOffset < cursor) {
         const overlap = { startOffset: entry.startOffset, endOffset: Math.min(cursor, entry.endOffset) };
@@ -114,7 +126,10 @@ export function validateSourceSpans(
       }
       cursor = Math.max(cursor, entry.endOffset);
     }
-    if (cursor < segment.endOffset) gaps.push({ startOffset: cursor, endOffset: segment.endOffset });
+    if (cursor < segment.endOffset) {
+      const gapText = segment.content.slice(cursor - segment.startOffset);
+      if (gapText.trim().length > 0) gaps.push({ startOffset: cursor, endOffset: segment.endOffset });
+    }
     for (const gap of gaps) {
       add(issues, "SOURCE_SPAN_GAP", `/sourceCoverage/${segment.id}`, `${segment.id} has an unconsumed range [${gap.startOffset}, ${gap.endOffset}).`);
     }

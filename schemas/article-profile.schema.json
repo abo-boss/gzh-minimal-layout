@@ -14,7 +14,7 @@
   "properties": {
     "$schema": { "type": "string", "format": "uri-reference" },
     "articleType": {
-      "enum": ["personal-essay", "opinion-knowledge", "literary-prose", "other"]
+      "enum": ["personal-essay", "opinion-knowledge", "literary-prose", "tutorial", "list-driven", "other"]
     },
     "tone": {
       "type": "array",

@@ -160,5 +160,239 @@
     "components/cta/component.json",
     "components/image/component.json",
     "components/ending/component.json"
-  ]
+  ],
+  "composition": {
+    "structureModel": "模块化刊页以信息分组和轻量卡片承载教程、比较与清单，不把正文切碎。",
+    "inlineMarkBudget": { "minPerParagraph": 0, "maxPerParagraph": 4, "maxHighlightPerParagraph": 1, "maxStyleKindsPerParagraph": 2, "preferredPhraseMinChars": 3, "preferredPhraseMaxChars": 15, "maxStrongAnchorsPerArticle": 5 },
+    "chrome": {
+      "intro": { "enabled": true, "styles": { "root": { "margin": "10px 0 36px", "padding": "20px 8px", "border-top": "1px solid {color.soft}", "border-bottom": "1px solid {color.soft}", "text-align": "center" }, "text": { "font-family": "{type.heading}", "font-size": "18px", "font-weight": "600", "line-height": "1.8", "color": "{color.ink}" } } },
+      "directory": { "enabled": true, "maxItems": 4, "styles": { "root": { "margin": "0 0 38px" }, "label": { "font-size": "12px", "font-weight": "700", "letter-spacing": "1.2px", "color": "{color.accent}", "margin-bottom": "10px" }, "list": { "border-top": "1px solid {color.soft}" }, "item": { "padding": "11px 0", "border-bottom": "1px solid {color.soft}" }, "itemNumber": { "font-size": "12px", "font-weight": "700", "color": "{color.accent}" }, "itemTitle": { "font-size": "15px", "line-height": "1.55", "color": "{color.ink}" } } },
+      "chapter": { "enabled": true, "label": "CHAPTER", "styles": { "root": { "margin": "40px 0 12px" }, "label": { "font-size": "12px", "font-weight": "700", "letter-spacing": "1.2px", "color": "{color.accent}" } } },
+      "end": { "enabled": true, "label": "END", "styles": { "root": { "margin": "48px 0 24px", "text-align": "center" }, "line": { "border-top": "1px solid {color.soft}", "margin": "0 auto 12px", "width": "52px" }, "label": { "font-size": "12px", "letter-spacing": "2px", "font-weight": "700", "color": "{color.accent}" } } },
+      "signature": { "enabled": true, "authorTemplate": "我是 {{作者名}}，{{一句话简介}}。", "ctaTemplate": "如果这篇文章对你有启发，欢迎点赞、在看、转发，让它抵达需要的人。", "styles": { "root": { "margin": "0", "padding": "20px", "background-color": "{color.soft}", "border-radius": "{radius}" }, "author": { "font-size": "15px", "line-height": "1.7", "font-weight": "600", "color": "{color.ink}" }, "cta": { "margin-top": "10px", "font-size": "14px", "line-height": "1.75", "color": "{color.muted}" } } }
+    },
+    "recipes": [
+      {
+        "id": "tutorial-steps",
+        "label": "问题—步骤—结果",
+        "articleTypes": [
+          "tutorial"
+        ],
+        "coreComponents": [
+          "masthead",
+          "heading",
+          "subheading",
+          "prose",
+          "list",
+          "ending",
+          "cta"
+        ],
+        "accentComponents": [
+          "lead",
+          "callout",
+          "image",
+          "quote"
+        ],
+        "maxAccentKinds": 3,
+        "guidance": [
+          "连续步骤合并为列表",
+          "提示与结论按需使用",
+          "不让每一步成为卡片"
+        ]
+      },
+      {
+        "id": "list-guide",
+        "label": "分类—清单—行动",
+        "articleTypes": [
+          "list-driven"
+        ],
+        "coreComponents": [
+          "masthead",
+          "heading",
+          "subheading",
+          "prose",
+          "list",
+          "ending",
+          "cta"
+        ],
+        "accentComponents": [
+          "lead",
+          "callout",
+          "image",
+          "quote"
+        ],
+        "maxAccentKinds": 2,
+        "guidance": [
+          "并列项目保持一组",
+          "项目说明维持正文",
+          "只突出总判断"
+        ]
+      },
+      {
+        "id": "universal",
+        "label": "通用长文",
+        "articleTypes": [
+          "other",
+          "personal-essay",
+          "opinion-knowledge",
+          "literary-prose",
+          "tutorial",
+          "list-driven"
+        ],
+        "coreComponents": [
+          "masthead",
+          "heading",
+          "subheading",
+          "prose",
+          "list",
+          "quote",
+          "ending",
+          "cta"
+        ],
+        "accentComponents": [
+          "lead",
+          "focus",
+          "callout",
+          "image"
+        ],
+        "maxAccentKinds": 2,
+        "guidance": [
+          "普通正文不显式选组件",
+          "结构优先于装饰",
+          "不确定时保持原结构"
+        ]
+      }
+    ],
+    "mappings": [
+      {
+        "blockTypes": [
+          "article-title"
+        ],
+        "componentId": "masthead"
+      },
+      {
+        "blockTypes": [
+          "lead"
+        ],
+        "componentId": "lead"
+      },
+      {
+        "blockTypes": [
+          "heading"
+        ],
+        "levels": [
+          2
+        ],
+        "componentId": "heading"
+      },
+      {
+        "blockTypes": [
+          "heading"
+        ],
+        "levels": [
+          3
+        ],
+        "componentId": "subheading"
+      },
+      {
+        "blockTypes": [
+          "heading"
+        ],
+        "levels": [
+          4
+        ],
+        "componentId": "minor"
+      },
+      {
+        "blockTypes": [
+          "paragraph",
+          "article-subtitle"
+        ],
+        "componentId": "prose"
+      },
+      {
+        "blockTypes": [
+          "list"
+        ],
+        "componentId": "list"
+      },
+      {
+        "blockTypes": [
+          "quote"
+        ],
+        "componentId": "quote"
+      },
+      {
+        "blockTypes": [
+          "callout"
+        ],
+        "componentId": "callout"
+      },
+      {
+        "blockTypes": [
+          "image"
+        ],
+        "componentId": "image"
+      },
+      {
+        "blockTypes": [
+          "ending"
+        ],
+        "componentId": "ending"
+      },
+      {
+        "blockTypes": [
+          "cta"
+        ],
+        "componentId": "cta"
+      },
+      {
+        "blockTypes": [
+          "code"
+        ],
+        "componentId": "prose"
+      },
+      {
+        "blockTypes": [
+          "divider"
+        ],
+        "componentId": "prose"
+      },
+      {
+        "blockTypes": [
+          "table"
+        ],
+        "componentId": "prose"
+      }
+    ]
+  },
+  "inlineMarks": {
+    "strong": {
+      "color": "{color.accent}",
+      "font-weight": "700"
+    },
+    "emphasis": {
+      "font-style": "italic"
+    },
+    "highlight": {
+      "background-color": "{color.soft}",
+      "color": "{color.ink}",
+      "font-weight": "700"
+    },
+    "underline": {
+      "border-bottom": "2px solid {color.accent}",
+      "padding-bottom": "1px"
+    },
+    "strike": {
+      "color": "{color.muted}",
+      "text-decoration": "line-through"
+    },
+    "code": {
+      "background-color": "{color.soft}",
+      "color": "{color.ink}",
+      "font-family": "monospace",
+      "border-radius": "2px",
+      "padding": "0 3px"
+    }
+  }
 }

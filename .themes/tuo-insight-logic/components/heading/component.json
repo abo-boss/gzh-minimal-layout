@@ -13,6 +13,12 @@
   },
   "slots": [
     {
+      "name": "marker",
+      "source": "heading-marker",
+      "required": false,
+      "format": "two-digit-arabic"
+    },
+    {
       "name": "content",
       "source": "content",
       "required": true

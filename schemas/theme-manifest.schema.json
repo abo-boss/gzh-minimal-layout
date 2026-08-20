@@ -4,7 +4,7 @@
   "title": "ThemeManifest v1.0",
   "type": "object",
   "additionalProperties": false,
-  "required": ["specVersion", "id", "version", "name", "description", "recommendation", "defaultDensity", "tokens", "rhythm", "budgets", "componentPaths"],
+  "required": ["specVersion", "id", "version", "name", "description", "recommendation", "defaultDensity", "tokens", "rhythm", "budgets", "inlineMarks", "composition", "componentPaths"],
   "properties": {
     "specVersion": { "const": "1.0" },
     "id": { "$ref": "#/$defs/id" },
@@ -82,6 +82,20 @@
         "noAdjacentStrong": { "type": "boolean" }
       }
     },
+    "inlineMarks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "emphasis": { "$ref": "#/$defs/inlineMarkStyle" },
+        "strong": { "$ref": "#/$defs/inlineMarkStyle" },
+        "quote": { "$ref": "#/$defs/inlineMarkStyle" },
+        "keyword": { "$ref": "#/$defs/inlineMarkStyle" },
+        "highlight": { "$ref": "#/$defs/inlineMarkStyle" },
+        "underline": { "$ref": "#/$defs/inlineMarkStyle" },
+        "strike": { "$ref": "#/$defs/inlineMarkStyle" },
+        "code": { "$ref": "#/$defs/inlineMarkStyle" }
+      }
+    },
     "essay": {
       "type": "object",
       "additionalProperties": false,
@@ -93,6 +107,27 @@
         "release": { "$ref": "#/$defs/essayRhythmVariant" }
       }
     },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["structureModel", "inlineMarkBudget", "recipes", "mappings", "chrome"],
+      "properties": {
+        "structureModel": { "type": "string", "minLength": 12 },
+        "inlineMarkBudget": { "$ref": "#/$defs/inlineMarkBudget" },
+        "recipes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/compositionRecipe" }
+        },
+        "mappings": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/componentMapping" }
+        },
+        "chrome": { "$ref": "#/$defs/themeChrome" }
+      }
+    },
     "componentPaths": {
       "type": "array",
       "minItems": 1,
@@ -102,6 +137,9 @@
   },
   "$defs": {
     "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+    "blockType": {
+      "enum": ["article-title", "article-subtitle", "metadata", "lead", "heading", "paragraph", "quote", "list", "image", "divider", "callout", "step", "table", "code", "ending", "cta"]
+    },
     "density": { "enum": ["dense", "balanced", "airy"] },
     "rhythmToken": { "enum": ["close", "flow", "break", "turn", "section", "release"] },
     "rhythmScale": {
@@ -124,6 +162,77 @@
         "additionalProperties": { "type": "string", "minLength": 1 }
       }
     },
+    "chromeSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "styles"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "styles": { "$ref": "#/$defs/styleMap" },
+        "maxItems": { "type": "integer" },
+        "label": { "type": "string" },
+        "authorTemplate": { "type": "string" },
+        "ctaTemplate": { "type": "string" }
+      }
+    },
+    "themeChrome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intro", "directory", "chapter", "end", "signature"],
+      "properties": {
+        "intro": { "$ref": "#/$defs/chromeSection" },
+        "directory": {
+          "allOf": [
+            { "$ref": "#/$defs/chromeSection" },
+            { "type": "object", "required": ["maxItems"], "properties": { "maxItems": { "type": "integer", "minimum": 1, "maximum": 8 } } }
+          ]
+        },
+        "chapter": {
+          "allOf": [
+            { "$ref": "#/$defs/chromeSection" },
+            { "type": "object", "required": ["label"], "properties": { "label": { "type": "string", "minLength": 1, "maxLength": 32 } } }
+          ]
+        },
+        "end": {
+          "allOf": [
+            { "$ref": "#/$defs/chromeSection" },
+            { "type": "object", "required": ["label"], "properties": { "label": { "type": "string", "minLength": 1, "maxLength": 32 } } }
+          ]
+        },
+        "signature": {
+          "allOf": [
+            { "$ref": "#/$defs/chromeSection" },
+            {
+              "type": "object",
+              "required": ["authorTemplate", "ctaTemplate"],
+              "properties": {
+                "authorTemplate": { "type": "string", "minLength": 1, "maxLength": 160 },
+                "ctaTemplate": { "type": "string", "minLength": 1, "maxLength": 240 }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "inlineMarkStyle": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "inlineMarkBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minPerParagraph", "maxPerParagraph", "maxHighlightPerParagraph", "maxStyleKindsPerParagraph", "preferredPhraseMinChars", "preferredPhraseMaxChars", "maxStrongAnchorsPerArticle"],
+      "properties": {
+        "minPerParagraph": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "maxPerParagraph": { "type": "integer", "minimum": 1, "maximum": 4 },
+        "maxHighlightPerParagraph": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "maxStyleKindsPerParagraph": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "preferredPhraseMinChars": { "type": "integer", "minimum": 3, "maximum": 15 },
+        "preferredPhraseMaxChars": { "type": "integer", "minimum": 3, "maximum": 15 },
+        "maxStrongAnchorsPerArticle": { "type": "integer", "minimum": 0, "maximum": 5 }
+      }
+    },
     "essayRhythmVariant": {
       "type": "object",
       "additionalProperties": false,
@@ -134,6 +243,35 @@
         "surface": { "enum": ["open", "panel"] },
         "emphasisCost": { "type": "integer", "minimum": 0 },
         "styles": { "$ref": "#/$defs/styleMap" }
+      }
+    },
+    "compositionRecipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "articleTypes", "coreComponents", "accentComponents", "maxAccentKinds", "guidance"],
+      "properties": {
+        "id": { "enum": ["essay-reflection", "opinion-analysis", "literary-narrative", "tutorial-steps", "list-guide", "universal"] },
+        "label": { "type": "string", "minLength": 1 },
+        "articleTypes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["personal-essay", "opinion-knowledge", "literary-prose", "tutorial", "list-driven", "other"] }
+        },
+        "coreComponents": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+        "accentComponents": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+        "maxAccentKinds": { "type": "integer", "minimum": 0, "maximum": 8 },
+        "guidance": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "componentMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blockTypes", "componentId"],
+      "properties": {
+        "blockTypes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/blockType" } },
+        "componentId": { "$ref": "#/$defs/id" },
+        "levels": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "integer", "minimum": 1, "maximum": 6 } }
       }
     }
   }

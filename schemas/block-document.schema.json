@@ -67,7 +67,7 @@
       "additionalProperties": false,
       "required": ["type", "start", "end"],
       "properties": {
-        "type": { "enum": ["emphasis", "strong", "quote", "keyword"] },
+        "type": { "enum": ["emphasis", "strong", "quote", "keyword", "highlight", "underline", "strike", "code"] },
         "start": { "type": "integer", "minimum": 0 },
         "end": { "type": "integer", "minimum": 1 }
       }
@@ -96,7 +96,8 @@
       "required": ["content"],
       "properties": {
         "ordinal": { "type": "integer", "minimum": 1 },
-        "content": { "type": "string", "minLength": 1 }
+        "content": { "type": "string", "minLength": 1 },
+        "marks": { "type": "array", "items": { "$ref": "#/$defs/mark" } }
       }
     },
     "listStructure": {

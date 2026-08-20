@@ -79,6 +79,8 @@ describe("reading-first WeChat presentation pipeline", () => {
       expect(result.canonicalHtml).toContain("margin-top:0;margin-bottom:0");
       expect(result.canonicalHtml).toContain("padding-left:0;padding-right:0");
       expect(result.wechatHtml).not.toMatch(/data-|<slot\b|<\/?(?:html|head|body|style|script)\b|\sclass=|\sid=/iu);
+      expect(result.wechatHtml).toContain('<span leaf="">');
+      expect(result.wechatHtml).not.toMatch(/position:(?:absolute|fixed|sticky)|float:|display:grid|white-space:pre/iu);
     }
   });
 
@@ -106,6 +108,37 @@ describe("reading-first WeChat presentation pipeline", () => {
     expect(result.wechatHtml).toContain("<blockquote");
     expect(result.wechatHtml).toMatch(/<ol[^>]*start="3"/u);
     expect(result.wechatHtml).toContain("—— 编辑手记");
+  });
+
+  it("adds theme-owned derived chrome without putting it in the source trace", async () => {
+    const document = validateBlockDocument({
+      specVersion: "1.0",
+      id: "derived-chrome",
+      blocks: [
+        { id: "title", type: "article-title", role: "title", content: "# 一篇保留原文的文章", importance: 1, sourceOrder: 0 },
+        { id: "lead", type: "lead", role: "lead", content: "先建立一套可以积累的系统。后面再解释它。", importance: 0.8, sourceOrder: 1, relationToPrevious: "default" },
+        { id: "one", type: "heading", level: 2, role: "section-heading", content: "## 01｜为什么先建立系统", importance: 0.9, sourceOrder: 2, relationToPrevious: "new-section", structure: { marker: "01", ordinal: 1, title: "为什么先建立系统", hasMarker: true } },
+        { id: "body", type: "paragraph", role: "body", content: "正文保持原顺序，也保持原来的文字。", importance: 0.5, sourceOrder: 3, relationToPrevious: "continuation" },
+        { id: "two", type: "heading", level: 2, role: "section-heading", content: "## 02｜如何让它发生", importance: 0.9, sourceOrder: 4, relationToPrevious: "new-section", structure: { marker: "02", ordinal: 2, title: "如何让它发生", hasMarker: true } },
+        { id: "ending", type: "ending", role: "ending", content: "感谢阅读。", importance: 0.6, sourceOrder: 5, relationToPrevious: "before-ending" },
+      ],
+    });
+    const library = await loadThemeLibrary("tuo-whitespace-narrative");
+    const layout = createLayoutPlan(document, createBaselineReadingPlan(document), library);
+    const result = renderComponentArticle(document, layout, library);
+
+    expect(result.contentIntegrity).toMatchObject({ valid: true, changedBlocks: [] });
+    expect(layout.items.find((item) => item.sourceBlockIds[0] === "ending")).toMatchObject({ rhythmToken: "flow", gapBefore: 25 });
+    expect(result.derivedChrome).toEqual({ intro: true, directory: true, chapters: 2, end: true, signature: true });
+    expect(result.canonicalHtml).toContain('data-derived-chrome="intro"');
+    expect(result.canonicalHtml).toContain('data-derived-chrome="directory"');
+    expect(result.canonicalHtml).toContain('data-derived-chrome="chapter"');
+    expect(result.canonicalHtml).toMatch(/<h2[^>]*><span leaf="">为什么先建立系统<\/span><\/h2>/u);
+    expect(result.canonicalHtml).not.toMatch(/<h2[^>]*><span leaf="">01/u);
+    expect(result.wechatHtml).toContain("文章脉络");
+    expect(result.wechatHtml).toContain("END");
+    expect(result.wechatHtml).toContain("{{作者名}}");
+    expect(result.wechatHtml).not.toContain("data-derived-chrome");
   });
 
   it("rejects unsafe source image URLs", async () => {

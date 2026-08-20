@@ -52,7 +52,7 @@
         "id": { "$ref": "#/$defs/id" },
         "sourceOrder": { "type": "integer", "minimum": 0 },
         "kindHint": {
-          "enum": ["heading", "paragraph", "list", "quote", "code", "divider"]
+          "enum": ["heading", "paragraph", "list", "quote", "code", "divider", "image", "table"]
         },
         "content": { "type": "string", "minLength": 1 },
         "startOffset": { "type": "integer", "minimum": 0 },

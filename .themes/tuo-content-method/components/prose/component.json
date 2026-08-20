@@ -5,7 +5,11 @@
   "kind": "prose",
   "accepts": {
     "blockTypes": [
-      "paragraph"
+      "paragraph",
+      "article-subtitle",
+      "code",
+      "divider",
+      "table"
     ]
   },
   "slots": [

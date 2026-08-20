@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import path from "node:path";
 
 import { Ajv2020, type ErrorObject, type ValidateFunction } from "ajv/dist/2020.js";
 import addFormatsImport from "ajv-formats";
@@ -37,22 +37,40 @@ const ajv = new Ajv2020({
 const addFormats = addFormatsImport as unknown as (instance: Ajv2020) => void;
 addFormats(ajv);
 
-const blockDocumentValidator = compileSchema("../../schemas/block-document.schema.json");
-const sourceManifestValidator = compileSchema("../../schemas/source-manifest.schema.json");
-const articleProfileValidator = compileSchema("../../schemas/article-profile.schema.json");
-const readingPlanValidator = compileSchema("../../schemas/reading-plan.schema.json");
-const layoutPlanValidator = compileSchema("../../schemas/layout-plan.schema.json");
-const themeManifestValidator = compileSchema("../../schemas/theme-manifest.schema.json");
-const componentDefinitionValidator = compileSchema("../../schemas/component-definition.schema.json");
-const candidateCatalogValidator = compileSchema("../../schemas/candidate-catalog.schema.json");
-const imagePlanValidator = compileSchema("../../schemas/image-plan.schema.json");
-const assetManifestValidator = compileSchema("../../schemas/asset-manifest.schema.json");
-const layoutDecisionValidator = compileSchema("../../schemas/layout-decision.schema.json");
-
-function compileSchema(relativePath: string): ValidateFunction {
-  const path = fileURLToPath(new URL(relativePath, import.meta.url));
-  return ajv.compile(JSON.parse(readFileSync(path, "utf8")) as object);
+const schemaCache = new Map<string, ValidateFunction>();
+function loadSchema(relativePath: string): ValidateFunction {
+  let cached = schemaCache.get(relativePath);
+  if (!cached) {
+    const schemaPath = path.resolve(process.cwd(), relativePath.replace(/^(?:\.\.\/)+/u, ""));
+    cached = ajv.compile(JSON.parse(readFileSync(schemaPath, "utf8")) as object);
+    schemaCache.set(relativePath, cached);
+  }
+  return cached;
 }
+
+function lazySchema(relativePath: string): ValidateFunction {
+  let compiled: ValidateFunction | undefined;
+  const invoke = ((data: unknown) => {
+    if (!compiled) compiled = loadSchema(relativePath);
+    return compiled(data);
+  }) as ValidateFunction;
+  Object.defineProperty(invoke, "errors", {
+    get: () => (compiled ?? loadSchema(relativePath)).errors,
+  });
+  return invoke;
+}
+
+const blockDocumentValidator = lazySchema("../../schemas/block-document.schema.json");
+const sourceManifestValidator = lazySchema("../../schemas/source-manifest.schema.json");
+const articleProfileValidator = lazySchema("../../schemas/article-profile.schema.json");
+const readingPlanValidator = lazySchema("../../schemas/reading-plan.schema.json");
+const layoutPlanValidator = lazySchema("../../schemas/layout-plan.schema.json");
+const themeManifestValidator = lazySchema("../../schemas/theme-manifest.schema.json");
+const componentDefinitionValidator = lazySchema("../../schemas/component-definition.schema.json");
+const candidateCatalogValidator = lazySchema("../../schemas/candidate-catalog.schema.json");
+const imagePlanValidator = lazySchema("../../schemas/image-plan.schema.json");
+const assetManifestValidator = lazySchema("../../schemas/asset-manifest.schema.json");
+const layoutDecisionValidator = lazySchema("../../schemas/layout-decision.schema.json");
 
 function schemaIssues(errors: ErrorObject[] | null | undefined): ValidationIssue[] {
   return (errors ?? []).map((error) => ({
@@ -289,7 +307,7 @@ function validateDeclaredStructure(
   const path = `/blocks/${index}/structure`;
   const heading = headingStructure(block);
   if (heading) {
-    if (heading.hasMarker && !block.content.startsWith(heading.marker!)) {
+    if (heading.hasMarker && !block.content.replace(/^\s*#{1,6}\s+/u, "").startsWith(heading.marker!)) {
       issues.push({ code: "block.structure-marker-mismatch", path, message: "heading marker must be present at the start of the original content" });
     }
     if (heading.title && !block.content.includes(heading.title)) {

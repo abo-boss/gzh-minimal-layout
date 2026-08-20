@@ -21,10 +21,9 @@
   "fallbackVariant": "source",
   "baseStyles": {
     "r0": {
-      "display": "flex",
-      "align-items": "center",
-      "margin": "36px 0 0",
-      "padding": "0"
+      "margin": "0",
+      "padding-left": "12px",
+      "border-left": "2px solid #948777"
     },
     "r1": {
       "display": "inline-flex",
@@ -45,7 +44,7 @@
       "margin": "0",
       "color": "#1a1c1a",
       "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
-      "font-size": "14.5px",
+      "font-size": "15px",
       "font-weight": "700",
       "line-height": "1.5",
       "letter-spacing": "0.04em"

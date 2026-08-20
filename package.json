@@ -8,8 +8,11 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "cli": "tsx scripts/cli.ts",
+    "cli": "node dist/scripts/cli.js",
+    "cli:dev": "tsx scripts/cli.ts",
     "preview:themes": "tsx scripts/generate-theme-gallery.ts",
+    "lint:themes": "tsx scripts/lint-theme-library.ts",
+    "docs:themes": "tsx scripts/generate-theme-guides.ts",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

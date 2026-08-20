@@ -1,6 +1,6 @@
 # 主题索引
 
-这套项目当前只注册了 7 个 TUO 导出主题。先判断文章类型、语气与结构，再运行 `npm run --silent cli -- recommend`，从最多 3 个候选中选择并记录 `themeReason`。
+这套项目当前只注册了 7 个 TUO 导出主题。排版 Agent 先判断文章类型、语气与结构，再从下列主题中选择一个并说明全文级取舍。内部推荐器可缩小候选范围，但不能替代通读文章后的选择。
 
 | 主题 | 风格与适用内容 |
 | --- | --- |
@@ -12,4 +12,4 @@
 | `tuo-magazine-cards` | 乳白阅读卡片；模块化信息、教程和清单 |
 | `tuo-content-method` | 暖纸白、哑光金；内容方法论与结构化教程 |
 
-每个主题均提供 `masthead`、`heading`、`subheading`、`prose`、`list`、`quote`、`ending` 与 `cta` 组件；具体合法候选由 CLI 根据所选主题返回。
+每个主题均提供 `masthead`、`heading`、`subheading`、`prose`、`list`、`quote`、`ending` 与 `cta` 组件；完整可执行映射和行内标记样式见对应的 [主题组件库](themes/) 说明。

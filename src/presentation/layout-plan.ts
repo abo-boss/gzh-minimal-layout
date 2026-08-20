@@ -8,6 +8,7 @@ import type {
   RhythmToken,
   ThemeLibrary,
 } from "../contracts/presentation.js";
+import type { ArticleRecipeId } from "../contracts/layout-decision.js";
 import { assertReadingPlan } from "../reading/reading-plan.js";
 import { candidatesFor } from "../theme/theme-library.js";
 
@@ -18,6 +19,7 @@ export function createLayoutPlan(
   options: {
     density?: RhythmDensity;
     selections?: AgentLayoutSelection[];
+    recipe?: ArticleRecipeId;
   } = {},
 ): LayoutPlan {
   assertReadingPlan(document, readingPlan);
@@ -35,9 +37,9 @@ export function createLayoutPlan(
     const selection = requested.get(block.id);
     const chosen = selection
       ? candidates.find((candidate) => candidate.componentId === selection.componentId && candidate.variantId === selection.variantId)
-      : defaultCandidateForBlock(block, candidates, library);
+      : defaultCandidateForBlock(block, candidates, library, options.recipe);
     if (!chosen) throw new Error(`Agent selected an illegal component candidate for ${block.id}`);
-    const rhythmToken = resolveRhythmToken(block, reading, index, library);
+    const rhythmToken = resolveRhythmToken(document, block, reading, index, library);
     return {
       id: `layout-${String(index + 1).padStart(3, "0")}`,
       sourceBlockIds: [block.id] as [string],
@@ -70,19 +72,20 @@ export function defaultCandidateForBlock(
   block: Block,
   candidates: ComponentCandidate[],
   library: ThemeLibrary,
+  recipeId?: ArticleRecipeId,
 ): ComponentCandidate {
-  const preferredComponents = block.type === "article-title" ? ["masthead"]
-    : block.type === "lead" ? ["lead", "prose"]
-      : block.type === "heading" ? block.level === 3 ? ["subheading", "heading"] : block.level && block.level >= 4 ? ["minor", "subheading", "heading"] : ["heading"]
-        : block.type === "paragraph" ? ["prose"]
-          : block.type === "quote" ? ["quote"]
-            : block.type === "list" || block.type === "step" ? ["list"]
-              : block.type === "callout" ? ["callout", "prose"]
-                : block.type === "image" ? ["image"]
-                  : block.type === "table" ? ["table", "list"]
-                    : block.type === "ending" ? ["ending", "prose"]
-                      : block.type === "cta" ? ["cta", "callout"]
-                        : ["prose"];
+  const selectedRecipe = recipeId
+    ? library.manifest.composition.recipes.find((recipe) => recipe.id === recipeId)
+    : undefined;
+  const preferredComponents = library.manifest.composition.mappings
+    .filter((mapping) => mapping.blockTypes.includes(block.type))
+    .filter((mapping) => !mapping.levels || (block.level !== undefined && mapping.levels.includes(block.level)))
+    .map((mapping) => mapping.componentId)
+    // A mapping can intentionally promote a sparse semantic role (for example
+    // key-insight → focus). Theme recipes may list that component as an accent,
+    // so do not discard an otherwise legal explicit mapping here.
+    .filter((componentId) => !selectedRecipe || selectedRecipe.coreComponents.includes(componentId) || selectedRecipe.accentComponents.includes(componentId))
+    .concat(selectedRecipe?.coreComponents ?? []);
 
   for (const componentId of preferredComponents) {
     const component = library.components.find((entry) => entry.id === componentId);
@@ -122,7 +125,7 @@ export function assertLayoutPlan(
     if (item.readingGesture !== reading.gesture) {
       throw new Error(`LayoutPlan reading gesture for ${block.id} does not match ReadingPlan`);
     }
-    const expectedToken = resolveRhythmToken(block, reading, index, library);
+    const expectedToken = resolveRhythmToken(document, block, reading, index, library);
     const expectedGap = index === 0 ? 0 : library.manifest.rhythm.modes[plan.density][expectedToken];
     if (item.rhythmToken !== expectedToken || item.gapBefore !== expectedGap) {
       throw new Error(`LayoutPlan rhythm for ${block.id} must be resolved by the selected theme`);
@@ -150,13 +153,21 @@ export function assertLayoutPlan(
 }
 
 function resolveRhythmToken(
+  document: BlockDocument,
   block: Block,
   reading: ReadingPlan["items"][number],
   index: number,
   library: ThemeLibrary,
 ): RhythmToken {
   if (index === 0) return "close";
-  if (block.type === "heading") return library.manifest.rhythm.relationMap["new-section"] ?? "section";
+  const previous = document.blocks[index - 1];
+  if (block.type === "heading" && block.level === 2) return library.manifest.rhythm.relationMap["new-section"] ?? "section";
+  if (block.type === "heading") return library.manifest.rhythm.relationMap[block.relationToPrevious ?? "turning-point"] ?? "turn";
+  // A conclusion heading already owns the section break. Consecutive ending
+  // groups must read as one closing passage, not as four independent endings.
+  if (block.type === "ending" && (previous?.type === "heading" || previous?.type === "ending")) {
+    return library.manifest.rhythm.relationMap.continuation ?? "flow";
+  }
   if (reading.gesture === "pause") return library.manifest.rhythm.relationMap["new-argument"] ?? "break";
   if (reading.gesture === "pivot") return library.manifest.rhythm.relationMap["turning-point"] ?? "turn";
   if (reading.gesture === "release") return library.manifest.rhythm.relationMap["before-ending"] ?? "release";

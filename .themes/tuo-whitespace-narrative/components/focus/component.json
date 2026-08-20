@@ -6,6 +6,9 @@
   "accepts": {
     "blockTypes": [
       "paragraph"
+    ],
+    "roles": [
+      "key-insight"
     ]
   },
   "slots": [
@@ -18,14 +21,15 @@
   "fallbackVariant": "source",
   "baseStyles": {
     "r0": {
-      "margin": "36px 0 0",
-      "color": "#1a1c1a",
-      "font-family": "Iowan Old Style, STSong, Songti SC, Georgia, serif",
-      "font-size": "14px",
-      "font-weight": "300",
-      "line-height": "1.85",
-      "letter-spacing": "0.06em",
-      "text-align": "justify"
+      "margin": "0",
+      "padding-left": "14px",
+      "border-left": "2px solid #948777",
+      "color": "#6f6254",
+      "font-family": "Noto Serif SC, Songti SC, STSong, Georgia, serif",
+      "font-size": "15px",
+      "font-weight": "700",
+      "line-height": "1.8",
+      "letter-spacing": "0.04em"
     }
   },
   "variants": [

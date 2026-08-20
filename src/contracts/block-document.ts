@@ -39,7 +39,21 @@ export const BLOCK_RELATIONS = [
   "before-ending",
 ] as const;
 
-export const BLOCK_MARK_TYPES = ["emphasis", "strong", "quote", "keyword"] as const;
+/**
+ * Inline intent survives independently of a theme.  A theme may choose a
+ * quiet treatment, but it must never need to re-parse author source in order
+ * to discover what the author marked.
+ */
+export const BLOCK_MARK_TYPES = [
+  "emphasis",
+  "strong",
+  "quote",
+  "keyword",
+  "highlight",
+  "underline",
+  "strike",
+  "code",
+] as const;
 
 export interface BlockMark {
   type: (typeof BLOCK_MARK_TYPES)[number];
@@ -70,6 +84,7 @@ export interface HeadingStructure {
 export interface ListItemStructure {
   ordinal?: number;
   content: string;
+  marks?: BlockMark[];
 }
 
 export interface ListStructure {

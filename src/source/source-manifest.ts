@@ -14,7 +14,9 @@ export type SourceKindHint =
   | "list"
   | "quote"
   | "code"
-  | "divider";
+  | "divider"
+  | "image"
+  | "table";
 
 export interface SourceSegment {
   id: string;

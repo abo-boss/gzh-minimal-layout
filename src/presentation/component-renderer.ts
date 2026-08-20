@@ -2,7 +2,7 @@ import type { Block, BlockDocument, BlockMark } from "../contracts/block-documen
 import type { AssetManifest, ImagePlan } from "../contracts/media.js";
 import { displayMarkdownText } from "../agent/inline-markdown.js";
 import { ctaStructure, formatOrdinal, headingStructure, imageStructure, listStructure, quoteStructure, tableStructure } from "../layout/block-structure.js";
-import type { ComponentSlot, LayoutPlan, LoadedComponent, StyleMap, ThemeLibrary } from "../contracts/presentation.js";
+import type { ComponentSlot, InlineMarkStyles, LayoutPlan, LoadedComponent, StyleMap, ThemeChrome, ThemeLibrary } from "../contracts/presentation.js";
 import { adaptToWechatFragment } from "../adapters/wechat-adapter.js";
 import { compileInlineStyle } from "../theme/template-safety.js";
 import { validateContentIntegrity, type RenderedContentTrace } from "../validation/content-integrity-validator.js";
@@ -14,6 +14,16 @@ export interface ComponentRenderResult {
   previewHtml: string;
   cleanPreviewHtml: string;
   contentIntegrity: ReturnType<typeof validateContentIntegrity>;
+  /** Render-only material derived from source structure; never part of source spans. */
+  derivedChrome: DerivedChromeStatus;
+}
+
+export interface DerivedChromeStatus {
+  intro: boolean;
+  directory: boolean;
+  chapters: number;
+  end: boolean;
+  signature: boolean;
 }
 
 export interface ComponentRenderOptions {
@@ -33,6 +43,14 @@ export function renderComponentArticle(
   const visualAssets = resolveRenderMedia(document, options);
   const visualsBefore = groupVisualAssets(visualAssets, "before");
   const visualsAfter = groupVisualAssets(visualAssets, "after");
+  const chrome = library.manifest.composition.chrome;
+  const derivedChrome: DerivedChromeStatus = {
+    intro: false,
+    directory: false,
+    chapters: 0,
+    end: false,
+    signature: false,
+  };
   const fragments = document.blocks.map((block, index) => {
     const item = layout.items[index];
     if (!item || item.sourceBlockIds[0] !== block.id) throw new Error(`Layout item ${index} does not cover ${block.id}`);
@@ -42,7 +60,7 @@ export function renderComponentArticle(
     if (!variant) throw new Error(`Unknown variant ${item.componentId}:${item.variantId}`);
 
     const styles = mergeStyleMaps(component.baseStyles, variant.styles);
-    let compiled = bindComponentSlots(component, block, styles, library.manifest.tokens);
+    let compiled = bindComponentSlots(component, block, styles, library.manifest.tokens, library.manifest.inlineMarks);
     compiled = applyStyleRoles(compiled, styles, library.manifest.tokens);
     compiled = normalizeComponentRootSpacing(compiled, component.id, block.type);
     compiled = compiled.replace(
@@ -57,9 +75,15 @@ export function renderComponentArticle(
     } else {
       trace.contributions.push({ blockId: block.id, text: textFromRenderedHtml(compiled), layoutItemId: item.id, slotPath: "content" });
     }
+    const chapter = block.type === "heading" && block.level === 2
+      ? renderChapterChrome(block, document, chrome, library.manifest.tokens, derivedChrome)
+      : "";
     const debug = debugLabel(block, item.readingGesture, item.componentId, item.variantId, item.rhythmToken, item.gapBefore, item.reason);
-    const blockFragment = `<section data-layout-item data-layout-id="${escapeAttribute(item.id)}" data-source-block-ids="${escapeAttribute(block.id)}" style="margin:0;padding:${item.gapBefore}px 0 0">${debug}${compiled.trim()}</section>`;
-    return `${renderVisualAssets(visualsBefore.get(block.id) ?? [], "before")}${blockFragment}${renderVisualAssets(visualsAfter.get(block.id) ?? [], "after")}`;
+    // Keep a chapter label inside the same spacing owner as its H2. Rendering
+    // it before the layout item leaves an unrelated section gap between label
+    // and title, which makes them look like separate sections.
+    const blockFragment = `<section data-layout-item data-layout-id="${escapeAttribute(item.id)}" data-source-block-ids="${escapeAttribute(block.id)}" style="margin:0;padding:${item.gapBefore}px 0 0">${debug}${chapter}${renderVisualAssets(visualsBefore.get(block.id) ?? [], "before")}${compiled.trim()}</section>`;
+    return `${blockFragment}${renderVisualAssets(visualsAfter.get(block.id) ?? [], "after")}`;
   });
 
   const displayDocument: BlockDocument = {
@@ -71,7 +95,13 @@ export function renderComponentArticle(
     const changed = contentIntegrity.changedBlocks.map((entry) => entry.blockId).join(", ");
     throw new Error(`Content integrity validation failed after component rendering${changed ? `: ${changed}` : ""}`);
   }
-  const canonicalHtml = renderThemeCanvas(fragments.join("\n"), library.manifest.tokens);
+  const openingChrome = renderOpeningChrome(document, chrome, library.manifest.tokens, derivedChrome);
+  const titleIndex = document.blocks.findIndex((block) => block.type === "article-title");
+  const sourceAndOpening = titleIndex === -1
+    ? `${openingChrome}${fragments.join("\n")}`
+    : fragments.map((fragment, index) => index === titleIndex ? `${fragment}${openingChrome}` : fragment).join("\n");
+  const closingChrome = renderClosingChrome(document, chrome, library.manifest.tokens, derivedChrome);
+  const canonicalHtml = renderThemeCanvas(`${sourceAndOpening}${closingChrome}`, library.manifest.tokens);
   const wechatHtml = adaptToWechatFragment(canonicalHtml);
   return {
     canonicalHtml,
@@ -79,7 +109,90 @@ export function renderComponentArticle(
     previewHtml: renderDebugPreview(document, canonicalHtml),
     cleanPreviewHtml: renderCleanPreview(document, wechatHtml),
     contentIntegrity,
+    derivedChrome,
   };
+}
+
+function renderOpeningChrome(
+  document: BlockDocument,
+  chrome: ThemeChrome,
+  tokens: Record<string, unknown>,
+  status: DerivedChromeStatus,
+): string {
+  const fragments: string[] = [];
+  const intro = introSentence(document);
+  if (chrome.intro.enabled && intro) {
+    status.intro = true;
+    fragments.push(`<section data-derived-chrome="intro" style="${chromeStyle(chrome.intro.styles, "root", tokens)}"><p style="${chromeStyle(chrome.intro.styles, "text", tokens)}">${escapedText(intro)}</p></section>`);
+  }
+  const headings = document.blocks
+    .filter((block) => block.type === "heading" && block.sectionId !== "conclusion" && block.role !== "conclusion")
+    .slice(0, chrome.directory.maxItems);
+  if (chrome.directory.enabled && headings.length >= 2) {
+    status.directory = true;
+    const items = headings.map((block, index) => {
+      const heading = headingStructure(block);
+      const number = heading?.ordinal ?? index + 1;
+      const title = headingTitle(block) ?? displayContent(block);
+      return `<p style="${chromeStyle(chrome.directory.styles, "item", tokens)}"><span style="${chromeStyle(chrome.directory.styles, "itemNumber", tokens)}">${escapedText(formatOrdinal(number, "two-digit-arabic"))}</span><span style="${chromeStyle(chrome.directory.styles, "itemTitle", tokens)}">${escapedText(title)}</span></p>`;
+    }).join("");
+    fragments.push(`<section data-derived-chrome="directory" style="${chromeStyle(chrome.directory.styles, "root", tokens)}"><p style="${chromeStyle(chrome.directory.styles, "label", tokens)}">${escapedText("文章脉络")}</p><section style="${chromeStyle(chrome.directory.styles, "list", tokens)}">${items}</section></section>`);
+  }
+  return fragments.join("\n");
+}
+
+function renderChapterChrome(
+  block: Block,
+  document: BlockDocument,
+  chrome: ThemeChrome,
+  tokens: Record<string, unknown>,
+  status: DerivedChromeStatus,
+): string {
+  if (!chrome.chapter.enabled) return "";
+  const heading = headingStructure(block);
+  const headingIndex = document.blocks.filter((candidate) => candidate.type === "heading").indexOf(block);
+  const ordinal = heading?.ordinal ?? headingIndex + 1;
+  const label = block.sectionId === "conclusion" || block.role === "conclusion" ? "POSTSCRIPT" : chrome.chapter.label;
+  status.chapters += 1;
+  return `<section data-derived-chrome="chapter" style="${chromeStyle(chrome.chapter.styles, "root", tokens)}"><p style="${chromeStyle(chrome.chapter.styles, "label", tokens)}">${escapedText(`${formatOrdinal(ordinal, "two-digit-arabic")} · ${label}`)}</p></section>`;
+}
+
+function renderClosingChrome(
+  document: BlockDocument,
+  chrome: ThemeChrome,
+  tokens: Record<string, unknown>,
+  status: DerivedChromeStatus,
+): string {
+  const fragments: string[] = [];
+  if (chrome.end.enabled) {
+    status.end = true;
+    fragments.push(`<section data-derived-chrome="end" style="${chromeStyle(chrome.end.styles, "root", tokens)}"><p style="${chromeStyle(chrome.end.styles, "line", tokens)}"></p><p style="${chromeStyle(chrome.end.styles, "label", tokens)}">${escapedText(chrome.end.label)}</p></section>`);
+  }
+  if (chrome.signature.enabled) {
+    const hasCta = document.blocks.some((block) => block.type === "cta");
+    const author = `<p style="${chromeStyle(chrome.signature.styles, "author", tokens)}">${escapedText(chrome.signature.authorTemplate)}</p>`;
+    const cta = hasCta ? "" : `<p style="${chromeStyle(chrome.signature.styles, "cta", tokens)}">${escapedText(chrome.signature.ctaTemplate)}</p>`;
+    status.signature = true;
+    fragments.push(`<section data-derived-chrome="signature" style="${chromeStyle(chrome.signature.styles, "root", tokens)}">${author}${cta}</section>`);
+  }
+  return fragments.length ? `\n${fragments.join("\n")}` : "";
+}
+
+function introSentence(document: BlockDocument): string | undefined {
+  const lead = document.blocks.find((block) => block.type === "lead" || block.role === "lead");
+  if (!lead) return undefined;
+  const content = displayContent(lead).trim();
+  if (!content) return undefined;
+  const sentence = content.match(/^.*?[。！？!?；;]/u)?.[0] ?? content;
+  return Array.from(sentence).length <= 80 ? sentence : undefined;
+}
+
+function chromeStyle(styles: StyleMap, role: string, tokens: Record<string, unknown>): string {
+  const roleStyles = styles[role];
+  if (!roleStyles || Object.keys(roleStyles).length === 0) {
+    throw new Error(`Derived chrome has no styles for role ${role}`);
+  }
+  return escapeAttribute(compileInlineStyle(roleStyles, tokens));
 }
 
 function normalizeComponentRootSpacing(html: string, componentId: string, blockType: Block["type"]): string {
@@ -194,13 +307,14 @@ function bindComponentSlots(
   block: Block,
   styles: StyleMap,
   tokens: Record<string, unknown>,
+  inlineMarks: InlineMarkStyles,
 ): string {
   let template = selectListContainer(component.templateHtml, block);
   const quoteAttributionHasOwnSlot = component.slots.some((entry) => entry.source === "quote-attribution");
   for (const slot of component.slots) {
     const rawValue = rawSlotValue(slot, block);
     template = bindAttributeSlot(template, slot.name, rawValue);
-    const value = slotHtml(slot, block, styles, tokens, quoteAttributionHasOwnSlot);
+    const value = slotHtml(slot, block, styles, tokens, inlineMarks, quoteAttributionHasOwnSlot);
     if (value === undefined && slot.required) {
       throw new Error(`Component ${component.id} requires unavailable slot ${slot.name} for ${block.id}`);
     }
@@ -262,19 +376,31 @@ function slotHtml(
   block: Block,
   styles: StyleMap,
   tokens: Record<string, unknown>,
+  inlineMarks: InlineMarkStyles,
   quoteAttributionHasOwnSlot: boolean,
 ): string | undefined {
   const raw = rawSlotValue(slot, block);
   if (raw !== undefined) return escapedText(raw);
+  if (slot.source === "content-initial" || slot.source === "content-remainder") {
+    const content = displayContent(block);
+    const characters = Array.from(content);
+    const boundary = characters[0]?.length ?? 0;
+    const start = slot.source === "content-initial" ? 0 : boundary;
+    const end = slot.source === "content-initial" ? boundary : content.length;
+    const value = content.slice(start, end);
+    return block.marks?.length
+      ? markedText(value, marksInSlice(block.marks, start, end), styles, tokens, inlineMarks)
+      : escapedText(value);
+  }
   if (slot.source === "content") {
     const content = displayContent(block);
     return block.marks?.length
-      ? markedText(content, block.marks, styles, tokens)
+      ? markedText(content, block.marks, styles, tokens, inlineMarks)
       : escapedText(content);
   }
   if (slot.source === "heading-title") {
-    const heading = headingStructure(block);
-    return escapedText(headingTitle(block) ?? "");
+    const content = headingTitle(block) ?? "";
+    return block.marks?.length ? markedText(content, block.marks, styles, tokens, inlineMarks) : escapedText(content);
   }
   if (slot.source === "heading-marker") {
     const heading = headingStructure(block);
@@ -286,13 +412,18 @@ function slotHtml(
     const list = listStructure(block);
     if (!list) return undefined;
     if (!styles.itemMarker || !styles.itemContent) {
-      return list.items.map((item) => `<li data-style-role="item">${escapedText(displayMarkdownText(item.content))}</li>`).join("");
+      return list.items.map((item) => {
+        const content = displayMarkdownText(item.content);
+        return `<li data-style-role="item">${item.marks?.length ? markedText(content, item.marks, styles, tokens, inlineMarks) : escapedText(content)}</li>`;
+      }).join("");
     }
     return list.items.map((item) => {
       const marker = list.ordered
         ? `${formatOrdinal(item.ordinal!, slot.format ?? "source")}.`
         : "•";
-      return `<li data-style-role="item"><span data-decorative data-style-role="itemMarker">${escapedText(marker)}</span><span data-style-role="itemContent">${escapedText(displayMarkdownText(item.content))}</span></li>`;
+      const content = displayMarkdownText(item.content);
+      const rendered = item.marks?.length ? markedText(content, item.marks, styles, tokens, inlineMarks) : escapedText(content);
+      return `<li data-style-role="item"><span data-decorative data-style-role="itemMarker">${escapedText(marker)}</span><span data-style-role="itemContent">${rendered}</span></li>`;
     }).join("");
   }
   const quote = quoteStructure(block);
@@ -302,20 +433,20 @@ function slotHtml(
     const value = quote.hasAttribution && !quoteAttributionHasOwnSlot
       ? `${content}\n${displayMarkdownText(quote.attribution!)}`
       : content;
-    return escapedText(value);
+    return block.marks?.length ? markedText(value, block.marks, styles, tokens, inlineMarks) : escapedText(value);
   }
   if (slot.source === "quote-attribution") return quote?.hasAttribution ? escapedText(displayMarkdownText(quote.attribution!)) : undefined;
   const table = tableStructure(block);
   if (slot.source === "table-headers" && table) {
     return table.headers.map((header, index) => {
       const role = index === 0 ? "headerCellFirst" : index === table.headers.length - 1 ? "headerCellLast" : "headerCell";
-      return `<th data-style-role="${role}">${escapedText(header)}</th>`;
+      return `<th data-style-role="${role}">${escapedText(displayMarkdownText(header))}</th>`;
     }).join("");
   }
   if (slot.source === "table-rows" && table) {
     return table.rows.map((row) => `<tr data-style-role="row">${row.map((cell, index) => {
       const role = index === 0 ? "cellFirst" : index === row.length - 1 ? "cellLast" : "cell";
-      return `<td data-style-role="${role}">${escapedText(cell)}</td>`;
+      return `<td data-style-role="${role}">${escapedText(displayMarkdownText(cell))}</td>`;
     }).join("")}</tr>`).join("");
   }
   const cta = ctaStructure(block);
@@ -326,15 +457,19 @@ function slotHtml(
 }
 
 function rawSlotValue(slot: ComponentSlot, block: Block): string | undefined {
-  if (slot.source === "content-initial" || slot.source === "content-remainder") {
-    const characters = Array.from(displayContent(block));
-    return slot.source === "content-initial" ? characters[0] ?? "" : characters.slice(1).join("");
-  }
   const image = imageStructure(block);
   if (slot.source === "image-src") return image ? safeImageSource(image.src) : undefined;
   if (slot.source === "image-alt") return image?.alt;
   if (slot.source === "image-caption") return image?.hasCaption ? image.caption : undefined;
   return undefined;
+}
+
+function marksInSlice(marks: BlockMark[], start: number, end: number): BlockMark[] {
+  return marks.flatMap((mark) => {
+    const markStart = Math.max(mark.start, start);
+    const markEnd = Math.min(mark.end, end);
+    return markStart < markEnd ? [{ ...mark, start: markStart - start, end: markEnd - start }] : [];
+  });
 }
 
 function safeImageSource(value: string): string {
@@ -361,20 +496,37 @@ function markedText(
   marks: BlockMark[],
   styles: StyleMap,
   tokens: Record<string, unknown>,
+  inlineMarks: InlineMarkStyles,
 ): string {
   const ordered = [...marks].sort((left, right) => left.start - right.start || left.end - right.end);
   let cursor = 0;
   const fragments: string[] = [];
   for (const mark of ordered) {
+    if (mark.start < cursor || mark.end > content.length) continue;
     fragments.push(escapedText(content.slice(cursor, mark.start)));
     const role = mark.type === "strong" ? "markStrong"
       : mark.type === "keyword" ? "markKeyword"
         : mark.type === "quote" ? "markQuote"
-          : "markEmphasis";
-    const roleStyles = styles[role];
-    const tag = mark.type === "emphasis" || mark.type === "quote" ? "em" : "strong";
+          : mark.type === "highlight" ? "markHighlight"
+            : mark.type === "underline" ? "markUnderline"
+              : mark.type === "strike" ? "markStrike"
+                : mark.type === "code" ? "markCode"
+                  : "markEmphasis";
+    const roleStyles = styles[role] ?? inlineMarks[mark.type];
+    const tag = mark.type === "emphasis" || mark.type === "quote" ? "em"
+      : mark.type === "underline" ? "span"
+        : mark.type === "strike" ? "span"
+          : mark.type === "code" ? "span"
+            : "strong";
     const style = roleStyles ? ` style="${escapeAttribute(compileInlineStyle(roleStyles, tokens))}"` : "";
-    fragments.push(`<${tag} data-inline-mark="${mark.type}"${style}>${escapedText(content.slice(mark.start, mark.end))}</${tag}>`);
+    const semanticStyle = mark.type === "underline" && !roleStyles?.["text-decoration"] ? ";text-decoration:underline"
+      : mark.type === "strike" && !roleStyles?.["text-decoration"] ? ";text-decoration:line-through"
+        : mark.type === "code" && !roleStyles?.["font-family"] ? ";font-family:monospace"
+          : "";
+    const combinedStyle = style
+      ? style.replace(/"$/u, `${semanticStyle}"`)
+      : semanticStyle ? ` style="${semanticStyle.slice(1)}"` : "";
+    fragments.push(`<${tag} data-inline-mark="${mark.type}"${combinedStyle}>${escapedText(content.slice(mark.start, mark.end))}</${tag}>`);
     cursor = mark.end;
   }
   fragments.push(escapedText(content.slice(cursor)));
@@ -382,7 +534,10 @@ function markedText(
 }
 
 function escapedText(value: string): string {
-  return escapeHtml(value).replace(/\r?\n/gu, "<br>");
+  return value
+    .split(/\r?\n/gu)
+    .map((line) => `<span leaf="">${escapeHtml(line)}</span>`)
+    .join("<br>");
 }
 
 function debugLabel(
@@ -415,14 +570,10 @@ function displayContent(block: Block): string {
   if (block.type === "article-title" || block.type === "heading") {
     content = content.replace(/^#{1,6}[\t ]+/u, "");
     if (block.type === "heading") {
-      const heading = headingStructure(block);
       const title = headingTitle(block);
-      if (heading?.ordinal !== undefined) {
-        return title
-          ? `${formatOrdinal(heading.ordinal, "two-digit-arabic")} ${title}`
-          : formatOrdinal(heading.ordinal, "two-digit-arabic");
-      }
-      return title ?? "";
+      // Markers belong to the chapter chrome / theme heading marker. Keeping
+      // them in the text slot duplicates “03” beside an already-numbered H2.
+      return title ?? displayMarkdownText(content);
     }
   }
   const list = listStructure(block);
@@ -432,7 +583,11 @@ function displayContent(block: Block): string {
     return `${displayMarkdownText(quote.content)}${quote.hasAttribution ? `\n${displayMarkdownText(quote.attribution!)}` : ""}`;
   }
   const table = tableStructure(block);
-  if (table) return [...table.headers, ...table.rows.flat()].join("\n");
+  if (table) return [...table.headers, ...table.rows.flat()].map(displayMarkdownText).join("\n");
+  if (block.type === "code") {
+    return content.replace(/^```[^\n]*\r?\n?/u, "").replace(/\r?\n?```\s*$/u, "");
+  }
+  if (block.type === "divider") return "";
   const cta = ctaStructure(block);
   if (cta) return [cta.eyebrow, cta.prompt, cta.highlight]
     .filter((value): value is string => Boolean(value))

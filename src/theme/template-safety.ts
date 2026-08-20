@@ -49,6 +49,7 @@ const ALLOWED_STYLE_PROPERTIES = new Set([
   "table-layout",
   "text-align",
   "text-align-last",
+  "text-decoration",
   "top",
   "vertical-align",
   "white-space",
@@ -115,6 +116,14 @@ export function compileInlineStyle(
     const value = resolveTokenValue(rawValue, tokens);
     if (/[;<>]/u.test(value) || /(?:url|expression|javascript)\s*\(/iu.test(value)) {
       throw new Error(`Unsafe style value for ${property}`);
+    }
+    if (
+      (property === "position" && /^(?:absolute|fixed|sticky)$/iu.test(value.trim()))
+      || property === "float"
+      || (property === "display" && /^grid$/iu.test(value.trim()))
+      || (property === "white-space" && /^pre$/iu.test(value.trim()))
+    ) {
+      throw new Error(`Unsupported WeChat style ${property}:${value}`);
     }
     return `${property}:${value}`;
   }).join(";");
